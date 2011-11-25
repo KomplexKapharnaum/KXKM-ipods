@@ -1,0 +1,10 @@
+<command-line>: warning: "__IPHONE_OS_VERSION_MIN_REQUIRED" redefined
+<command-line>: warning: this is the location of the previous definition
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m: In function '-[remoteplayv2ViewController viewDidLoad]':
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m:50: warning: no '+currentHost' method found
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m:50: warning: (Messages without a matching method signature
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m:50: warning: will be assumed to return 'id' and accept
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m:50: warning: '...' as arguments.)
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m: At top level:
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m:91: warning: property 'test' requires method '-test' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/macbookpierre/Documents/remoteplayv2/Classes/remoteplayv2ViewController.m:91: warning: property 'test' requires the method 'setTest:' to be defined - use @synthesize, @dynamic or provide a method implementation

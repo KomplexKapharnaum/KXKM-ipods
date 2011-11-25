@@ -1,0 +1,411 @@
+// !$*UTF8*$!
+{
+	1D3623240D0F684500981E51 /* remoteplayv2AppDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {866, 923}}";
+			sepNavSelRange = "{904, 0}";
+			sepNavVisRange = "{678, 1190}";
+		};
+	};
+	1D3623250D0F684500981E51 /* remoteplayv2AppDelegate.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1194, 4472}}";
+			sepNavSelRange = "{3859, 0}";
+			sepNavVisRange = "{164, 429}";
+		};
+	};
+	1D6058900D05DD3D006BFB54 /* remoteplayv2 */ = {
+		activeExec = 0;
+		executables = (
+			86127D5714334D2A0041071B /* remoteplayv2 */,
+		);
+	};
+	28D7ACF60DDB3853001CB0EB /* remoteplayv2ViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {792, 558}}";
+			sepNavSelRange = "{409, 0}";
+			sepNavVisRange = "{0, 749}";
+			sepNavWindowFrame = "{{15, 87}, {851, 686}}";
+		};
+	};
+	28D7ACF70DDB3853001CB0EB /* remoteplayv2ViewController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {866, 1183}}";
+			sepNavSelRange = "{645, 0}";
+			sepNavVisRange = "{0, 988}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeExecutable = 86127D5714334D2A0041071B /* remoteplayv2 */;
+		activeSDKPreference = iphonesimulator4.2;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* remoteplayv2 */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* remoteplayv2 */,
+		);
+		breakpoints = (
+			864F91B81453436A000FB867 /* remoteplayv2AppDelegate.m:88 */,
+		);
+		codeSenseManager = 86127D6114334D3D0041071B /* Code sense */;
+		executables = (
+			86127D5714334D2A0041071B /* remoteplayv2 */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					688,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.XCSCMDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					641,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_SCM_ColumnID,
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					625,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 340982259;
+			PBXWorkspaceStateSaveDate = 340982259;
+		};
+		perUserProjectItems = {
+			86127E8B143358350041071B /* PBXTextBookmark */ = 86127E8B143358350041071B /* PBXTextBookmark */;
+			86127E8D143358350041071B /* PBXBookmark */ = 86127E8D143358350041071B /* PBXBookmark */;
+			86127E8E143358350041071B /* PBXTextBookmark */ = 86127E8E143358350041071B /* PBXTextBookmark */;
+			86127EB214335D850041071B /* PlistBookmark */ = 86127EB214335D850041071B /* PlistBookmark */;
+			864F07781435B7E100963276 /* PBXTextBookmark */ = 864F07781435B7E100963276 /* PBXTextBookmark */;
+			864F90AF1453065F000FB867 /* PBXTextBookmark */ = 864F90AF1453065F000FB867 /* PBXTextBookmark */;
+			864F910814530C75000FB867 /* PBXBookmark */ = 864F910814530C75000FB867 /* PBXBookmark */;
+			864F911D14530D73000FB867 /* PBXTextBookmark */ = 864F911D14530D73000FB867 /* PBXTextBookmark */;
+			864F91A3145341CE000FB867 /* PBXTextBookmark */ = 864F91A3145341CE000FB867 /* PBXTextBookmark */;
+			864F91A4145341CE000FB867 /* PBXTextBookmark */ = 864F91A4145341CE000FB867 /* PBXTextBookmark */;
+			864F91CF14536CC9000FB867 /* PBXTextBookmark */ = 864F91CF14536CC9000FB867 /* PBXTextBookmark */;
+			864F91D014536CC9000FB867 /* PBXTextBookmark */ = 864F91D014536CC9000FB867 /* PBXTextBookmark */;
+			864F91D114536CC9000FB867 /* PBXTextBookmark */ = 864F91D114536CC9000FB867 /* PBXTextBookmark */;
+			864F91D214536CC9000FB867 /* PBXTextBookmark */ = 864F91D214536CC9000FB867 /* PBXTextBookmark */;
+			86A76C531434C72600D0CA7A /* PlistBookmark */ = 86A76C531434C72600D0CA7A /* PlistBookmark */;
+		};
+		sourceControlManager = 86127D6014334D3D0041071B /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	29B97316FDCFA39411CA2CEA /* main.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {633, 234}}";
+			sepNavSelRange = "{279, 0}";
+			sepNavVisRange = "{34, 344}";
+		};
+	};
+	32CA4F630368D1EE00C91783 /* remoteplayv2_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {727, 468}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 193}";
+		};
+	};
+	86127D5714334D2A0041071B /* remoteplayv2 */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = remoteplayv2;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+			$lr = 1;
+			$pc = 1;
+			$r0 = 1;
+			$r1 = 1;
+			$r10 = 1;
+			$r11 = 1;
+			$r12 = 1;
+			$r2 = 1;
+			$r3 = 1;
+			$r4 = 1;
+			$r5 = 1;
+			$r6 = 1;
+			$r7 = 1;
+			$r8 = 1;
+			$r9 = 1;
+			$sp = 1;
+		};
+	};
+	86127D6014334D3D0041071B /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	86127D6114334D3D0041071B /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	86127E8B143358350041071B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 29B97316FDCFA39411CA2CEA /* main.m */;
+		name = "main.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 378;
+		vrLoc = 0;
+	};
+	86127E8D143358350041071B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 86127D68143351430041071B /* iconkxkm.jpg */;
+	};
+	86127E8E143358350041071B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 86127E8F143358350041071B /* Root.strings */;
+		name = "Root.strings: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 272;
+		vrLoc = 0;
+	};
+	86127E8F143358350041071B /* Root.strings */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.plist.strings;
+		name = Root.strings;
+		path = /Users/macbookpierre/Documents/remoteplayv2/Settings.bundle/en.lproj/Root.strings;
+		sourceTree = "<absolute>";
+	};
+	86127E91143358350041071B /* Root.plist */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.plist.xml;
+		name = Root.plist;
+		path = /Users/macbookpierre/Documents/remoteplayv2/Settings.bundle/Root.plist;
+		sourceTree = "<absolute>";
+	};
+	86127EB214335D850041071B /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* remoteplayv2-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			CFBundleVersion,
+		);
+		name = "/Users/macbookpierre/Documents/remoteplayv2/remoteplayv2-Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+	864F07781435B7E100963276 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 864F07791435B7E100963276 /* CGGeometry.h */;
+		name = "CGGeometry.h: 22";
+		rLen = 7;
+		rLoc = 343;
+		rType = 0;
+		vrLen = 554;
+		vrLoc = 0;
+	};
+	864F07791435B7E100963276 /* CGGeometry.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = CGGeometry.h;
+		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.2.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CGGeometry.h;
+		sourceTree = "<absolute>";
+	};
+	864F90AF1453065F000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 864F90B01453065F000FB867 /* UITabBarController.h */;
+		name = "UITabBarController.h: 58";
+		rLen = 52;
+		rLoc = 1845;
+		rType = 0;
+		vrLen = 1228;
+		vrLoc = 518;
+	};
+	864F90B01453065F000FB867 /* UITabBarController.h */ = {
+		isa = PBXFileReference;
+		name = UITabBarController.h;
+		path = /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.2.sdk/System/Library/Frameworks/UIKit.framework/Headers/UITabBarController.h;
+		sourceTree = "<absolute>";
+	};
+	864F910814530C75000FB867 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 28D7ACF60DDB3853001CB0EB /* remoteplayv2ViewController.h */;
+	};
+	864F911D14530D73000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 32CA4F630368D1EE00C91783 /* remoteplayv2_Prefix.pch */;
+		name = "remoteplayv2_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 193;
+		vrLoc = 0;
+	};
+	864F91A3145341CE000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 28D7ACF60DDB3853001CB0EB /* remoteplayv2ViewController.h */;
+		name = "remoteplayv2ViewController.h: 30";
+		rLen = 0;
+		rLoc = 725;
+		rType = 0;
+		vrLen = 749;
+		vrLoc = 0;
+	};
+	864F91A4145341CE000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 28D7ACF70DDB3853001CB0EB /* remoteplayv2ViewController.m */;
+		name = "remoteplayv2ViewController.m: 25";
+		rLen = 0;
+		rLoc = 645;
+		rType = 0;
+		vrLen = 988;
+		vrLoc = 0;
+	};
+	864F91B81453436A000FB867 /* remoteplayv2AppDelegate.m:88 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 1D3623250D0F684500981E51 /* remoteplayv2AppDelegate.m */;
+		functionName = "-application:didFinishLaunchingWithOptions:";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 88;
+		location = remoteplayv2;
+		modificationTime = 341001118.714852;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	864F91CF14536CC9000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* remoteplayv2AppDelegate.h */;
+		name = "remoteplayv2AppDelegate.h: 36";
+		rLen = 0;
+		rLoc = 904;
+		rType = 0;
+		vrLen = 1190;
+		vrLoc = 678;
+	};
+	864F91D014536CC9000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* remoteplayv2AppDelegate.m */;
+		name = "remoteplayv2AppDelegate.m: 90";
+		rLen = 8;
+		rLoc = 3872;
+		rType = 0;
+		vrLen = 2029;
+		vrLoc = 2431;
+	};
+	864F91D114536CC9000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* remoteplayv2AppDelegate.m */;
+		name = "remoteplayv2AppDelegate.m: 90";
+		rLen = 8;
+		rLoc = 3872;
+		rType = 0;
+		vrLen = 2384;
+		vrLoc = 1229;
+	};
+	864F91D214536CC9000FB867 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 28D7ACF60DDB3853001CB0EB /* remoteplayv2ViewController.h */;
+		name = "remoteplayv2ViewController.h: 19";
+		rLen = 0;
+		rLoc = 409;
+		rType = 0;
+		vrLen = 749;
+		vrLoc = 0;
+	};
+	86A76C531434C72600D0CA7A /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 86127E91143358350041071B /* Root.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			PreferenceSpecifiers,
+			0,
+			Type,
+		);
+		name = /Users/macbookpierre/Documents/remoteplayv2/Settings.bundle/Root.plist;
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+}
