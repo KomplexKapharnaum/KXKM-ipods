@@ -179,7 +179,21 @@
     NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathformovie error:nil];
     mediaList = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
     
-    //VUE update media list 
+    //liste les prefix des vidéos
+    NSMutableArray *prefix_list;
+    prefix_list = [[NSMutableArray alloc]init]; 
+    NSString *s = @"";
+    for (NSString *movies in mediaList){
+        NSArray *a = [movies componentsSeparatedByString:@"_"];
+        NSString *prefix = [a objectAtIndex:0];
+        if (![s isEqualToString:prefix]) {
+            s=[prefix copy];
+            [prefix_list addObject:[s copy]];
+        }
+    }
+    
+    //VUE update media list
+    tableViewController.section_list = [prefix_list copy];
     tableViewController.moviesList = [mediaList copy];
     [tableViewController.moviesTable reloadData];
 }

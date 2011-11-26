@@ -14,11 +14,11 @@
     //list des fichier présent dans le dossier document de l'app (upload via iexplorer)
     NSArray *moviesList;
     
-    NSArray *test;
+    NSMutableArray *section_list;
 }
 
 @property (readwrite,retain) IBOutlet UITableView *moviesTable;
 @property (readwrite,retain) NSArray *moviesList;
-@property (readwrite,retain) NSArray *test;
+@property (readwrite,retain) NSMutableArray *section_list;
 
 @end

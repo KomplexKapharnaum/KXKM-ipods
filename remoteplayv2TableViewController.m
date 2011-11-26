@@ -11,17 +11,28 @@
 
 @implementation remoteplayv2TableViewController
 
-@synthesize moviesList,test,moviesTable;
+@synthesize moviesList,section_list,moviesTable;
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     // There is only one section.
-    return 1;
+    return [section_list count];
+}
+
+- (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section {
+	return [section_list objectAtIndex:section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of time zone names.
-    return [moviesList count];
+    NSInteger count=0;
+    for (NSString *movie in moviesList) {
+        if([[movie substringToIndex:[[section_list objectAtIndex:section]length]]isEqualToString:[section_list objectAtIndex:section]]){
+            count++;
+        }
+    }
+    return count;
 }
 
 
@@ -40,7 +51,15 @@
     }
     
     // Set up the cell.
-    NSString *movieName = [moviesList objectAtIndex:indexPath.row];
+    NSString *prefix = [section_list objectAtIndex:indexPath.section];
+    NSString *t = @"_";
+    NSString *selecteur = [prefix stringByAppendingString:t];
+    NSLog(selecteur);
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@",selecteur];
+    NSArray *selected_movieList = [moviesList filteredArrayUsingPredicate:pred];
+    
+    
+    NSString *movieName = [selected_movieList objectAtIndex:indexPath.row];
     cell.textLabel.text = movieName;
     
     return cell;
@@ -58,14 +77,14 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-     
+    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
     return self;
     moviesList = [[NSMutableArray alloc] init];
-   
+    
     
 }
 
