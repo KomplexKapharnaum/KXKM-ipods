@@ -6,3 +6,4 @@ build/
 *.perspectivev3
 profile
 xcuserdata
+*.xcuserdata
