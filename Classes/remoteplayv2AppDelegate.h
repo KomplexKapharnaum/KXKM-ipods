@@ -24,6 +24,7 @@
     UIView *blackview;
     UIView *fadeview;
     UIView *flashview;
+    UIView *titlesview;
     //controllers
     remoteplayv2ViewController *viewController;
     remoteplayv2UserViewController*userViewController;
@@ -58,11 +59,13 @@
     BOOL goflash;
     BOOL gocolorflash;
     BOOL gomessage;
+    BOOL gotitles;
     //détails instructions
     NSArray *mediaList;
 	NSString *pathformovie;
 	NSString *remotemoviepath;
 	NSString *remotemoviename;
+    NSString *customTitles;
 	int playbacktimeWanted;
     int flashcolorRed;
     int flashcolorGreen;
@@ -83,14 +86,14 @@
 @property (nonatomic,retain) UIView *blackview;
 @property (nonatomic,retain) UIView *fadeview;
 @property (nonatomic,retain) UIView *flashview;
-
+@property (nonatomic,retain) UIView *titlesview;
 
 @property (readwrite, retain) OSCManager *manager;
 @property (readwrite, retain) OSCOutPort *outPort;
 
 @property (readwrite, retain) MPMoviePlayerController *moviePlayer;
-//@property (readwrite, retain) MPMoviePlayerController *futurePlayer;
 @property (nonatomic, retain) NSURL *movieURL;
+@property (nonatomic, retain) NSArray *mediaList;
 @property (nonatomic,retain) NSTimer *timermouvement;
 
 @property (nonatomic,retain) NSString *pathformovie;
@@ -100,6 +103,7 @@
 @property (nonatomic,retain) NSString *screenstate;
 
 @property (nonatomic,retain) NSString *message;
+@property (nonatomic,retain) NSString *customTitles;
 
 
 //@property (nonatomic) BOOL goload;
@@ -111,6 +115,7 @@
 @property (nonatomic) BOOL goflash;
 @property (nonatomic) BOOL gomessage;
 @property (nonatomic) BOOL streamingMode;
+@property (nonatomic) BOOL gotitles;
 
 //routines
 - (void) sendInfo;
@@ -129,6 +134,7 @@
 //-(void) loadMovie;
 -(void) playMovie;
 -(void) stopMovie;
+-(void) skipMovie:(OSCMessage *)attime;
 -(void) fadeMovie:(BOOL)fadeMe;
 -(void) flashMovie;
 -(void) muteMovie:(BOOL)muteMe;

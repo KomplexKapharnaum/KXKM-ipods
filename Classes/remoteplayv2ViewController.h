@@ -27,8 +27,6 @@
 - (void)setInfoipText:(NSString*)text;
 - (void)setInfoMovieText:(NSString*)text;
 
-- (void)myMethod;
-
 
 @end
 

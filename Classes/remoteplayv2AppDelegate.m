@@ -15,7 +15,7 @@
 
 @synthesize window;
 @synthesize _secondWindow;
-@synthesize blackview, fadeview, flashview;
+@synthesize blackview, fadeview, flashview, titlesview;
 @synthesize tabBarController;
 @synthesize moviePlayer;
 @synthesize manager;
@@ -23,9 +23,9 @@
 @synthesize movieURL;
 @synthesize timermouvement;
 @synthesize remotemoviepath;
-@synthesize pathformovie;
-@synthesize remotemoviename,screenstate,playerstate,message;
-@synthesize gomovie,stopmovie,gomute,gofade,goflash,gomessage;
+@synthesize pathformovie, mediaList;
+@synthesize remotemoviename,screenstate,playerstate,message,customTitles;
+@synthesize gomovie,stopmovie,gomute,gofade,goflash,gomessage,gotitles;
 @synthesize movieIsPlaying,streamingMode;
 
 
@@ -83,11 +83,13 @@
         gomovie = NO;
         stopmovie = NO;
         movieIsPlaying = NO;
+    
         
         //initiatisations états
         playerMode = @"auto"; 
         playerState = @"starting";
         screenState = @"noscreen";
+        remotemoviename = @"";
         muted = NO;
         faded = NO;
         
@@ -97,10 +99,7 @@
         [viewController setInfoipText: [@"IP : " stringByAppendingString: [self getIPAddress]]];
     
 	
-    //APP init
-        //Get ipod IP 
-        //myIp = [self getIPAddress];
-        
+    //APP init       
         //list media
         [self listMedia];
     
@@ -131,10 +130,12 @@
     [newMsg addString:[self getIPAddress]];
     for (NSString *movies in mediaList) 
         [newMsg addString:movies];
+    
+    
     [outPort sendThisMessage:newMsg];
 }
 
-
+	
 //Sync message : send player state message
 -(void)sendSync{
     
@@ -144,9 +145,9 @@
     //Player State : waiting, playing, 
     [newMsg addString:playerState];
     
-//TODO construct detailed state message 
-//TODO construct detailed state message
-//TODO construct detailed state message
+    //TODO construct detailed state message 
+    //TODO construct detailed state message
+    //TODO construct detailed state message
     
     [newMsg addInt:(int)[moviePlayer currentPlaybackTime]];
     [newMsg addBOOL:[userViewController isMute]];
@@ -160,50 +161,236 @@
     [outPort sendThisMessage:newMsg];
 }
 
-//###########################################################
-//FILES MANAGER
 
-//MEDIA list
--(void)listMedia{
-    //les vidéos sont dorénavent a placer dans le dossier Documents de l'App KXKM
-    //ne pas activer icloud sous peine de synchronisation des vidéos (ralentissement)
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);  
-    pathformovie = [[paths objectAtIndex:0] copy];
-    
-    //simulator path (dev only)
-    NSString *platform = [self platform];
-    if ([platform isEqualToString:@"i386"]) pathformovie = @"/Media/Video/";
-    
-    //list compatible video files
-    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"m4v", nil];
-    NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathformovie error:nil];
-    mediaList = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
-    
-    //liste les prefix des vidéos
-    NSMutableArray *prefix_list;
-    prefix_list = [[NSMutableArray alloc]init]; 
-    NSString *s = @"";
-    for (NSString *movies in mediaList){
-        NSArray *a = [movies componentsSeparatedByString:@"_"];
-        NSString *prefix = [a objectAtIndex:0];
-        if (![s isEqualToString:prefix]) {
-            s=[prefix copy];
-            [prefix_list addObject:[s copy]];
-        }
-    }
-    
-    //VUE update media list
-    tableViewController.section_list = [prefix_list copy];
-    tableViewController.moviesList = [mediaList copy];
-    [tableViewController.moviesTable reloadData];
-}
-
-//###########################################################
-//INFO MANAGER
-
-//INFO
+//INFO (state box info)
 -(void) infoX:(NSString*)msg{
     [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoText:msg];
+}
+
+
+//###########################################################
+// OSC EXECUTION
+
+//treat oscmessage when received
+- (void) receivedOSCMessage: 	(OSCMessage *)  	m	{
+	NSString * a = [m address];
+    
+    //SYNC : mode, state, args (movie, time, ...)
+	if ([a isEqualToString: @"/synctest"]) {
+        [self sendSync];
+        return;
+	}
+    
+    //INIT INFO : ip, media list
+	if ([a isEqualToString: @"/fullsynctest"]) {
+		[self sendInfo];
+        return;
+	}
+    
+    //LOAD & PLAY MOVIE
+	if (([a isEqualToString: @"/loadmovie"]) || ([a isEqualToString: @"/playmovie"])) {
+        streamingMode = NO;
+        [self initGoMovieWithName : [[m value] stringValue]];
+        if ([a isEqualToString: @"/playmovie"]) gomovie = YES;
+        return;
+    }
+    
+    //LOAD & PLAY STREAM
+	if (([a isEqualToString: @"/loadstream"]) || ([a isEqualToString: @"/playstream"])) {
+		streamingMode = YES;
+        [self initGoMovieWithName : [[m value] stringValue]];
+        if ([a isEqualToString: @"/playstream"]) gomovie = YES;
+        return;
+    }
+    
+    //SKIP AT TIME
+	if ([a isEqualToString: @"/attime"]) {
+        [self skipMovie:m];
+        [self sendSync];
+        return;
+    }
+    
+    //STOP MOVIE
+	if ([a isEqualToString: @"/stopmovie"]) {
+		stopmovie = YES;
+        return;
+    }
+    
+    //MUTE
+    if ([a isEqualToString: @"/mute"]) {
+		muted = YES;
+        gomute = YES;
+        return;
+    }
+    
+    //UNMUTE
+    if ([a isEqualToString: @"/unmute"]) {
+		muted = NO;
+        gomute = YES;
+        return;
+    }
+    
+    //FADE to color (RGBA 8bit)
+    if ([a isEqualToString: @"/fade"]) {
+        fadecolorRed = [[m valueAtIndex:0] intValue];
+        fadecolorGreen = [[m valueAtIndex:1] intValue];
+        fadecolorBlue = [[m valueAtIndex:2] intValue];
+        fadecolorAlpha = 255;
+        if ([m valueAtIndex:3] != NULL) 
+            fadecolorAlpha = [[m valueAtIndex:3] intValue];
+        
+        faded = YES;
+        gofade = YES;
+        return;
+    }
+    
+    //UNFADE
+    if ([a isEqualToString: @"/unfade"]) {
+        faded = NO;
+        gofade = YES;
+        return;
+    }
+    
+    //FADE to color (RGBA 8bit)
+    if ([a isEqualToString: @"/fade"]) {
+        fadecolorRed = [[m valueAtIndex:0] intValue];
+        fadecolorGreen = [[m valueAtIndex:1] intValue];
+        fadecolorBlue = [[m valueAtIndex:2] intValue];
+        fadecolorAlpha = 255;
+        if ([m valueAtIndex:3] != NULL) 
+            fadecolorAlpha = [[m valueAtIndex:3] intValue];
+        
+        faded = YES;
+        gofade = YES;
+        return;
+    }
+    
+    //ADD TEXT
+    if ([a isEqualToString: @"/titles"]) {
+        self.customTitles = [[[m value ] stringValue]copy];
+        gotitles=YES;
+        return;
+    }
+    
+    //DISPLAY MESSAGE
+    if ([a isEqualToString: @"/message"]) {
+        self.message= [[[m value ] stringValue]copy];
+        gomessage=YES;
+        return;
+    }
+    
+    //UNKNOW ORDER
+    OSCMessage *newMsg = [OSCMessage createWithAddress:@"/problem"];
+    [newMsg addString:@"bad request : "];
+    [newMsg addString:a];
+    [outPort sendThisMessage:newMsg];
+}
+
+
+//###########################################################
+//WORKERS TIMER
+
+//lancer le timer
+-(void)topDepartMouvement: (NSTimer*)timer{
+	timer = [NSTimer scheduledTimerWithTimeInterval:0.01 //10ms
+											 target:self 
+										   selector:@selector(topHorloge) 
+										   userInfo:nil 
+											repeats:YES];
+	timermouvement = timer;
+}
+
+
+- (void)topHorloge{
+    
+    //CHECK SCREEN
+	[self checkScreen];
+    
+    //UPDATE MOVIE SCROLLER
+    if(movieIsPlaying && !userViewController.timeSlider.touchInside){
+        userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
+        userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
+    }
+    if (movieIsPlaying && userViewController.timeSlider.touchInside) {
+        [moviePlayer setCurrentPlaybackTime:(double)userViewController.timeSlider.value];
+    }
+	
+	//STOP VIDEO IF NO SCREEN
+	if (screenState == @"noscreen") [self stopMovie];
+	
+    //RE LAUNCH VIDEO IF PAUSED (debug streaming)
+    //TODO, check player state to know if it is usefull..
+    //TODO ADD Observer !
+    if (streamingMode) [self.moviePlayer play];  
+    
+    //SCHEDULED ORDERS
+    //play movie
+	if (gomovie) {
+        [self playMovie];
+		[self sendSync];	
+        stopmovie=NO;
+		gomovie=NO;
+	}   
+    //stop movie
+	if (stopmovie){
+        [self stopMovie];
+		[self sendSync];
+        stopmovie=NO;
+	}
+    //mute
+    if (gomute) {
+		[self muteMovie:muted];
+        [self sendSync];
+        gomute=NO;
+    }
+    //fade / unfade to color
+    if (gofade) {
+		[self fadeMovie:faded];
+        [self sendSync];
+        gofade=NO;
+    }
+    //white flash
+    if (goflash) {
+        [self flashMovie];
+        goflash=NO;
+    }
+    
+    //titles : add text
+    if (gotitles) {        
+        CGSize        stringSize = [customTitles sizeWithFont:[UIFont systemFontOfSize:18]];
+        CGRect        labelSize = CGRectMake((_secondWindow.screen.bounds.size.width - stringSize.width) / 2.0,
+                                             (_secondWindow.screen.bounds.size.height - stringSize.height) / 2.0,
+                                             stringSize.width, stringSize.height);
+        
+        UILabel* noContentLabel = [[UILabel alloc] initWithFrame:labelSize];
+        noContentLabel.textColor = [UIColor redColor];
+        noContentLabel.backgroundColor = [UIColor clearColor];
+        noContentLabel.text = customTitles;
+        noContentLabel.font = [UIFont systemFontOfSize:18];
+
+        [self.titlesview addSubview:noContentLabel];
+        gotitles=NO;
+    }
+    
+    //message
+    if (gomessage) {
+        [userViewController setMessage:message];
+        gomessage=NO;
+    }
+    
+    //UPDATE PLAYER STATE
+    if (muted) playerState = @"muted";
+    else if (faded) playerState = @"faded";
+    else if (movieIsPlaying) 
+    {
+        if(streamingMode) playerState = @"streaming";
+        else playerState = @"playing";
+    }
+    else playerState = @"waiting";
+    
+    //UPDATE DISPLAY STATE
+    [self infoX:playerState];
+    [userViewController setMovieTitle:remotemoviename];
 }
 
 //###########################################################
@@ -242,7 +429,7 @@
         
         //keep mute state
         [self muteMovie:muted];
-       
+        
         //init slider
         userViewController.timeSlider.continuous=NO;
         userViewController.timeSlider.minimumValue=0.0;
@@ -316,211 +503,10 @@
 }
 
 //###########################################################
-//WORKERS
-
-//lancer le timer
--(void)topDepartMouvement: (NSTimer*)timer{
-	timer = [NSTimer scheduledTimerWithTimeInterval:0.01 //10ms
-											 target:self 
-										   selector:@selector(topHorloge) 
-										   userInfo:nil 
-											repeats:YES];
-	timermouvement = timer;
-}
-
-
-- (void)topHorloge{
-    
-    //CHECK SCREEN
-	[self checkScreen];
-    
-    //UPDATE MOVIE SCROLLER
-    if(movieIsPlaying && !userViewController.timeSlider.touchInside){
-        userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
-        userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
-    }
-    if (movieIsPlaying && userViewController.timeSlider.touchInside) {
-        [moviePlayer setCurrentPlaybackTime:(double)userViewController.timeSlider.value];
-    }
-	
-	//STOP VIDEO IF NO SCREEN
-	if (screenState == @"noscreen") [self stopMovie];
-	
-    //RE LAUNCH VIDEO IF PAUSED (debug streaming)
-    if (streamingMode) [self.moviePlayer play];  //TODO, check player state to know if it is usefull..
-    
-    //SCHEDULED ORDERS
-    //play movie
-	if (gomovie) {
-        [self playMovie];
-		[self sendSync];	
-        stopmovie=NO;
-		gomovie=NO;
-	}   
-    //stop movie
-	if (stopmovie){
-        [self stopMovie];
-		[self sendSync];
-        stopmovie=NO;
-	}
-    //mute
-    if (gomute) {
-		[self muteMovie:muted];
-        [self sendSync];
-        gomute=NO;
-    }
-    //fade / unfade to color
-    if (gofade) {
-		[self fadeMovie:faded];
-        [self sendSync];
-        gofade=NO;
-    }
-    //white flash
-    if (goflash) {
-        [self flashMovie];
-        goflash=NO;
-    }
-    //message
-    if (gomessage) {
-        [userViewController setMessage:message];
-        gomessage=NO;
-    }
-    
-    //UPDATE PLAYER STATE
-    if (muted) playerState = @"muted";
-    else if (faded) playerState = @"faded";
-    else if (movieIsPlaying) 
-    {
-        if(streamingMode) playerState = @"streaming";
-        else playerState = @"playing";
-    }
-    else playerState = @"waiting";
-    
-    //UPDATE DISPLAY STATE
-    [self infoX:playerState];
-    [userViewController setMovieTitle:remotemoviename];
-}
-
-//###########################################################
-// OSC EXECUTION
-
-//treat oscmessage when received
-- (void) receivedOSCMessage: 	(OSCMessage *)  	m	{
-	NSString * a = [m address];
-    
-    //SYNC : mode, state, args (movie, time, ...)
-	if ([a isEqualToString: @"/synctest"]) {
-		[self sendSync];
-        return;
-	}
-    
-    //INIT INFO : ip, media list
-	if ([a isEqualToString: @"/fullsynctest"]) {
-		[self sendInfo];
-        return;
-	}
-    
-    //PLAY MOVIE
-	if ([a isEqualToString: @"/playmovie"]) {
-		streamingMode = NO;
-        [self initGoMovieWithName : [[m value] stringValue]];
-        return;
-    }
-    
-    //PLAY MOVIE
-	if ([a isEqualToString: @"/playstream"]) {
-		streamingMode = YES;
-        [self initGoMovieWithName : [[m value] stringValue]];
-        return;
-    }
-    
-    //SKIP AT TIME
-	if ([a isEqualToString: @"/attime"]) {
-        [self skipMovie:m];
-        [self sendSync];
-        return;
-    }
-    
-    //STOP MOVIE
-	if ([a isEqualToString: @"/stopmovie"]) {
-		stopmovie = YES;
-        return;
-    }
-    
-    //MUTE
-    if ([a isEqualToString: @"/mute"]) {
-		muted = YES;
-        gomute = YES;
-        return;
-    }
-    
-    //UNMUTE
-    if ([a isEqualToString: @"/unmute"]) {
-		muted = NO;
-        gomute = YES;
-        return;
-    }
-    
-    //FADE to color (RGBA 8bit)
-    if ([a isEqualToString: @"/fade"]) {
-        fadecolorRed = [[m valueAtIndex:0] intValue];
-        fadecolorGreen = [[m valueAtIndex:1] intValue];
-        fadecolorBlue = [[m valueAtIndex:2] intValue];
-        fadecolorAlpha = 255;
-        if ([m valueAtIndex:3] != NULL) 
-            fadecolorAlpha = [[m valueAtIndex:3] intValue];
-        
-        faded = YES;
-        gofade = YES;
-        return;
-    }
-    
-    //UNFADE
-    if ([a isEqualToString: @"/unfade"]) {
-        faded = NO;
-        gofade = YES;
-        return;
-    }
-
-    //FLASH color (RGBA 8bit)
-    if ([a isEqualToString: @"/flash"]) {
-		flashcolorRed = 255;
-        flashcolorGreen = 255;
-        flashcolorBlue = 255;
-        flashcolorAlpha = 255;
-        
-        if ([m valueAtIndex:2] != NULL) {
-            flashcolorRed = [[m valueAtIndex:0] intValue];
-            flashcolorGreen = [[m valueAtIndex:1] intValue];
-            flashcolorBlue = [[m valueAtIndex:2] intValue];
-        }
-        if ([m valueAtIndex:3] != NULL) 
-            flashcolorAlpha = [[m valueAtIndex:3] intValue];
-   
-        goflash=YES;
-        return;
-    }
-    
-    //DISPLAY MESSAGE
-    if ([a isEqualToString: @"/message"]) {
-        self.message= [[[m value ] stringValue]copy];
-        gomessage=YES;
-        return;
-    }
-    
-    //UNKNOW ORDER
-    OSCMessage *newMsg = [OSCMessage createWithAddress:@"/problem"];
-    [newMsg addString:@"bad request : "];
-    [newMsg addString:a];
-    [outPort sendThisMessage:newMsg];
-}
-
-//###########################################################
 // PLAYER UTILITIES
 
 -(void) initGoMovieWithName:(NSString*)n {
     if ([n length]>=1){
-        gomovie = YES;
         //Streaming
         if (streamingMode) self.remotemoviename = n;
         //Local
@@ -548,6 +534,44 @@
 
 -(void) disableStreaming{
     streamingMode = NO;
+}
+
+//###########################################################
+//FILES MANAGER
+
+//MEDIA list
+-(void)listMedia{
+    //les vidéos sont dorénavent a placer dans le dossier Documents de l'App KXKM
+    //ne pas activer icloud sous peine de synchronisation des vidéos (ralentissement)
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);  
+    pathformovie = [[paths objectAtIndex:0] copy];
+    
+    //simulator path (dev only)
+    NSString *platform = [self platform];
+    if ([platform isEqualToString:@"i386"]) pathformovie = @"/Media/Video/";
+    
+    //list compatible video files
+    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"m4v", nil];
+    NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathformovie error:nil];
+    mediaList = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
+    
+    //liste les prefix des vidéos
+    NSMutableArray *prefix_list;
+    prefix_list = [[NSMutableArray alloc]init]; 
+    NSString *s = @"";
+    for (NSString *movies in mediaList){
+        NSArray *a = [movies componentsSeparatedByString:@"_"];
+        NSString *prefix = [a objectAtIndex:0];
+        if (![s isEqualToString:prefix]) {
+            s=[prefix copy];
+            [prefix_list addObject:[s copy]];
+        }
+    }
+    
+    //VUE update media list
+    tableViewController.section_list = [prefix_list copy];
+    tableViewController.moviesList = [mediaList copy];
+    [tableViewController.moviesTable reloadData];
 }
 
 
@@ -599,6 +623,12 @@
             fadeview.backgroundColor = [UIColor blackColor];
             fadeview.alpha=0;
             [_secondWindow addSubview:fadeview];
+            
+            //Create Masks (flashview)
+            titlesview = [[UIView alloc] initWithFrame:screenBounds];
+            titlesview.backgroundColor = [UIColor clearColor];
+            titlesview.alpha=1;
+            [_secondWindow addSubview:titlesview];
             
             //Create Masks (flashview)
             flashview = [[UIView alloc] initWithFrame:screenBounds];

@@ -54,7 +54,7 @@
     NSString *prefix = [section_list objectAtIndex:indexPath.section];
     NSString *t = @"_";
     NSString *selecteur = [prefix stringByAppendingString:t];
-    NSLog(selecteur);
+    //NSLog(selecteur);
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@",selecteur];
     NSArray *selected_movieList = [moviesList filteredArrayUsingPredicate:pred];
     
