@@ -2,7 +2,7 @@
 //  remoteplayv2TableViewController.m
 //  remoteplayv2
 //
-//  Created by Pierre Hoezelle, Thomas Bohl, Jeremie Forge
+//  Created by Pierre Hoezelle and Thomas Bohl
 //  Copyright 2011 KXKM. Creative Commons BY-NC-SA.
 //
 
@@ -11,28 +11,17 @@
 
 @implementation remoteplayv2TableViewController
 
-@synthesize moviesList,section_list,moviesTable;
+@synthesize moviesList,test,moviesTable;
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
     // There is only one section.
-    return [section_list count];
-}
-
-- (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section {
-	return [section_list objectAtIndex:section];
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of time zone names.
-    NSInteger count=0;
-    for (NSString *movie in moviesList) {
-        if([[movie substringToIndex:[[section_list objectAtIndex:section]length]]isEqualToString:[section_list objectAtIndex:section]]){
-            count++;
-        }
-    }
-    return count;
+    return [moviesList count];
 }
 
 
@@ -51,15 +40,7 @@
     }
     
     // Set up the cell.
-    NSString *prefix = [section_list objectAtIndex:indexPath.section];
-    NSString *t = @"_";
-    NSString *selecteur = [prefix stringByAppendingString:t];
-    //NSLog(selecteur);
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@",selecteur];
-    NSArray *selected_movieList = [moviesList filteredArrayUsingPredicate:pred];
-    
-    
-    NSString *movieName = [selected_movieList objectAtIndex:indexPath.row];
+    NSString *movieName = [moviesList objectAtIndex:indexPath.row];
     cell.textLabel.text = movieName;
     
     return cell;
@@ -71,20 +52,21 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [moviesList objectAtIndex:indexPath.row];
     [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m];    
+    [appDelegate initGoMovieWithName:m];
+    [appDelegate enableGoMovie];
 }
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    
+     
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
     return self;
     moviesList = [[NSMutableArray alloc] init];
-    
+   
     
 }
 

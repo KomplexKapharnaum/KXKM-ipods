@@ -17,13 +17,12 @@
 @synthesize _secondWindow;
 @synthesize blackview, fadeview, flashview, titlesview;
 @synthesize tabBarController;
-@synthesize moviePlayer;
+@synthesize moviePlayer,mPlayer;
 @synthesize manager;
 @synthesize outPort;
-@synthesize movieURL;
 @synthesize timermouvement;
 @synthesize remotemoviepath;
-@synthesize pathformovie, mediaList;
+@synthesize pathformovie;
 @synthesize remotemoviename,screenstate,playerstate,message,customTitles;
 @synthesize gomovie,stopmovie,gomute,gofade,goflash,gomessage,gotitles;
 @synthesize movieIsPlaying,streamingMode;
@@ -101,7 +100,8 @@
 	
     //APP init       
         //list media
-        [self listMedia];
+        tableViewController.moviesList = [[self listMedia] copy];
+        [tableViewController.moviesTable reloadData];
     
         //set up the timer
         [self topDepartMouvement: timermouvement];
@@ -128,11 +128,15 @@
 -(void)sendInfo{
     OSCMessage *newMsg = [self oscNewMsg:@"initinfo"];
     [newMsg addString:[self getIPAddress]];
-    for (NSString *movies in mediaList) 
-        [newMsg addString:movies];
-    
-    
     [outPort sendThisMessage:newMsg];
+    
+    NSArray * mediaList = [self listMedia];
+    for (NSString *movies in mediaList) {
+        newMsg = [self oscNewMsg:@"fileinfo"];
+        [newMsg addString:movies];
+        [outPort sendThisMessage:newMsg];
+    }
+    
 }
 
 	
@@ -169,7 +173,7 @@
 
 
 //###########################################################
-// OSC EXECUTION
+// OSC RECEIVER
 
 //treat oscmessage when received
 - (void) receivedOSCMessage: 	(OSCMessage *)  	m	{
@@ -321,7 +325,7 @@
     //RE LAUNCH VIDEO IF PAUSED (debug streaming)
     //TODO, check player state to know if it is usefull..
     //TODO ADD Observer !
-    if (streamingMode) [self.moviePlayer play];  
+    //if (streamingMode) [self.moviePlayer play];  
     
     //SCHEDULED ORDERS
     //play movie
@@ -405,34 +409,40 @@
     // File url
     else mymovieURL = [NSURL fileURLWithPath:self.remotemoviepath];
     
-    MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:mymovieURL];
-    mp.movieSourceType = MPMovieSourceTypeFile;
-    playerState = @"loading movie";
-    if (mp) {
-        //init player
-        [mp prepareToPlay];
-        mp.controlStyle = MPMovieControlStyleNone;
-        mp.repeatMode = MPMovieRepeatModeOne;
-        
-        //set player on second screen
-        [[mp view] setFrame: [_secondWindow bounds]];
-        [_secondWindow insertSubview:[mp view] belowSubview:blackview];
-        
-        // Play the movie!
-        [self stopMovie];  //stop previous
-        self.moviePlayer = mp; //attach new player
-        [self.moviePlayer play]; //play
-        
-        //add observers
-        [self installMovieNotificationObservers];
-        movieIsPlaying = YES;
-        
-        //keep mute state
+    if (movieIsPlaying) {
+        self.moviePlayer.contentURL = mymovieURL;
         [self muteMovie:muted];
+    }
+    else {     
+        MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:mymovieURL];
+        mp.movieSourceType = MPMovieSourceTypeFile;
+        playerState = @"loading movie";
+        if (mp) {
+            //init player
+            [mp prepareToPlay];
+            mp.controlStyle = MPMovieControlStyleNone;
+            mp.repeatMode = MPMovieRepeatModeOne;
         
-        //init slider
-        userViewController.timeSlider.continuous=NO;
-        userViewController.timeSlider.minimumValue=0.0;
+            //set player on second screen
+            [[mp view] setFrame: [_secondWindow bounds]];
+            [_secondWindow insertSubview:[mp view] belowSubview:blackview];
+        
+            // Play the movie!
+            [self stopMovie];  //stop previous
+            self.moviePlayer = mp; //attach new player
+            [self.moviePlayer play]; //play
+        
+            //add observers
+            [self installMovieNotificationObservers];
+            movieIsPlaying = YES;
+        
+            //keep mute state
+            [self muteMovie:muted];
+        
+            //init slider
+            userViewController.timeSlider.continuous=NO;
+            userViewController.timeSlider.minimumValue=0.0;
+        }
     }
 }
 
@@ -442,6 +452,34 @@
         [self.moviePlayer stop];
         [self removeMovieNotificationHandlers];
         [self.moviePlayer release];
+        movieIsPlaying = NO;
+        playerState = @"waiting";
+    }
+}
+
+//PLAY with AVFoundation Player
+-(void) playMovieAVF{
+    
+    ///NOT WORKING !!!!!!
+    
+    NSURL *movieURL;
+    
+    //Streaming URL
+    if(streamingMode) movieURL = [NSURL URLWithString:self.remotemoviename];
+    // File url
+    else movieURL = [NSURL fileURLWithPath:self.remotemoviepath];
+    
+    self.mPlayer = [AVPlayer playerWithURL:movieURL];
+    [[_secondWindow layer] addSublayer:[AVPlayerLayer playerLayerWithPlayer:mPlayer]];
+}
+
+//STOP with AVFoundation Player
+-(void) stopMovieAVF{
+    
+    ///NOT WORKING !!!!!!
+    
+    if(movieIsPlaying){
+        [self.mPlayer release];
         movieIsPlaying = NO;
         playerState = @"waiting";
     }
@@ -507,13 +545,15 @@
 
 -(void) initGoMovieWithName:(NSString*)n {
     if ([n length]>=1){
-        //Streaming
-        if (streamingMode) self.remotemoviename = n;
-        //Local
-        else {
+        
+        self.remotemoviename = n;
+        
+        //Local File
+        if (!streamingMode) {
             self.remotemoviename = n;
             self.remotemoviepath = [self.pathformovie stringByAppendingString:@"/"];
             self.remotemoviepath = [self.remotemoviepath stringByAppendingString:n];
+            
             //set next button
             if ([tableViewController.moviesList lastObject]!=n) {
                 [userViewController setNextTitle:[tableViewController.moviesList objectAtIndex:1 + [tableViewController.moviesList indexOfObject:n]]];
@@ -521,6 +561,7 @@
             }else{
                 userViewController.nextButton.hidden=YES;
             }
+            
             //set back button
             if ([tableViewController.moviesList objectAtIndex:0]!=n) {
                 [userViewController setBackTitle:[tableViewController.moviesList objectAtIndex: [tableViewController.moviesList indexOfObject:n]-1]];
@@ -536,11 +577,15 @@
     streamingMode = NO;
 }
 
+-(void) enableGoMovie{
+    gomovie = YES;
+}
+
 //###########################################################
 //FILES MANAGER
 
 //MEDIA list
--(void)listMedia{
+- (NSArray *)listMedia{
     //les vidéos sont dorénavent a placer dans le dossier Documents de l'App KXKM
     //ne pas activer icloud sous peine de synchronisation des vidéos (ralentissement)
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);  
@@ -551,27 +596,11 @@
     if ([platform isEqualToString:@"i386"]) pathformovie = @"/Media/Video/";
     
     //list compatible video files
-    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"m4v", nil];
+    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"mov", @"m4v", nil];
     NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathformovie error:nil];
-    mediaList = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
+    NSArray *mediaList = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
     
-    //liste les prefix des vidéos
-    NSMutableArray *prefix_list;
-    prefix_list = [[NSMutableArray alloc]init]; 
-    NSString *s = @"";
-    for (NSString *movies in mediaList){
-        NSArray *a = [movies componentsSeparatedByString:@"_"];
-        NSString *prefix = [a objectAtIndex:0];
-        if (![s isEqualToString:prefix]) {
-            s=[prefix copy];
-            [prefix_list addObject:[s copy]];
-        }
-    }
-    
-    //VUE update media list
-    tableViewController.section_list = [prefix_list copy];
-    tableViewController.moviesList = [mediaList copy];
-    [tableViewController.moviesTable reloadData];
+    return mediaList;
 }
 
 

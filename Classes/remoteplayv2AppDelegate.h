@@ -13,6 +13,7 @@
 #import <VVOSC/VVOSC.h>
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
 
 
 @interface remoteplayv2AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate > {
@@ -43,8 +44,7 @@
     NSTimer *timermouvement;
 	//movie
 	MPMoviePlayerController *moviePlayer;
-    MPMoviePlayerController *futurePlayer;
-	NSURL *movieURL;
+    AVPlayer* mPlayer;
     int fadeColor;
     BOOL muted;
     BOOL faded;
@@ -61,7 +61,7 @@
     BOOL gomessage;
     BOOL gotitles;
     //détails instructions
-    NSArray *mediaList;
+//    NSArray *mediaList;
 	NSString *pathformovie;
 	NSString *remotemoviepath;
 	NSString *remotemoviename;
@@ -92,8 +92,9 @@
 @property (readwrite, retain) OSCOutPort *outPort;
 
 @property (readwrite, retain) MPMoviePlayerController *moviePlayer;
-@property (nonatomic, retain) NSURL *movieURL;
-@property (nonatomic, retain) NSArray *mediaList;
+@property (readwrite, retain) AVPlayer* mPlayer;
+
+//@property (nonatomic, retain) NSArray *mediaList;
 @property (nonatomic,retain) NSTimer *timermouvement;
 
 @property (nonatomic,retain) NSString *pathformovie;
@@ -106,7 +107,6 @@
 @property (nonatomic,retain) NSString *customTitles;
 
 
-//@property (nonatomic) BOOL goload;
 @property (nonatomic) BOOL gomovie;
 @property (nonatomic) BOOL stopmovie;
 @property (nonatomic) BOOL movieIsPlaying;
@@ -124,7 +124,7 @@
 
 //utilities
 - (void) checkScreen;
-- (void) listMedia;
+- (NSArray *) listMedia;
 
 //fonction boucle et son initialisation
 - (void) topHorloge;
@@ -133,7 +133,9 @@
 //PLAYER CONTROLS
 //-(void) loadMovie;
 -(void) playMovie;
+-(void) playMovieAVF;
 -(void) stopMovie;
+-(void) stopMovieAVF;
 -(void) skipMovie:(OSCMessage *)attime;
 -(void) fadeMovie:(BOOL)fadeMe;
 -(void) flashMovie;
@@ -142,7 +144,6 @@
 //OSC functions
 - (OSCMessage*) oscNewMsg: (NSString*)state;
 - (void) receivedOSCMessage: 		(OSCMessage *)  	m;
-- (void) treatReceivedOSCMessage: 	(OSCMessage *)  	m;
 
 //debug
 - (void) debug : (NSString*) s;
@@ -153,6 +154,7 @@
 
 //manage movie functions 
 -(void) disableStreaming;
+-(void) enableGoMovie;
 -(void) initGoMovieWithName:(NSString*)n ;
 -(void) installMovieNotificationObservers;
 -(void) removeMovieNotificationHandlers;

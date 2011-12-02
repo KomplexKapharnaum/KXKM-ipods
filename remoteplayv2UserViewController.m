@@ -51,6 +51,7 @@
     NSString *m = [nextButton titleForState:UIControlStateNormal];
     [appDelegate disableStreaming];
     [appDelegate initGoMovieWithName:m];
+    [appDelegate enableGoMovie];
 }
 
 //vidéo précedente
@@ -59,6 +60,7 @@
     NSString *m = [backButton titleForState:UIControlStateNormal];
     [appDelegate disableStreaming];
     [appDelegate initGoMovieWithName:m];
+    [appDelegate enableGoMovie];
 }
 
 //défilement

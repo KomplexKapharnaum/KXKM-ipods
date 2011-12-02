@@ -2,7 +2,7 @@
 //  remoteplayv2TableViewController.h
 //  remoteplayv2
 //
-//  Created by Pierre Hoezelle, Thomas Bohl, Jeremie Forge
+//  Created by Pierre Hoezelle and Thomas Bohl
 //  Copyright 2011 KXKM. Creative Commons BY-NC-SA.
 //
 
@@ -14,11 +14,11 @@
     //list des fichier présent dans le dossier document de l'app (upload via iexplorer)
     NSArray *moviesList;
     
-    NSMutableArray *section_list;
+    NSArray *test;
 }
 
 @property (readwrite,retain) IBOutlet UITableView *moviesTable;
 @property (readwrite,retain) NSArray *moviesList;
-@property (readwrite,retain) NSMutableArray *section_list;
+@property (readwrite,retain) NSArray *test;
 
 @end

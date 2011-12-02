@@ -15,6 +15,7 @@
 - (void)setInfoText:(NSString*)text {
 	self.info.text = text;
 }
+
 - (void)setInfoscreenText:(NSString*)text;	{
 	self.infoscreen.text = text;
 }
