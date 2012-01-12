@@ -52,8 +52,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [moviesList objectAtIndex:indexPath.row];
     [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m];
-    [appDelegate enableGoMovie];
+    [appDelegate initGoMovieWithName:m:YES];
 }
 
 

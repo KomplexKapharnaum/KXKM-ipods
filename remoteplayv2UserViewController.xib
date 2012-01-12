@@ -129,6 +129,7 @@
 						<string key="NSFrame">{{230, 354}, {72, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -252,6 +253,27 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">F</string>
+						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="696282691"/>
+						<reference key="IBUIFontDescription" ref="182080511"/>
+						<reference key="IBUIFont" ref="298345485"/>
+					</object>
+					<object class="IBUIButton" id="748312010">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{230, 205}, {72, 41}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">MIRE</string>
 						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -424,6 +446,15 @@
 					</object>
 					<int key="connectionID">32</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">mirSwitch:</string>
+						<reference key="source" ref="748312010"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">36</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -446,6 +477,7 @@
 							<reference ref="869827606"/>
 							<reference ref="331144021"/>
 							<reference ref="279930558"/>
+							<reference ref="748312010"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -505,6 +537,11 @@
 						<reference key="object" ref="279930558"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">35</int>
+						<reference key="object" ref="748312010"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -520,6 +557,7 @@
 				<string key="25.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="31.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="7.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -528,7 +566,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">34</int>
+			<int key="maxID">36</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -541,6 +579,7 @@
 						<string key="flash:">id</string>
 						<string key="goBack:">id</string>
 						<string key="goNext:">id</string>
+						<string key="mirSwitch:">id</string>
 						<string key="muting:">id</string>
 						<string key="mutingAndPause:">id</string>
 						<string key="slide:">id</string>
@@ -567,6 +606,10 @@
 							<string key="name">goNext:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="mirSwitch:">
+							<string key="name">mirSwitch:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="muting:">
 							<string key="name">muting:</string>
 							<string key="candidateClassName">id</string>
@@ -589,6 +632,7 @@
 						<string key="fadeBlackButton">UIButton</string>
 						<string key="fadeWhiteButton">UIButton</string>
 						<string key="messageRegie">UILabel</string>
+						<string key="mirButton">UIButton</string>
 						<string key="muteButton">UIButton</string>
 						<string key="nextButton">UIButton</string>
 						<string key="timeSlider">UISlider</string>
@@ -609,6 +653,10 @@
 						<object class="IBToOneOutletInfo" key="messageRegie">
 							<string key="name">messageRegie</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mirButton">
+							<string key="name">mirButton</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="muteButton">
 							<string key="name">muteButton</string>

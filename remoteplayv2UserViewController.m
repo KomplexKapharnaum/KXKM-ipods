@@ -11,22 +11,19 @@
 
 @implementation remoteplayv2UserViewController
 
-@synthesize muteButton,nextButton,backButton,timeSlider,fadeBlackButton,messageRegie;
+@synthesize muteButton,nextButton,backButton,timeSlider,fadeBlackButton,fadeWhiteButton,mirButton,messageRegie;
 
 //mute ou unmute la sortie vidéo (vue avec un cache noir devant la vidéo)
 -(IBAction)muting:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    if (mute) {
-        [appDelegate.moviePlayer play];
-        appDelegate.blackview.alpha=0;
+    
+    if (appDelegate.muted) {
+        [appDelegate muteMovie:NO];
         [self setMuteButtonColor:[UIColor greenColor]];
         [fadeBlackButton setTitle:@">B" forState:UIControlStateNormal];
-        mute=NO;
     }else{
-        appDelegate.blackview.backgroundColor=[UIColor blackColor];
-        appDelegate.blackview.alpha=1;
+        [appDelegate muteMovie:YES];
         [self setMuteButtonColor:[UIColor orangeColor]];
-        mute=YES;
     }
     [appDelegate sendSync];
 }
@@ -38,8 +35,8 @@
 //double click = mute and pause
 - (IBAction)mutingAndPause:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    appDelegate.blackview.backgroundColor=[UIColor blackColor];
-    appDelegate.blackview.alpha=1;
+    appDelegate.muteview.backgroundColor=[UIColor blackColor];
+    appDelegate.muteview.alpha=1;
     [self setMuteButtonColor:[UIColor redColor]];
     mute=YES;
     [appDelegate.moviePlayer pause];
@@ -50,8 +47,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [nextButton titleForState:UIControlStateNormal];
     [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m];
-    [appDelegate enableGoMovie];
+    [appDelegate initGoMovieWithName:m:YES];
 }
 
 //vidéo précedente
@@ -59,8 +55,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [backButton titleForState:UIControlStateNormal];
     [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m];
-    [appDelegate enableGoMovie];
+    [appDelegate initGoMovieWithName:m:YES];
 }
 
 //défilement
@@ -74,10 +69,10 @@
 - (IBAction)fadeBlack:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(!mute){
-        appDelegate.blackview.backgroundColor=[UIColor blackColor];
+        appDelegate.muteview.backgroundColor=[UIColor blackColor];
         [UIView beginAnimations:@"fadetoblack" context:NULL];
         [UIView setAnimationDuration:1.5];
-        appDelegate.blackview.alpha=1;
+        appDelegate.muteview.alpha=1;
         [UIView commitAnimations];
         mute=YES;
         [self setMuteButtonColor:[UIColor orangeColor]];
@@ -85,7 +80,7 @@
     }else{
         [UIView beginAnimations:@"unfadetoblack" context:NULL];
         [UIView setAnimationDuration:1.5];
-        appDelegate.blackview.alpha=0;
+        appDelegate.muteview.alpha=0;
         [UIView commitAnimations];
         [self setMuteButtonColor:[UIColor greenColor]];
         mute=NO;
@@ -98,10 +93,10 @@
 - (IBAction)fadeWhite:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(!mute){
-        appDelegate.blackview.backgroundColor=[UIColor whiteColor];
+        appDelegate.muteview.backgroundColor=[UIColor whiteColor];
         [UIView beginAnimations:@"fadetowhite" context:NULL];
         [UIView setAnimationDuration:1.5];
-        appDelegate.blackview.alpha=1;
+        appDelegate.muteview.alpha=1;
         [UIView commitAnimations];
         mute=YES;
         [self setMuteButtonColor:[UIColor yellowColor]];
@@ -109,7 +104,7 @@
     }else{
         [UIView beginAnimations:@"unfadetowhite" context:NULL];
         [UIView setAnimationDuration:1.5];
-        appDelegate.blackview.alpha=0;
+        appDelegate.muteview.alpha=0;
         [UIView commitAnimations];
         [self setMuteButtonColor:[UIColor greenColor]];
         mute=NO;
@@ -118,14 +113,21 @@
     [appDelegate sendSync];
 }
 
+//switch mir
+- (IBAction)mirSwitch:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [appDelegate mirMovie:!appDelegate.mired];
+}
+
 //flash
 - (IBAction)flash:(id)sender{
         remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    appDelegate.blackview.backgroundColor=[UIColor whiteColor];
-    appDelegate.blackview.alpha=1;
+    appDelegate.muteview.backgroundColor=[UIColor whiteColor];
+    appDelegate.muteview.alpha=1;
     [UIView beginAnimations:@"flash" context:NULL];
     [UIView setAnimationDuration:0.35];
-    appDelegate.blackview.alpha=0;
+    appDelegate.muteview.alpha=0;
     [UIView commitAnimations];
 }
 

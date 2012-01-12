@@ -14,18 +14,19 @@
 @implementation remoteplayv2AppDelegate
 
 @synthesize window;
-@synthesize _secondWindow;
-@synthesize blackview, fadeview, flashview, titlesview;
+@synthesize _secondWindow, layerAVF;
+@synthesize playerview, player1view, player2view, muteview, fadeview, flashview, titlesview, mirview;
 @synthesize tabBarController;
-@synthesize moviePlayer,mPlayer;
+@synthesize moviePlayer,playerAVF;
 @synthesize manager;
 @synthesize outPort;
 @synthesize timermouvement;
 @synthesize remotemoviepath;
 @synthesize pathformovie;
-@synthesize remotemoviename,screenstate,playerstate,message,customTitles;
-@synthesize gomovie,stopmovie,gomute,gofade,goflash,gomessage,gotitles;
-@synthesize movieIsPlaying,streamingMode;
+@synthesize remotemoviename,screenstate,playerstate,message,customTitles,movieLast;
+@synthesize gomovie,gopause,gostop,gomute,gofade,goflash,gomessage,gotitles;
+@synthesize muted,faded,paused,mired;
+@synthesize streamingMode,createPlayer,useAVF,usePlayer1,releasePlayer;
 
 
 
@@ -80,9 +81,11 @@
     //APP Info and States
         //initiatisations ordres
         gomovie = NO;
-        stopmovie = NO;
-        movieIsPlaying = NO;
-    
+        gostop = NO;
+        createPlayer = YES;
+        useAVF = YES;
+        usePlayer1 = YES;
+        releasePlayer = 0;
         
         //initiatisations états
         playerMode = @"auto"; 
@@ -91,8 +94,9 @@
         remotemoviename = @"";
         muted = NO;
         faded = NO;
+        paused = NO;
+        mired = YES;
         
-    
         //display info
         [viewController setInfoscreenText: @"Warning no second screen"];
         [viewController setInfoipText: [@"IP : " stringByAppendingString: [self getIPAddress]]];
@@ -108,7 +112,6 @@
 	
         //Send a initial info on app startup
         [self sendInfo];
-    
     
 	//end of startup
     return YES;
@@ -167,8 +170,13 @@
 
 
 //INFO (state box info)
--(void) infoX:(NSString*)msg{
+-(void) infoState:(NSString*)msg{
     [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoText:msg];
+}
+
+//INFO (state box info)
+-(void) infoMovie:(NSString*)msg{
+    [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoMovieText:msg];
 }
 
 
@@ -194,29 +202,59 @@
     //LOAD & PLAY MOVIE
 	if (([a isEqualToString: @"/loadmovie"]) || ([a isEqualToString: @"/playmovie"])) {
         streamingMode = NO;
-        [self initGoMovieWithName : [[m value] stringValue]];
-        if ([a isEqualToString: @"/playmovie"]) gomovie = YES;
+        useAVF = NO;
+        [self initGoMovieWithName : [[m value] stringValue] : [a isEqualToString: @"/playmovie"]];
         return;
     }
     
     //LOAD & PLAY STREAM
 	if (([a isEqualToString: @"/loadstream"]) || ([a isEqualToString: @"/playstream"])) {
 		streamingMode = YES;
-        [self initGoMovieWithName : [[m value] stringValue]];
-        if ([a isEqualToString: @"/playstream"]) gomovie = YES;
+        useAVF = NO;
+        [self initGoMovieWithName : [[m value] stringValue] : [a isEqualToString: @"/playstream"]];
+        return;
+    }
+    
+    //PLAY MOVIE AVF
+	if ([a isEqualToString: @"/playmovieAVF"]) {
+        streamingMode = NO;
+        useAVF = YES;
+        [self initGoMovieWithName : [[m value] stringValue] : YES];
+        return;
+    }
+    
+    //PLAY STREAM AVF
+	if ([a isEqualToString: @"/playstreamAVF"]) {
+		streamingMode = YES;
+        useAVF = YES;
+        [self initGoMovieWithName : [[m value] stringValue] : YES];
         return;
     }
     
     //SKIP AT TIME
 	if ([a isEqualToString: @"/attime"]) {
-        [self skipMovie:m];
+        [self skipMovie:[[m value] intValue]];
         [self sendSync];
         return;
     }
     
     //STOP MOVIE
 	if ([a isEqualToString: @"/stopmovie"]) {
-		stopmovie = YES;
+		gostop = YES;
+        return;
+    }
+    
+    //PAUSE
+    if ([a isEqualToString: @"/pause"]) {
+        gopause = YES;
+        paused = YES;
+        return;
+    }
+    
+    //UNPAUSE
+    if ([a isEqualToString: @"/unpause"]) {
+        gopause = YES;
+        paused = NO;
         return;
     }
     
@@ -256,16 +294,24 @@
     }
     
     //FADE to color (RGBA 8bit)
-    if ([a isEqualToString: @"/fade"]) {
-        fadecolorRed = [[m valueAtIndex:0] intValue];
-        fadecolorGreen = [[m valueAtIndex:1] intValue];
-        fadecolorBlue = [[m valueAtIndex:2] intValue];
-        fadecolorAlpha = 255;
-        if ([m valueAtIndex:3] != NULL) 
-            fadecolorAlpha = [[m valueAtIndex:3] intValue];
+    if ([a isEqualToString: @"/flash"]) {
+        if ([m valueAtIndex:2] != NULL) 
+        {    
+            flashcolorRed = [[m valueAtIndex:0] intValue];
+            flashcolorGreen = [[m valueAtIndex:1] intValue];
+            flashcolorBlue = [[m valueAtIndex:2] intValue];
+            flashcolorAlpha = 255;
+            if ([m valueAtIndex:3] != NULL) 
+                flashcolorAlpha = [[m valueAtIndex:3] intValue];
+        }
+        else {
+            flashcolorRed = 255;
+            flashcolorGreen = 255;
+            flashcolorBlue = 255;
+            flashcolorAlpha = 255;
+        }
         
-        faded = YES;
-        gofade = YES;
+        goflash = YES;
         return;
     }
     
@@ -273,6 +319,26 @@
     if ([a isEqualToString: @"/titles"]) {
         self.customTitles = [[[m value ] stringValue]copy];
         gotitles=YES;
+        return;
+    }
+    
+    //CHANGE TEXT COLOR
+    if ([a isEqualToString: @"/titlescolor"]) {
+        if ([m valueAtIndex:2] != NULL) 
+        {    
+            titlescolorRed = [[m valueAtIndex:0] intValue];
+            titlescolorGreen = [[m valueAtIndex:1] intValue];
+            titlescolorBlue = [[m valueAtIndex:2] intValue];
+            titlescolorAlpha = 255;
+            if ([m valueAtIndex:3] != NULL) 
+                titlescolorAlpha = [[m valueAtIndex:3] intValue];
+        }
+        else {
+            titlescolorRed = 0;
+            titlescolorGreen = 0;
+            titlescolorBlue = 0;
+            titlescolorAlpha = 1;
+        }
         return;
     }
     
@@ -311,12 +377,12 @@
 	[self checkScreen];
     
     //UPDATE MOVIE SCROLLER
-    if(movieIsPlaying && !userViewController.timeSlider.touchInside){
-        userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
-        userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
-    }
-    if (movieIsPlaying && userViewController.timeSlider.touchInside) {
-        [moviePlayer setCurrentPlaybackTime:(double)userViewController.timeSlider.value];
+    if (!createPlayer) {
+        if(!userViewController.timeSlider.touchInside){
+            userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
+            userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
+        }
+        else [moviePlayer setCurrentPlaybackTime:(double)userViewController.timeSlider.value];
     }
 	
 	//STOP VIDEO IF NO SCREEN
@@ -330,17 +396,25 @@
     //SCHEDULED ORDERS
     //play movie
 	if (gomovie) {
-        [self playMovie];
-		[self sendSync];	
-        stopmovie=NO;
+        if (useAVF) [self playMovieAVF];
+        else [self playMovie];		
+        [self sendSync];	
+        gostop=NO;
 		gomovie=NO;
-	}   
+	}
+    
     //stop movie
-	if (stopmovie){
+	if (gostop) {
         [self stopMovie];
 		[self sendSync];
-        stopmovie=NO;
+        gostop=NO;
 	}
+    //pause
+    if (gopause) {
+        [self pauseMovie];
+        [self sendSync];
+        gopause=NO;
+    }
     //mute
     if (gomute) {
 		[self muteMovie:muted];
@@ -360,19 +434,29 @@
     }
     
     //titles : add text
-    if (gotitles) {        
-        CGSize        stringSize = [customTitles sizeWithFont:[UIFont systemFontOfSize:18]];
-        CGRect        labelSize = CGRectMake((_secondWindow.screen.bounds.size.width - stringSize.width) / 2.0,
-                                             (_secondWindow.screen.bounds.size.height - stringSize.height) / 2.0,
-                                             stringSize.width, stringSize.height);
+    if (gotitles) {
+        //suppress all titlesview subviews (sinon les titrages s'empilent)
+        //for (UIView *titlesview in [self.titlesview subviews]) { [titlesview removeFromSuperview]; }
+        for (UIView *tview in [self.titlesview subviews]) { [tview removeFromSuperview]; }
         
-        UILabel* noContentLabel = [[UILabel alloc] initWithFrame:labelSize];
-        noContentLabel.textColor = [UIColor redColor];
-        noContentLabel.backgroundColor = [UIColor clearColor];
-        noContentLabel.text = customTitles;
-        noContentLabel.font = [UIFont systemFontOfSize:18];
-
-        [self.titlesview addSubview:noContentLabel];
+        float r = (float)titlescolorRed/255;
+        float g = (float)titlescolorGreen/255;
+        float b = (float)titlescolorBlue/255;
+        float a = (float)titlescolorAlpha/255;
+        
+        
+        CGSize stringSize = [customTitles sizeWithFont:[UIFont systemFontOfSize:80]]; 
+        CGRect labelSize = CGRectMake((_secondWindow.screen.bounds.size.width - stringSize.width) / 2.0,
+                                      (_secondWindow.screen.bounds.size.height - stringSize.height),
+                                      stringSize.width, stringSize.height);
+        
+        UILabel* soustitres = [[UILabel alloc] initWithFrame:labelSize];
+        //soustitres.textColor = [UIColor whiteColor];
+        soustitres.textColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
+        soustitres.backgroundColor = [UIColor clearColor];
+        soustitres.text = customTitles;
+        soustitres.font = [UIFont systemFontOfSize:80];
+        [self.titlesview addSubview:soustitres];
         gotitles=NO;
     }
     
@@ -383,18 +467,32 @@
     }
     
     //UPDATE PLAYER STATE
-    if (muted) playerState = @"muted";
+    
+    if (paused) playerState = @"paused";
     else if (faded) playerState = @"faded";
-    else if (movieIsPlaying) 
+    else if ([self isPlaying]) 
     {
-        if(streamingMode) playerState = @"streaming";
+        if (muted) playerState = @"muted";
+        else if (mired) playerState = @"mired";
+        else if(streamingMode) playerState = @"streaming";
         else playerState = @"playing";
     }
-    else playerState = @"waiting";
+    else {
+        playerState = @"waiting";
+    }
     
     //UPDATE DISPLAY STATE
-    [self infoX:playerState];
+    [self infoState:playerState];
     [userViewController setMovieTitle:remotemoviename];
+    
+    //Player release counter
+    if (releasePlayer > 0) {
+        if (releasePlayer == 1) {
+            if (usePlayer1) player1view.layer.sublayers = nil;
+            else player2view.layer.sublayers = nil;
+        }   
+        releasePlayer--;
+    }
 }
 
 //###########################################################
@@ -404,15 +502,21 @@
 -(void) playMovie{
     NSURL *mymovieURL;
     
-    //Streaming URL
     if(streamingMode) mymovieURL = [NSURL URLWithString:self.remotemoviename];
-    // File url
     else mymovieURL = [NSURL fileURLWithPath:self.remotemoviepath];
     
-    if (movieIsPlaying) {
-        self.moviePlayer.contentURL = mymovieURL;
-        [self muteMovie:muted];
+    //if player already exist
+    if (!createPlayer) {
+        //if same movie just fast reward
+        if (([movieLast isEqualToString:self.remotemoviepath]) && ([self isPlaying])) [self skipMovie:0];
+        //else change movie url
+        else {
+            self.moviePlayer.contentURL = mymovieURL;
+            [self.moviePlayer play];
+        }
     }
+    
+    //first movie : create player
     else {     
         MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:mymovieURL];
         mp.movieSourceType = MPMovieSourceTypeFile;
@@ -425,7 +529,7 @@
         
             //set player on second screen
             [[mp view] setFrame: [_secondWindow bounds]];
-            [_secondWindow insertSubview:[mp view] belowSubview:blackview];
+            [_secondWindow insertSubview:[mp view] belowSubview:player1view];
         
             // Play the movie!
             [self stopMovie];  //stop previous
@@ -434,71 +538,132 @@
         
             //add observers
             [self installMovieNotificationObservers];
-            movieIsPlaying = YES;
+            createPlayer = NO;
         
             //keep mute state
             [self muteMovie:muted];
+            
+            //hide mire
+            [self mirMovie:NO];
         
             //init slider
             userViewController.timeSlider.continuous=NO;
             userViewController.timeSlider.minimumValue=0.0;
         }
     }
-}
-
-//STOP
--(void) stopMovie{
-    if(movieIsPlaying){
-        [self.moviePlayer stop];
-        [self removeMovieNotificationHandlers];
-        [self.moviePlayer release];
-        movieIsPlaying = NO;
-        playerState = @"waiting";
-    }
+    
+    [movieLast release];
+    movieLast = [remotemoviepath mutableCopy];
+    
+    [self infoMovie:remotemoviename];
+    paused = NO;
 }
 
 //PLAY with AVFoundation Player
 -(void) playMovieAVF{
-    
-    ///NOT WORKING !!!!!!
-    
     NSURL *movieURL;
     
-    //Streaming URL
+    //URL
     if(streamingMode) movieURL = [NSURL URLWithString:self.remotemoviename];
-    // File url
     else movieURL = [NSURL fileURLWithPath:self.remotemoviepath];
     
-    self.mPlayer = [AVPlayer playerWithURL:movieURL];
-    [[_secondWindow layer] addSublayer:[AVPlayerLayer playerLayerWithPlayer:mPlayer]];
+    //if same movie just rewind
+    if (([movieLast isEqualToString:self.remotemoviepath]) && ([self isPlaying])) [self skipMovie:0];
+    else {        
+        //create players
+        self.playerAVF = [AVPlayer playerWithURL:movieURL];
+        [playerAVF addObserver:self forKeyPath:@"status" options:0 context:nil];
+        
+        createPlayer = NO;
+        [self muteMovie:muted];
+        [self mirMovie:NO];
+        
+        userViewController.timeSlider.continuous=NO;
+        userViewController.timeSlider.minimumValue=0.0;
+    }
+    
+    [movieLast release];
+    movieLast = [remotemoviepath mutableCopy];
+    
+    [self infoMovie:remotemoviename];
+    paused = NO;
 }
 
-//STOP with AVFoundation Player
--(void) stopMovieAVF{
+//IS PLAYING
+-(BOOL) isPlaying{
+    if (useAVF) {
+        if (usePlayer1) return (player2view.layer.sublayers != nil);
+        else return (player1view.layer.sublayers != nil);
+    }
+    else return (self.moviePlayer.playbackState == MPMoviePlaybackStatePlaying);
+}
+
+
+//STOP
+-(void) stopMovie{
+    if (useAVF) {
+        player1view.layer.sublayers = nil;
+        player2view.layer.sublayers = nil;
+    }
+    else {
+        if(!createPlayer)
+        {
+            [self.moviePlayer stop];
+            [self removeMovieNotificationHandlers];
+            [self.moviePlayer release];
+            createPlayer = YES;
+        }
+    }
     
-    ///NOT WORKING !!!!!!
-    
-    if(movieIsPlaying){
-        [self.mPlayer release];
-        movieIsPlaying = NO;
-        playerState = @"waiting";
+    //show mire
+    [self mirMovie:YES];
+    paused = NO;
+    [self infoMovie:@""];
+}
+
+//PAUSE
+-(void) pauseMovie{
+    if (useAVF) {
+        if ([self isPlaying] && paused) [self.playerAVF pause];
+        else if (!paused) [self.playerAVF play];
+    }
+    else {
+        if ([self isPlaying] && paused) [self.moviePlayer pause];
+        else if (!paused) [self.moviePlayer play];
     }
 }
 
 //SKIP
--(void) skipMovie:(OSCMessage *)attime{
-    playbacktimeWanted = [[attime value] intValue];
-    if ((int)[moviePlayer duration]>playbacktimeWanted) 
-        [moviePlayer setCurrentPlaybackTime:(double)playbacktimeWanted];
-    else stopmovie=YES;
+-(void) skipMovie:(int) playbacktimeWanted{
+    if (useAVF) {
+        //TODO : tolerance 0 pour le seekToTime
+        if ( CMTimeGetSeconds(playerAVF.currentItem.duration) > playbacktimeWanted) 
+                [playerAVF seekToTime:CMTimeMake(playbacktimeWanted, 1)];
+        else gostop=YES; 
+    }
+    else {
+        if ((int)[moviePlayer duration]>playbacktimeWanted) 
+            [moviePlayer setCurrentPlaybackTime:(double)playbacktimeWanted];
+        else gostop=YES;
+    }
 }
 
 //MUTE
 -(void) muteMovie:(BOOL)muteMe{
-    if (((muteMe) && (![userViewController isMute])) || ((!muteMe) && ([userViewController isMute])))
-        [userViewController muting:self];
     
-    muted = [userViewController isMute];
+    if (muteMe) muteview.alpha = 1;
+    else muteview.alpha = 0;
+    
+    muted = muteMe;
+}
+
+//MIR
+-(void) mirMovie:(BOOL)mirDisp{
+    
+    if (mirDisp) mirview.alpha = 1;
+    else mirview.alpha = 0;
+    
+    mired = mirDisp;
 }
 
 //FADE
@@ -531,7 +696,7 @@
     float g = (float)flashcolorGreen/255;
     float b = (float)flashcolorBlue/255;
     float a = (float)flashcolorAlpha/255;
-    self.flashview.backgroundColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
+    self.flashview.backgroundColor = [UIColor colorWithRed:r green:g blue:b alpha:1];
     
     self.flashview.alpha=a;
     [UIView beginAnimations:@"flash" context:NULL];
@@ -543,14 +708,15 @@
 //###########################################################
 // PLAYER UTILITIES
 
--(void) initGoMovieWithName:(NSString*)n {
+-(void) initGoMovieWithName:(NSString*)n:(BOOL)go {
     if ([n length]>=1){
         
         self.remotemoviename = n;
         
-        //Local File
-        if (!streamingMode) {
-            self.remotemoviename = n;
+        //Streaming URL
+        if (streamingMode) self.remotemoviepath = self.remotemoviename;
+        //Local File     
+        else {
             self.remotemoviepath = [self.pathformovie stringByAppendingString:@"/"];
             self.remotemoviepath = [self.remotemoviepath stringByAppendingString:n];
             
@@ -566,13 +732,13 @@
             if ([tableViewController.moviesList objectAtIndex:0]!=n) {
                 [userViewController setBackTitle:[tableViewController.moviesList objectAtIndex: [tableViewController.moviesList indexOfObject:n]-1]];
                 userViewController.backButton.hidden=NO;
-            }else{
-                userViewController.backButton.hidden=YES;
-            }
+            }else userViewController.backButton.hidden=YES;
         }
     }
+    
+    gomovie = go;
 }
-
+	
 -(void) disableStreaming{
     streamingMode = NO;
 }
@@ -617,58 +783,86 @@
 		{	
 			// Associate the window with the second screen.
 			// The main screen is always at index 0.
-			UIScreen*    secondScreen = [[UIScreen screens] objectAtIndex:1];
-			CGRect        screenBounds = secondScreen.bounds;
 			
-			_secondWindow = [[UIWindow alloc] initWithFrame:screenBounds];
-			_secondWindow.screen = secondScreen;
+            //select external Screen
+            UIScreen*    secondScreen = [[UIScreen screens] objectAtIndex:1];
 			
-			// Add a black background to the window		
-			UIView*            whiteField = [[UIView alloc] initWithFrame:screenBounds];
-			whiteField.backgroundColor = [UIColor blackColor];
+            //create WINDOW (full sized for second screen)	
+			_secondWindow = [[UIWindow alloc] initWithFrame:secondScreen.bounds];
 			
-			[_secondWindow addSubview:whiteField];
-			[whiteField release];
+            //attach WINDOW to external screen
+                _secondWindow.screen = secondScreen;
 			
-			// Center a label in the view.
-			NSString*    noContentString = [NSString stringWithFormat:@" "];
-			CGSize        stringSize = [noContentString sizeWithFont:[UIFont systemFontOfSize:18]];
-			CGRect        labelSize = CGRectMake((screenBounds.size.width - stringSize.width) / 2.0,
-												 (screenBounds.size.height - stringSize.height) / 2.0,
-												 stringSize.width, stringSize.height);
-			UILabel*    noContentLabel = [[UILabel alloc] initWithFrame:labelSize];
-			noContentLabel.text = noContentString;
-			noContentLabel.font = [UIFont systemFontOfSize:18];
-			[whiteField addSubview:noContentLabel];
+                // Add a black background to the window		
+                UIView* backField = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                backField.backgroundColor = [UIColor blackColor];			
+                [_secondWindow addSubview:backField];
+                [backField release];
             
-            //Create Masks (blackview : mute)
-            blackview = [[UIView alloc] initWithFrame:screenBounds];
-            blackview.backgroundColor = [UIColor blackColor];
-            blackview.alpha=0;
-            [_secondWindow addSubview:blackview];
+            //Create Masks (playerview)
+                playerview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                playerview.backgroundColor = [UIColor clearColor];
+                playerview.alpha=1;
+                [_secondWindow addSubview:playerview];
+            
+                //Create PLAYER 1 view
+                    player1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    player1view.backgroundColor = [UIColor clearColor];
+                    player1view.alpha=1;
+                    [playerview addSubview:player1view];
+            
+                //Create PLAYER 2 view
+                    player2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    player2view.backgroundColor = [UIColor clearColor];
+                    player2view.alpha=1;
+                    [playerview addSubview:player2view];
+            
             
             //Create Masks (fadeview)
-            fadeview = [[UIView alloc] initWithFrame:screenBounds];
-            fadeview.backgroundColor = [UIColor blackColor];
-            fadeview.alpha=0;
-            [_secondWindow addSubview:fadeview];
+                fadeview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                fadeview.backgroundColor = [UIColor blackColor];
+                fadeview.alpha=0;
+                [_secondWindow addSubview:fadeview];
+            
+            //Create Masks (titlesview)
+                titlesview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                titlesview.backgroundColor = [UIColor clearColor];
+                titlesview.alpha=1;
+                [_secondWindow addSubview:titlesview];
+            
+            //Create Masks (muteview)
+                muteview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                muteview.backgroundColor = [UIColor blackColor];
+                muteview.alpha=0;
+                [_secondWindow addSubview:muteview];
+            
+            //Create Masks (mirview)
+                mirview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                mirview.backgroundColor = [UIColor blackColor];
+                mirview.alpha=1;
+                [_secondWindow addSubview:mirview];
+            
+                // Center a label in the view.
+                NSString*    noContentString = [NSString stringWithFormat:@" "];
+                CGSize        stringSize = [noContentString sizeWithFont:[UIFont systemFontOfSize:18]];
+                CGRect        labelSize = CGRectMake((secondScreen.bounds.size.width - stringSize.width) / 2.0,
+												 (secondScreen.bounds.size.height - stringSize.height) / 2.0,
+												 stringSize.width, stringSize.height);
+                UILabel*    noContentLabel = [[UILabel alloc] initWithFrame:labelSize];
+                noContentLabel.text = noContentString;
+                noContentLabel.font = [UIFont systemFontOfSize:18];
+                [mirview addSubview:noContentLabel];
             
             //Create Masks (flashview)
-            titlesview = [[UIView alloc] initWithFrame:screenBounds];
-            titlesview.backgroundColor = [UIColor clearColor];
-            titlesview.alpha=1;
-            [_secondWindow addSubview:titlesview];
-            
-            //Create Masks (flashview)
-            flashview = [[UIView alloc] initWithFrame:screenBounds];
-            flashview.backgroundColor = [UIColor blackColor];
-            flashview.alpha=0;
-            [_secondWindow addSubview:flashview];
+                flashview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                flashview.backgroundColor = [UIColor blackColor];
+                flashview.alpha=0;
+                [_secondWindow addSubview:flashview];
 			
 			// Go ahead and show the window.
 			_secondWindow.hidden = NO;
-            [viewController setInfoscreenText: [NSString stringWithFormat: @"second screen %.0f x %.0f",screenBounds.size.width,screenBounds.size.height]];
-			screenState = [NSString stringWithFormat: @"%.0f x %.0f",screenBounds.size.width,screenBounds.size.height];
+            [viewController setInfoscreenText: [NSString stringWithFormat: @"second screen %.0f x %.0f",secondScreen.bounds.size.width,secondScreen.bounds.size.height]];
+			screenState = [NSString stringWithFormat: @"%.0f x %.0f",secondScreen.bounds.size.width,secondScreen.bounds.size.height];
 			playerState = @"ready";
 			[self sendSync];
 		}
@@ -733,18 +927,71 @@
 }
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
-    if(![userViewController isMute]){
-        [userViewController muting:self];
-        [userViewController setMuteButtonColor:[UIColor grayColor]];
-        stopmovie=YES;
-    }
-    
+    //if(![userViewController isMute]){
+        //[userViewController muting:self];
+        //[userViewController setMuteButtonColor:[UIColor grayColor]];
+    //    stopmovie=YES;
+    //}
+    [userViewController setMuteButtonColor:[UIColor grayColor]];
 }
 
 -(void)removeMovieNotificationHandlers {    
     [[NSNotificationCenter defaultCenter]removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:moviePlayer];
 }
 
+
+//observer manager (AVPlayer,...)
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
+{
+    //AVF Player Statuts OBSERVER
+    if (object == playerAVF && [keyPath isEqualToString:@"status"]) {
+        if (playerAVF.status == AVPlayerStatusReadyToPlay) {
+            
+            layerAVF = [AVPlayerLayer playerLayerWithPlayer:playerAVF];
+            layerAVF.frame = player1view.layer.bounds;
+            
+            if (usePlayer1) {
+                //push view 1 on back
+                [playerview sendSubviewToBack:player1view];
+                
+                //clear view 1
+                player1view.layer.sublayers = nil;
+                
+                //attach PLAYER to view 1
+                [player1view.layer addSublayer:layerAVF];
+                
+                //next will be player 2
+                usePlayer1 = NO;
+            }
+            else {
+                //push view 2 on back
+                [playerview sendSubviewToBack:player2view];
+                
+                //clear view 2
+                player2view.layer.sublayers = nil;
+                
+                //attach PLAYER to view 2
+                [player2view.layer addSublayer:layerAVF];
+                
+                //next will be player 2
+                usePlayer1 = YES;
+            }
+            
+            //start Player
+            [playerAVF play];
+            
+            //send last initialized view to front
+            if (usePlayer1) {
+                [playerview sendSubviewToBack:player1view];
+            }
+            else {
+                [playerview sendSubviewToBack:player2view];
+            }
+            
+            releasePlayer = 10;
+        }
+    }
+}
 
 
 //###########################################################

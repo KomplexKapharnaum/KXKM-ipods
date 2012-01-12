@@ -19,6 +19,7 @@
     
     IBOutlet UIButton *fadeBlackButton;
     IBOutlet UIButton *fadeWhiteButton;
+    IBOutlet UIButton *mirButton;
     
     IBOutlet UILabel *messageRegie;
     
@@ -35,9 +36,9 @@
 @property (nonatomic,retain) IBOutlet UIButton *backButton;
 
 @property (nonatomic,retain) IBOutlet UISlider *timeSlider;
-
 @property (nonatomic,retain) IBOutlet UIButton *fadeBlackButton;
-
+@property (nonatomic,retain) IBOutlet UIButton *fadeWhiteButton;
+@property (nonatomic,retain) IBOutlet UIButton *mirButton;
 @property (nonatomic,retain) IBOutlet UILabel *messageRegie;
 
 //fonction action
@@ -46,10 +47,14 @@
 - (IBAction)goNext:(id)sender;
 - (IBAction)goBack:(id)sender;
 - (IBAction)slide:(id)sender;
+
+
 - (IBAction)fadeBlack:(id)sender;
 - (IBAction)fadeWhite:(id)sender;
+- (IBAction)mirSwitch:(id)sender;
+
 - (IBAction)flash:(id)sender;
--(IBAction)sos:(id)sender;
+- (IBAction)sos:(id)sender;
 
 
 //fonction modification vue

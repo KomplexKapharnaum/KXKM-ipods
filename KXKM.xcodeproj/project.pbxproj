@@ -24,6 +24,7 @@
 		86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D68AE614542701009897FD /* remoteplayv2TableViewController.m */; };
 		86D68AE914542701009897FD /* remoteplayv2TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */; };
 		CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9DA3081488F872005357EC /* AVFoundation.framework */; };
+		CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2TableViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* KXKM-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KXKM-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		CE9DA3081488F872005357EC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */,
 				CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -122,6 +125,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */,
 				CE9DA3081488F872005357EC /* AVFoundation.framework */,
 				86127E49143357970041071B /* MediaPlayer.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
