@@ -18,7 +18,7 @@
 #define STREAM_MODE     1
 #define LIVE_MODE       2
 
-#define RELEASE_TIME    12
+#define RELEASE_TIME    2
 
 
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
@@ -100,6 +100,7 @@
         usePlayer = 1;
         releasePlayer1 = 0;
         releasePlayer2 = 0;
+        releasePlayer3 = 0;
         firstStart = YES;
         
         //initiatisations états
@@ -533,71 +534,75 @@
 
 - (void)topHorloge{
     
-    //SCHEDULED ORDERS
-    //play movie
-	if (gomovie) {
-        if (useAVF) [self playMovieAVF];
-        else [self playMovie];		
-        [self sendSync];	
-        gostop=NO;
-		gomovie=NO;
-	}
+    //don't execute video related order if no screen 
+    if (screenState != @"noscreen") {
+        
+        //SCHEDULED ORDERS
+        //play movie
+        if (gomovie) {
+            if (useAVF) [self playMovieAVF];
+            else [self playMovie];		
+            [self sendSync];	
+            gostop=NO;
+            gomovie=NO;
+        }
     
-    //stop movie
-	if (gostop) {
-        [self stopMovie];
-		[self sendSync];
-        gostop=NO;
-	}
-    //pause
-    if (gopause) {
-        [self pauseMovie];
-        [self sendSync];
-        gopause=NO;
-    }
-    //mute
-    if (gomute) {
-		[self muteMovie:muted];
-        [self sendSync];
-        gomute=NO;
-    }
-    //fade / unfade to color
-    if (gofade) {
-		[self fadeMovie:faded];
-        [self sendSync];
-        gofade=NO;
-    }
-    //white flash
-    if (goflash) {
-        [self flashMovie];
-        goflash=NO;
-    }
+        //stop movie
+        if (gostop) {
+            [self stopMovie];
+            [self sendSync];
+            gostop=NO;
+        }
+        //pause
+        if (gopause) {
+            [self pauseMovie];
+            [self sendSync];
+            gopause=NO;
+        }
+        //mute
+        if (gomute) {
+            [self muteMovie:muted];
+            [self sendSync];
+            gomute=NO;
+        }
+        //fade / unfade to color
+        if (gofade) {
+            [self fadeMovie:faded];
+            [self sendSync];
+            gofade=NO;
+        }
+        //white flash
+        if (goflash) {
+            [self flashMovie];
+            goflash=NO;
+        }
     
-    //titles : add text
-    if (gotitles) {
-        //suppress all titlesview subviews (sinon les titrages s'empilent)
-        //TODO check if it is still working !
-        for (UIView *titlesview in [self.titlesview subviews]) { [titlesview removeFromSuperview]; }
-        //for (UIView *tview in [self.titlesview subviews]) { [tview removeFromSuperview]; }
+        //titles : add text
+        if (gotitles) {
+            //suppress all titlesview subviews (sinon les titrages s'empilent)
+            //TODO check if it is still working !
+            for (UIView *titlesview in [self.titlesview subviews]) { [titlesview removeFromSuperview]; }
+            //for (UIView *tview in [self.titlesview subviews]) { [tview removeFromSuperview]; }
         
-        float r = (float)titlescolorRed/255;
-        float g = (float)titlescolorGreen/255;
-        float b = (float)titlescolorBlue/255;
-        float a = (float)titlescolorAlpha/255;
+            float r = (float)titlescolorRed/255;
+            float g = (float)titlescolorGreen/255;
+            float b = (float)titlescolorBlue/255;
+            float a = (float)titlescolorAlpha/255;
         
         
-        CGSize stringSize = [customTitles sizeWithFont:[UIFont systemFontOfSize:80]]; 
-        CGRect labelSize = CGRectMake((_secondWindow.screen.bounds.size.width - stringSize.width) / 2.0,
+            CGSize stringSize = [customTitles sizeWithFont:[UIFont systemFontOfSize:80]]; 
+            CGRect labelSize = CGRectMake((_secondWindow.screen.bounds.size.width - stringSize.width) / 2.0,
                                       (_secondWindow.screen.bounds.size.height - stringSize.height),
                                       stringSize.width, stringSize.height);
         
-        UILabel* soustitres = [[UILabel alloc] initWithFrame:labelSize];
-        soustitres.textColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
-        soustitres.backgroundColor = [UIColor clearColor];
-        soustitres.text = customTitles;
-        soustitres.font = [UIFont systemFontOfSize:80];
-        [self.titlesview addSubview:soustitres];
-        gotitles=NO;
+            UILabel* soustitres = [[UILabel alloc] initWithFrame:labelSize];
+            soustitres.textColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
+            soustitres.backgroundColor = [UIColor clearColor];
+            soustitres.text = customTitles;
+            soustitres.font = [UIFont systemFontOfSize:80];
+            [self.titlesview addSubview:soustitres];
+            gotitles=NO;
+        }
     }
     
     //message
@@ -627,13 +632,18 @@
     if (([connectedSockets count] == 0) && (useTCP)) [self sayAllo]; 
     
     //UPDATE MOVIE SCROLLER
-    if (!createPlayer) {
-        
-        //TODO FIX slider !!!
-    if(!userViewController.timeSlider.touchInside){
-            userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
-            userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
+    if ((useAVF) && ([self isPlaying])) {
+        if(!userViewController.timeSlider.touchInside){
+            userViewController.timeSlider.maximumValue=(CGFloat)CMTimeGetSeconds([[playerAVF currentItem] duration]);
+            userViewController.timeSlider.value = (CGFloat)CMTimeGetSeconds([playerAVF currentTime]);
         }
+        else [self skipMovie:(int)userViewController.timeSlider.value*1000];
+    }
+    else if (!createPlayer)  {
+        if(!userViewController.timeSlider.touchInside){
+                userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
+                userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
+            }
         else [moviePlayer setCurrentPlaybackTime:(double)userViewController.timeSlider.value];
     }
      
@@ -641,6 +651,7 @@
     //TODO, check player state to know if it is usefull..
     //TODO ADD Observer !
     //if (streamingMode) [self.moviePlayer play]; 
+    //if (sourceMode == LIVE_MODE) [playerAVF play]; 
      
     //UPDATE PLAYER STATE
     if (([connectedSockets count] == 0) && (useTCP)) playerState = @"no connection";
@@ -666,18 +677,21 @@
     if (releasePlayer1 > 0) {
         if (releasePlayer1 == 1) {
             player1view.layer.sublayers = nil;
+            [self.playerAVF1 pause];
         }
         releasePlayer1--;
     }
     if (releasePlayer2 > 0) {
         if (releasePlayer2 == 1) {
             player2view.layer.sublayers = nil;
+            [self.playerAVF2 pause];
         }
         releasePlayer2--;
     }
     if (releasePlayer3 > 0) {
         if (releasePlayer3 == 1) {
             player3view.layer.sublayers = nil;
+            [self.playerAVF3 pause];
         } 
         releasePlayer3--;
     }
@@ -832,6 +846,9 @@
         player1view.layer.sublayers = nil;
         player2view.layer.sublayers = nil;
         player3view.layer.sublayers = nil;
+        [self.playerAVF1 pause];
+        [self.playerAVF2 pause];
+        [self.playerAVF3 pause];
         usePlayer = 1;
     }
     else {
