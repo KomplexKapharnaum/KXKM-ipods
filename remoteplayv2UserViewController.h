@@ -39,6 +39,7 @@
 @property (nonatomic,retain) IBOutlet UIButton *fadeBlackButton;
 @property (nonatomic,retain) IBOutlet UIButton *fadeWhiteButton;
 @property (nonatomic,retain) IBOutlet UIButton *mirButton;
+@property (nonatomic,retain) IBOutlet UIButton *pauseButton;
 @property (nonatomic,retain) IBOutlet UILabel *messageRegie;
 
 //fonction action
@@ -52,6 +53,7 @@
 - (IBAction)fadeBlack:(id)sender;
 - (IBAction)fadeWhite:(id)sender;
 - (IBAction)mirSwitch:(id)sender;
+- (IBAction)pauseSwitch:(id)sender;
 
 - (IBAction)flash:(id)sender;
 - (IBAction)sos:(id)sender;
@@ -64,7 +66,5 @@
 -(void) setMuteButtonColor:(UIColor*)c;
 -(void) setNextTitle:(NSString*)t;
 -(void) setBackTitle:(NSString*)t;
-
--(BOOL) isMute;
 
 @end

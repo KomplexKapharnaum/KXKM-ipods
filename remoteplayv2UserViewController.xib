@@ -40,7 +40,7 @@
 					<object class="IBUIButton" id="467337848">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{18, 79}, {284, 37}}</string>
+						<string key="NSFrame">{{20, 50}, {284, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="493264125"/>
@@ -76,7 +76,7 @@
 					<object class="IBUISlider" id="493264125">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{16, 136}, {288, 23}}</string>
+						<string key="NSFrame">{{16, 98}, {288, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="869827606"/>
@@ -90,7 +90,7 @@
 					<object class="IBUILabel" id="627273237">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{18, 301}, {284, 21}}</string>
+						<string key="NSFrame">{{18, 318}, {284, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1049942723"/>
@@ -126,10 +126,9 @@
 					<object class="IBUIButton" id="1049942723">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{230, 354}, {72, 37}}</string>
+						<string key="NSFrame">{{258, 311}, {44, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -148,7 +147,7 @@
 					<object class="IBUIButton" id="834550163">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{150, 20}, {152, 37}}</string>
+						<string key="NSFrame">{{148, 0}, {152, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="467337848"/>
@@ -177,7 +176,7 @@
 					<object class="IBUIButton" id="68464528">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{18, 20}, {100, 37}}</string>
+						<string key="NSFrame">{{20, 0}, {100, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="834550163"/>
@@ -199,7 +198,7 @@
 					<object class="IBUIButton" id="869827606">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{18, 205}, {44, 41}}</string>
+						<string key="NSFrame">{{20, 136}, {74, 41}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="331144021"/>
@@ -208,7 +207,7 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">&gt;B</string>
+						<string key="IBUINormalTitle">&gt; Noir</string>
 						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -221,7 +220,7 @@
 					<object class="IBUIButton" id="331144021">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{67, 205}, {48, 41}}</string>
+						<string key="NSFrame">{{20, 185}, {74, 41}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="279930558"/>
@@ -230,7 +229,7 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">&gt;W</string>
+						<string key="IBUINormalTitle">&gt; Blanc</string>
 						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -243,16 +242,16 @@
 					<object class="IBUIButton" id="279930558">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{137, 205}, {48, 41}}</string>
+						<string key="NSFrame">{{20, 234}, {74, 41}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="627273237"/>
+						<reference key="NSNextKeyView" ref="748312010"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">F</string>
+						<string key="IBUINormalTitle">Flash</string>
 						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -265,7 +264,29 @@
 					<object class="IBUIButton" id="748312010">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{230, 205}, {72, 41}}</string>
+						<string key="NSFrame">{{226, 161}, {76, 41}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="627273237"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">MIRE</string>
+						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="696282691"/>
+						<reference key="IBUIFontDescription" ref="182080511"/>
+						<reference key="IBUIFont" ref="298345485"/>
+					</object>
+					<object class="IBUIButton" id="902569097">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{226, 210}, {76, 41}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -273,7 +294,7 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">MIRE</string>
+						<string key="IBUINormalTitle">PAUSE</string>
 						<reference key="IBUIHighlightedTitleColor" ref="671344139"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -455,6 +476,15 @@
 					</object>
 					<int key="connectionID">36</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">pauseSwitch:</string>
+						<reference key="source" ref="902569097"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">38</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -468,16 +498,17 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="1049942723"/>
-							<reference ref="834550163"/>
-							<reference ref="467337848"/>
 							<reference ref="68464528"/>
-							<reference ref="627273237"/>
+							<reference ref="834550163"/>
 							<reference ref="493264125"/>
 							<reference ref="869827606"/>
 							<reference ref="331144021"/>
 							<reference ref="279930558"/>
 							<reference ref="748312010"/>
+							<reference ref="902569097"/>
+							<reference ref="627273237"/>
+							<reference ref="1049942723"/>
+							<reference ref="467337848"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -542,6 +573,11 @@
 						<reference key="object" ref="748312010"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">37</int>
+						<reference key="object" ref="902569097"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -558,6 +594,7 @@
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="31.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="7.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -566,7 +603,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">36</int>
+			<int key="maxID">38</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -582,6 +619,7 @@
 						<string key="mirSwitch:">id</string>
 						<string key="muting:">id</string>
 						<string key="mutingAndPause:">id</string>
+						<string key="pauseSwitch:">id</string>
 						<string key="slide:">id</string>
 						<string key="sos:">id</string>
 					</dictionary>
@@ -618,6 +656,10 @@
 							<string key="name">mutingAndPause:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="pauseSwitch:">
+							<string key="name">pauseSwitch:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="slide:">
 							<string key="name">slide:</string>
 							<string key="candidateClassName">id</string>
@@ -635,6 +677,7 @@
 						<string key="mirButton">UIButton</string>
 						<string key="muteButton">UIButton</string>
 						<string key="nextButton">UIButton</string>
+						<string key="pauseButton">UIButton</string>
 						<string key="timeSlider">UISlider</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -664,6 +707,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="nextButton">
 							<string key="name">nextButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="pauseButton">
+							<string key="name">pauseButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="timeSlider">

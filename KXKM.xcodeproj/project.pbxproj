@@ -23,6 +23,8 @@
 		86D68AE414541853009897FD /* remoteplayv2UserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE214541853009897FD /* remoteplayv2UserViewController.xib */; };
 		86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D68AE614542701009897FD /* remoteplayv2TableViewController.m */; };
 		86D68AE914542701009897FD /* remoteplayv2TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */; };
+		CE9A29C014C473C200003298 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9A29BF14C473C200003298 /* GCDAsyncSocket.m */; };
+		CE9A29C314C47D3000003298 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9A29C214C47D3000003298 /* CFNetwork.framework */; };
 		CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9DA3081488F872005357EC /* AVFoundation.framework */; };
 		CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
@@ -52,6 +54,9 @@
 		86D68AE614542701009897FD /* remoteplayv2TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = remoteplayv2TableViewController.m; sourceTree = "<group>"; };
 		86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2TableViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* KXKM-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KXKM-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		CE9A29BE14C473C200003298 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		CE9A29BF14C473C200003298 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		CE9A29C214C47D3000003298 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		CE9DA3081488F872005357EC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -61,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE9A29C314C47D3000003298 /* CFNetwork.framework in Frameworks */,
 				CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */,
 				CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -76,6 +82,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CE9A29BE14C473C200003298 /* GCDAsyncSocket.h */,
+				CE9A29BF14C473C200003298 /* GCDAsyncSocket.m */,
 				1D3623240D0F684500981E51 /* remoteplayv2AppDelegate.h */,
 				1D3623250D0F684500981E51 /* remoteplayv2AppDelegate.m */,
 			);
@@ -125,6 +133,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE9A29C214C47D3000003298 /* CFNetwork.framework */,
 				CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */,
 				CE9DA3081488F872005357EC /* AVFoundation.framework */,
 				86127E49143357970041071B /* MediaPlayer.framework */,
@@ -236,6 +245,7 @@
 				28D7ACF80DDB3853001CB0EB /* remoteplayv2ViewController.m in Sources */,
 				86D68AE314541853009897FD /* remoteplayv2UserViewController.m in Sources */,
 				86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */,
+				CE9A29C014C473C200003298 /* GCDAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
