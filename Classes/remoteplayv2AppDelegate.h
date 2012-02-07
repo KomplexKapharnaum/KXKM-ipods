@@ -14,7 +14,8 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
-#import "GCDAsyncSocket.h"
+#import "GCDAsyncUdpSocket.h"
+//#import "RTSPClient.hh"
 
 
 @interface remoteplayv2AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate > {
@@ -29,6 +30,11 @@
     UIView *player1view;
     UIView *player2view;
     UIView *player3view;
+    
+    UIView *movieview;
+    UIView *movie1view;
+    UIView *movie2view;
+
     
     UIView *blackview;
     UIView *fadeview;
@@ -50,15 +56,19 @@
     
     //osc
     OSCManager	*manager;
-	OSCOutPort *outPort;
-	NSString* inPort;
+    NSString* udpServerIP;
+    OSCOutPort* vvoscOUT;
+    
+    //UPD
+    int outPort;
+	int inPort;
     
     //boucle
     NSTimer *timermouvement;
     NSTimer *timerchecker;
 	
     //movie
-	MPMoviePlayerController *moviePlayer;
+	AVPlayer* playerMOVIE;
     
     AVPlayer* playerAVF;
     AVPlayer* playerAVF1;
@@ -78,27 +88,32 @@
 	BOOL gomovie;
     BOOL gopause;
 	BOOL gostop;
+    BOOL gostoplive;
     BOOL gomute;
     BOOL gofade;
     BOOL goflash;
     BOOL gocolorflash;
     BOOL gomessage;
     BOOL gotitles;
-    BOOL createPlayer;
-    BOOL firstStart;
-    BOOL useAVF;
-    BOOL useTCP;
+    
+    BOOL lock1;
+    BOOL lock2;
+    BOOL lock3;
+    
     int usePlayer;
     int releasePlayer1;
     int releasePlayer2;
     int releasePlayer3;
+    int releaseMOVIE;
+    
     //détails instructions
-//    NSArray *mediaList;
 	NSString *pathformovie;
 	NSString *remotemoviepath;
 	NSString *remotemoviename;
     NSString *customTitles;
     NSString *nextQueue;
+    
+    //Colors
     int flashcolorRed;
     int flashcolorGreen;
     int flashcolorBlue;
@@ -111,12 +126,13 @@
     int titlescolorGreen;
     int titlescolorBlue;
     int titlescolorAlpha;
+    
     NSString *message;
     
-    //TCP Communication
-    dispatch_queue_t socketQueue;	
-	GCDAsyncSocket *listenSocket;
-	NSMutableArray *connectedSockets;
+    
+    //UDP Communication
+    GCDAsyncUdpSocket *udpSocketIN;
+    GCDAsyncUdpSocket *udpSocketOUT;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -131,6 +147,10 @@
 @property (nonatomic,retain) UIView *player2view;
 @property (nonatomic,retain) UIView *player3view;
 
+@property (nonatomic,retain) UIView *movieview;
+@property (nonatomic,retain) UIView *movie1view;
+@property (nonatomic,retain) UIView *movie2view;
+
 @property (nonatomic,retain) UIView *muteview;
 @property (nonatomic,retain) UIView *mirview;
 @property (nonatomic,retain) UIView *fadeview;
@@ -138,14 +158,16 @@
 @property (nonatomic,retain) UIView *titlesview;
 
 @property (readwrite, retain) OSCManager *manager;
-@property (readwrite, retain) OSCOutPort *outPort;
+@property (readwrite, retain) OSCOutPort *vvoscOUT;
+@property (readwrite, retain) NSString* udpServerIP;
 
 @property (readwrite, retain) MPMoviePlayerController *moviePlayer;
 
+@property (readwrite, retain) AVPlayer* playerMOVIE;
 @property (readwrite, retain) AVPlayer* playerAVF;
-@property (readwrite, retain) AVPlayer* playerAVF1;
-@property (readwrite, retain) AVPlayer* playerAVF2;
-@property (readwrite, retain) AVPlayer* playerAVF3;
+@property (retain) AVPlayer* playerAVF1;
+@property (retain) AVPlayer* playerAVF2;
+@property (retain) AVPlayer* playerAVF3;
 
 @property (nonatomic,retain) NSTimer *timermouvement;
 @property (nonatomic,retain) NSTimer *timerchecker;
@@ -169,20 +191,23 @@
 @property (nonatomic) BOOL gomovie;
 @property (nonatomic) BOOL gopause;
 @property (nonatomic) BOOL gostop;
+@property (nonatomic) BOOL gostoplive;
 @property (nonatomic) BOOL gomute;
 @property (nonatomic) BOOL gofade;
 @property (nonatomic) BOOL goflash;
 @property (nonatomic) BOOL gomessage;
 @property (nonatomic) BOOL gotitles;
-@property (nonatomic) BOOL createPlayer;
-@property (nonatomic) BOOL firstStart;
-@property (nonatomic) BOOL useAVF;
-@property (nonatomic) BOOL useTCP;
+
+@property (nonatomic) BOOL lock1;
+@property (nonatomic) BOOL lock2;
+@property (nonatomic) BOOL lock3;
+
 @property (nonatomic) int usePlayer;
 @property (nonatomic) int releasePlayer1;
 @property (nonatomic) int releasePlayer2;
 @property (nonatomic) int releasePlayer3;
 @property (nonatomic) int sourceMode;
+@property (nonatomic) int releaseMOVIE;
 
 @property (nonatomic) BOOL muted;
 @property (nonatomic) BOOL faded;
@@ -209,10 +234,11 @@
 //PLAYER CONTROLS
 //-(void) loadMovie;
 -(void) playMovie;
+-(void) playLive;
 -(void) stopMovie;
+-(void) stopLive;
 -(void) pauseMovie;
 -(BOOL) isPlaying;
--(void) playMovieAVF;
 -(void) skipMovie:(int)playbacktimeWanted;
 -(void) fadeMovie:(BOOL)fadeMe;
 -(void) flashMovie;
@@ -226,12 +252,16 @@
 //OSC functions
 //- (OSCMessage*) oscNewMsg: (NSString*)state;
 - (void) receivedOSCMessage: (OSCMessage *)m;
-
 - (void) runMessage;
 
-//TCP Communication
-- (BOOL) openTCP: (int) TCPListenPort;
-- (void) sendTCP: (NSString *) m;
+- (void) player1End : (NSNotification*) notification;
+- (void) player2End : (NSNotification*) notification;
+- (void) player3End : (NSNotification*) notification;
+
+-(void) releaseUnusedMovie:(BOOL)clear;
+
+//UDP Communication
+- (void) sendUDP: (NSString *) m;
 
 //debug
 - (void) debug : (NSString*) s;
@@ -243,8 +273,6 @@
 //manage movie functions 
 -(void) disableStreaming;
 -(void) initGoMovieWithName:(NSString*)n:(BOOL)go ;
--(void) installMovieNotificationObservers;
--(void) removeMovieNotificationHandlers;
 
 @end
 

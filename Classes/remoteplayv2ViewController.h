@@ -15,18 +15,20 @@
 	UITextField *infoscreen;
 	UITextField *infoip;
 	UITextField *infomovie;
+    UITextField *infotime;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *info;
 @property (nonatomic, retain) IBOutlet UITextField *infoscreen;
 @property (nonatomic, retain) IBOutlet UITextField *infoip;
 @property (nonatomic, retain) IBOutlet UITextField *infomovie;
+@property (nonatomic, retain) IBOutlet UITextField *infotime;
 
 - (void)setInfoText:(NSString*)text;
 - (void)setInfoscreenText:(NSString*)text;
 - (void)setInfoipText:(NSString*)text;
 - (void)setInfoMovieText:(NSString*)text;
-
+- (void)setTimeText:(NSString*)text;
 
 @end
 

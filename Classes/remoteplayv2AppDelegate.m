@@ -11,15 +11,16 @@
 #define ECHO_MSG     1
 #define WARNING_MSG  2
 
-#define READ_TIMEOUT 5.0
+#define READ_TIMEOUT 15.0
 
 //PLAYERS
 #define LOCAL_MODE      0
 #define STREAM_MODE     1
 #define LIVE_MODE       2
 
-#define RELEASE_TIME    2
-
+#define TIME_CHECKER    0.2 //clock for cheker in seconds
+#define RELEASE_PLAYER  6   // multiply x TIME_CHECKER
+#define RELEASE_LIVE    20  // multiply x TIME_CHECKER //MUST BE HIGHER THAN SEGMENT PLAYED!
 
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
 
@@ -27,21 +28,24 @@
 #import "remoteplayv2ViewController.h"
 #import "remoteplayv2TableViewController.h"
 #import "remoteplayv2UserViewController.h"
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 @implementation remoteplayv2AppDelegate
 
 @synthesize window;
 @synthesize _secondWindow, layerAVF;
 @synthesize playerview, player1view, player2view, player3view, muteview, fadeview, flashview, titlesview, mirview;
+@synthesize movieview, movie1view, movie2view;
 @synthesize tabBarController;
-@synthesize moviePlayer,playerAVF,playerAVF1,playerAVF2,playerAVF3;
-@synthesize manager,outPort;
+@synthesize moviePlayer,playerMOVIE,playerAVF,playerAVF1,playerAVF2,playerAVF3;
+@synthesize manager, udpServerIP, vvoscOUT;
 @synthesize timermouvement,timerchecker;
 @synthesize remotemoviepath,pathformovie;
 @synthesize remotemoviename,screenstate,playerstate,message,customTitles,movieLast;
-@synthesize rcvCommand,gomovie,gopause,gostop,gomute,gofade,goflash,gomessage,gotitles;
-@synthesize muted,faded,paused,mired;
-@synthesize sourceMode,createPlayer,firstStart,useAVF,useTCP,usePlayer,releasePlayer1,releasePlayer2,releasePlayer3;
+@synthesize rcvCommand,gomovie,gopause,gostop,gostoplive,gomute,gofade,goflash,gomessage,gotitles;
+@synthesize muted,faded,paused,mired,releaseMOVIE,lock1,lock2,lock3;
+@synthesize sourceMode,usePlayer,releasePlayer1,releasePlayer2,releasePlayer3;
 @synthesize fadecolorRed,fadecolorGreen,fadecolorBlue;
 
 
@@ -73,35 +77,49 @@
         //Get ipod name 
         myName = [[NSUserDefaults standardUserDefaults] stringForKey:@"osc_id_name_key"];
     
-    //OSC Communication
+    //COMMON UDP
+        inPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_in_key"] intValue];
+        outPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_server_key"] intValue];
+        udpServerIP = [[NSUserDefaults standardUserDefaults] stringForKey:@"osc_ip_server_key"];
+    
+    //VVOSC Communication (UDP)
         //MANAGER add osc manager object
         manager = [[OSCManager alloc] init];
         [manager setDelegate:self];    
 	
         //INPUT create an input port for receiving OSC data
-        inPort = [[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_in_key"];
-        [manager createNewInputForPort:[inPort intValue]];
+        [manager createNewInputForPort:inPort];
 	
         //OUTPUT create outPort to the server
-        NSString *ipServerValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"osc_ip_server_key"];
-        NSString *portServerValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_server_key"];
-        outPort = [manager createNewOutputToAddress:ipServerValue atPort:[portServerValue intValue]];
+        vvoscOUT= [manager createNewOutputToAddress:udpServerIP atPort:outPort];
     
-    //TCP Communication
-        //TCP open Server & Listen Port (UDP fallback if failed)
-        useTCP = [self openTCP:1333];
+    //UDP Communication
+        //NSError *error = nil;
+        //INPUT from regie    
+        //udpSocketIN = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+        //[udpSocketIN bindToPort:inPort error:&error];
+        //[udpSocketIN beginReceiving:&error];
+    
+        //OUTPUT to regie  
+        //udpSocketOUT = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+        //[udpSocketOUT enableBroadcast:YES error:&error];
     
     //APP Info and States
         //initiatisations ordres
         gomovie = NO;
         gostop = NO;
-        createPlayer = YES;
-        useAVF = YES;
+        gostoplive = NO;
         usePlayer = 1;
         releasePlayer1 = 0;
         releasePlayer2 = 0;
         releasePlayer3 = 0;
-        firstStart = YES;
+        playerAVF1 = nil;
+        playerAVF2 = nil;
+        playerAVF3 = nil;
+        releaseMOVIE = 0;
+        lock1 = NO;
+        lock2 = NO;
+        lock3 = NO;
         
         //initiatisations états
         playerMode = @"auto"; 
@@ -147,8 +165,7 @@
 
 //Say ALLO
 -(void) sayAllo{
-    NSString* msg = @"allo";
-    [outPort sendThisMessage:[self oscWithString:msg]];
+    [self sendUDP:@"allo"];
 }
 
 //Info message : IP, media list
@@ -157,22 +174,12 @@
     NSString *msg = @"initinfo ";
     msg = [msg stringByAppendingString:[self getIPAddress]];
     
-    if (useTCP) [self sendTCP:msg];
-    else [outPort sendThisMessage:[self oscWithString:msg]];
+    [self sendUDP:msg];
     
     NSArray * mediaList = [self listMedia];
     
-    if (useTCP) {
-        NSString *filesmsg = @"fileinfo";
-        for (NSString *movies in mediaList) {
-            filesmsg = [filesmsg stringByAppendingString:@" "];
-            filesmsg = [filesmsg stringByAppendingString:movies];
-        }
-        [self sendTCP:filesmsg];
-    }
-    else 
-        for (NSString *movies in mediaList) 
-                [self sendTCP:[@"fileinfo " stringByAppendingString:movies]];
+    for (NSString *movies in mediaList) 
+        [self sendUDP:[@"fileinfo " stringByAppendingString:movies]];
     
 }
 
@@ -194,24 +201,17 @@
     //msg = [msg stringByAppendingString:[NSString stringWithFormat:@" %i",[moviePlayer currentPlaybackTime]]];
     //msg = [msg stringByAppendingString:[NSString stringWithFormat:@" %i",[userViewController isMute]]];
     
-    if (useTCP) [self sendTCP:msg];
-    else [outPort sendThisMessage:[self oscWithString:msg]];
+    [self sendUDP:msg];
 }
 
 //send SOS
 -(void) sendSOS {    
-    NSString* msg = @"SOS";
-    
-    if (useTCP) [self sendTCP:msg];
-    else [outPort sendThisMessage:[self oscWithString:msg]];
+    [self sendUDP:@"SOS"];
 }
 
 //send ERROR
 -(void) sendError:(NSString*)m {    
-    NSString* msg = [@"error " stringByAppendingString:m];
-    
-    if (useTCP) [self sendTCP:msg];
-    else [outPort sendThisMessage:[self oscWithString:msg]];
+    [self sendUDP:[@"error " stringByAppendingString:m]];
 }
 
 
@@ -225,127 +225,102 @@
     [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoMovieText:msg];
 }
 
-
 //###########################################################
-// TCP COMM
+// UDP/OSC COMM
 
-// TCP Sock : Create Server and open Socket
-- (BOOL) openTCP:(int)TCPListenPort {
-    
-    //TCP SERVER (wait for call and answer it)
-    socketQueue = dispatch_queue_create("socketQueue", NULL);
-    listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
-    
-    // Setup an array to store all accepted client connections
-    connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
-     
-    NSError *error = nil;
-    if([listenSocket acceptOnPort:TCPListenPort error:&error]) return YES;
-    else return NO;
-}
 
-// TCP Sock : Connection asked by new client
-- (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext
 {
-	@synchronized(connectedSockets)
+    //convert data into NSString
+    NSString *msg = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+	if (msg) 
 	{
-		[connectedSockets addObject:newSocket];
-	}
-	
-	NSString *welcomeMsg = [@"KXKM TCP Server on " stringByAppendingString:myName];
-	NSData *welcomeData = [welcomeMsg dataUsingEncoding:NSUTF8StringEncoding];
-	
-	[newSocket writeData:welcomeData withTimeout:-1 tag:WELCOME_MSG];
-	[newSocket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
-    
-    if (firstStart) [self sendInfo];
-    firstStart = NO;
+        //pass the Message to the runner
+        rcvCommand = msg;
+        [self runMessage];
+    }
 }
 
-// TCP Sock : CLIENT connection TERMINATED
-- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
-{
-	if (sock != listenSocket)
-	{		
-		@synchronized(connectedSockets)
-		{
-			[connectedSockets removeObject:sock];
-		}
-	}
-}
-
-//TCP Sock : write a message on all available client socket
-- (void) sendTCP: (NSString *) m {
+- (void) sendUDP: (NSString *) m {
     
+    //using vvosc
+    [vvoscOUT sendThisMessage:[self oscWithString:m]];
+    
+    /*Not working UDP send (not recognized as OSC by MAX
     NSString *msg = [@"/" stringByAppendingString: myName];
-    msg = [msg stringByAppendingString:@" "];
-    msg = [msg stringByAppendingString:m];
-    msg = [msg stringByAppendingString:@"\r\n"];
+    //msg = [msg stringByAppendingString:@",s super"];
+    //msg = [msg stringByAppendingString:m];
     NSData *data = [msg dataUsingEncoding:NSUTF8StringEncoding];
-    
-    if ([connectedSockets count] > 0)
-        for (GCDAsyncSocket *sock in connectedSockets) 
-                [sock writeData:data withTimeout:-1 tag:1];
-}
-
-
-// TCP Sock :  A message has been recieved from the client
-- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
-{
-	dispatch_async(dispatch_get_main_queue(), ^{
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        
-        //get data and remove \r\n
-		NSData *strData = [data subdataWithRange:NSMakeRange(0, [data length] - 2)];
-		//convert data into NSString
-        NSString *msg = [[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] autorelease];
-		if (msg) 
-		{
-            //pass the Message to the runner
-            rcvCommand = msg;
-            [self runMessage];
-        }
-		[pool release];
-	});
-	    
-    //restart reader
-    [sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
+    NSMutableData * paddedData = [NSMutableData dataWithData:data];
+    int underFlow = 4 - ([paddedData length] % 4);
+    if (underFlow > 0) {
+        // need to pad out with 0's
+        char padding[] = { 0,0,0,0 }; // TODO: make this a constant
+        [paddedData appendBytes:padding length:underFlow];
+    }
+    [udpSocketOUT sendData:paddedData toHost:udpServerIP port:outPort withTimeout:-1 tag:0];
+     */
 }
 
 
 //###########################################################
 // OSC RECEIVER
 
+- (NSString*) oscValueToString: (OSCValue*) val {
+
+    switch (val.type)   {
+        case OSCValInt:
+            return [NSString stringWithFormat:@"%ld",[val intValue]];
+        case OSCValFloat:
+            return  [NSString stringWithFormat:@"%f",[val floatValue]];
+        case OSCValString:
+            return [val stringValue];
+        case OSCVal64Int:
+            return [NSString stringWithFormat:@"%qi",[val longLongValue]];
+            break;
+        case OSCValDouble:
+            return [NSString stringWithFormat:@"%f",[val doubleValue]];
+        case OSCValChar:
+            return [NSString stringWithFormat:@"%c",[val charValue]];
+        case OSCValBool:
+            if ([val boolValue]) return @"1";
+            else if ([val boolValue]) return @"0";
+        case OSCValBlob:
+            return[[NSString alloc] initWithData:[val blobNSData] encoding:NSUTF8StringEncoding];
+        default:
+            return @"typeunrecognized";
+    }
+    
+}
+
 - (void) receivedOSCMessage: (OSCMessage *) m {
     rcvCommand = [m address];
     
-    for (int y = 0; y < 10 ; y++) 
-            if ([m valueAtIndex:y] != NULL) 
-                rcvCommand = [rcvCommand stringByAppendingString:[[m valueAtIndex:y] stringValue]];
-    
+    if ([m valueCount] == 1) {
+        rcvCommand = [rcvCommand stringByAppendingString:@" "];
+        rcvCommand = [rcvCommand stringByAppendingString:[self oscValueToString:[m value]]];
+    }
+    else if ([m valueCount] > 0) {
+        for (int y = 0; y < [m valueCount] ; y++) 
+        {            
+            rcvCommand = [rcvCommand stringByAppendingString:@" "];
+            rcvCommand = [rcvCommand stringByAppendingString:[self oscValueToString:[m valueAtIndex:y]]];
+        }
+    }
+    //NSLog(rcvCommand);
     [self runMessage];
 }
 
 //treat Message when received
 - (void) runMessage {
-    //NSLog(rcvCommand);
+
     NSArray *pieces = [rcvCommand componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *command = [pieces objectAtIndex:0];
     
     NSMutableArray *orders = [NSMutableArray arrayWithArray: pieces];
     [orders removeObjectAtIndex:0];
     
-    //SWITCH COMMUNICATION METHOD
-	if ([command isEqualToString: @"/usetcp"]) {
-        useTCP = YES;
-        return;
-	}
-    
-    //SWITCH COMMUNICATION METHOD
-	if ([command isEqualToString: @"/useudp"]) {
-        useTCP = NO;
-        return;
-	}
+    //SWITCH COMMUNICATION METHOD  
     
     //SYNC : mode, state, args (movie, time, ...)
 	if ([command isEqualToString: @"/synctest"]) {
@@ -360,44 +335,33 @@
 	}
     
     //LOAD & PLAY MOVIE
-	if (([command isEqualToString: @"/loadmovie"]) || ([command isEqualToString: @"/playmovie"])) {
+    //TODO remove playmovieAVF : deprecated
+	if (([command isEqualToString: @"/loadmovie"]) 
+        || ([command isEqualToString: @"/playmovie"]) 
+        || ([command isEqualToString: @"/playmovieAVF"])) {
+        
         sourceMode = LOCAL_MODE;
-        useAVF = NO;
-        [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : [command isEqualToString: @"/playmovie"]];
+        BOOL playnow = (([command isEqualToString: @"/playmovieAVF"]) || ([command isEqualToString: @"/playmovie"]));
+        [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : playnow];
         return;
     }
     
     //LOAD & PLAY STREAM
-	if (([command isEqualToString: @"/loadstream"]) || ([command isEqualToString: @"/playstream"])) {
+    //TODO remove playstreamAVF : deprecated
+	if (([command isEqualToString: @"/loadstream"]) 
+        || ([command isEqualToString: @"/playstream"])  
+        || ([command isEqualToString: @"/playstreamAVF"])) {
+        
 		sourceMode = STREAM_MODE;
-        useAVF = NO;
-        [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : [command isEqualToString: @"/playstream"]];
-        return;
-    }
-    
-    //PLAY MOVIE AVF
-	if ([command isEqualToString: @"/playmovieAVF"]) {
-        sourceMode = LOCAL_MODE;
-        useAVF = YES;
-        [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : YES];
-        return;
-    }
-    
-    //PLAY STREAM AVF
-	if ([command isEqualToString: @"/playstreamAVF"]) {
-		sourceMode = STREAM_MODE;
-        useAVF = YES;
-        [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : YES];
+        BOOL playnow = (([command isEqualToString: @"/playstreamAVF"]) || ([command isEqualToString: @"/playstream"]));
+        [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : playnow];
         return;
     }
     
     //PLAY LIVE AVF
 	if ([command isEqualToString: @"/playlive"]) {
-		useAVF = YES;
-        if (sourceMode != LIVE_MODE) {
-            sourceMode = LIVE_MODE;
-            [self stopMovie];
-        }
+        sourceMode = LIVE_MODE;
+        playerview.alpha=1;
         [self initGoMovieWithName : [[orders componentsJoinedByString:@" "] copy] : YES];
         return;
     }
@@ -414,6 +378,12 @@
     //STOP MOVIE
 	if ([command isEqualToString: @"/stopmovie"]) {
 		gostop = YES;
+        return;
+    }
+    
+    //STOP MOVIE
+	if ([command isEqualToString: @"/stoplive"]) {
+		gostoplive = YES;
         return;
     }
     
@@ -540,8 +510,8 @@
         //SCHEDULED ORDERS
         //play movie
         if (gomovie) {
-            if (useAVF) [self playMovieAVF];
-            else [self playMovie];		
+            if (sourceMode == LIVE_MODE) [self playLive];
+            else [self playMovie];
             [self sendSync];	
             gostop=NO;
             gomovie=NO;
@@ -553,6 +523,14 @@
             [self sendSync];
             gostop=NO;
         }
+        
+        //stop live
+        if (gostoplive) {
+            [self stopLive];
+            [self sendSync];
+            gostoplive=NO;
+        }
+        
         //pause
         if (gopause) {
             [self pauseMovie];
@@ -614,7 +592,7 @@
 
 //lancer le timer de Check (screen, players, connection TCP)
 -(void)topDepartChecker: (NSTimer*)timer{
-	timer = [NSTimer scheduledTimerWithTimeInterval:0.2 //200ms
+	timer = [NSTimer scheduledTimerWithTimeInterval:TIME_CHECKER
 											 target:self 
 										   selector:@selector(topChecker) 
 										   userInfo:nil 
@@ -628,23 +606,19 @@
     [self checkScreen];
     if (screenState == @"noscreen") [self stopMovie];
     
-    //CHECK REGIE TCP CONNECTION
-    if (([connectedSockets count] == 0) && (useTCP)) [self sayAllo]; 
+    //UPDATE CLOCK DISPLAY
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss:SSS"];
+    [viewController setTimeText: [dateFormatter stringFromDate:[NSDate date]]];
+    [dateFormatter release];
     
     //UPDATE MOVIE SCROLLER
-    if ((useAVF) && ([self isPlaying])) {
+    if ([self isPlaying]) {
         if(!userViewController.timeSlider.touchInside){
-            userViewController.timeSlider.maximumValue=(CGFloat)CMTimeGetSeconds([[playerAVF currentItem] duration]);
-            userViewController.timeSlider.value = (CGFloat)CMTimeGetSeconds([playerAVF currentTime]);
+            userViewController.timeSlider.maximumValue=(CGFloat)CMTimeGetSeconds([[playerMOVIE currentItem] duration]);
+            userViewController.timeSlider.value = (CGFloat)CMTimeGetSeconds([playerMOVIE currentTime]);
         }
         else [self skipMovie:(int)userViewController.timeSlider.value*1000];
-    }
-    else if (!createPlayer)  {
-        if(!userViewController.timeSlider.touchInside){
-                userViewController.timeSlider.maximumValue=(CGFloat)[moviePlayer duration];
-                userViewController.timeSlider.value = (CGFloat)[moviePlayer currentPlaybackTime];
-            }
-        else [moviePlayer setCurrentPlaybackTime:(double)userViewController.timeSlider.value];
     }
      
     //RE LAUNCH VIDEO IF PAUSED (debug streaming)
@@ -654,8 +628,7 @@
     //if (sourceMode == LIVE_MODE) [playerAVF play]; 
      
     //UPDATE PLAYER STATE
-    if (([connectedSockets count] == 0) && (useTCP)) playerState = @"no connection";
-    else if (paused) playerState = @"paused";
+    if (paused) playerState = @"paused";
     else if (faded) playerState = @"faded";
     else if ([self isPlaying]) 
     {
@@ -663,7 +636,9 @@
         else if (mired) playerState = @"mired";
         else if(sourceMode == STREAM_MODE) playerState = @"streaming";
         else if(sourceMode == LIVE_MODE) playerState = @"live";
-        else playerState = @"playing";
+        else {
+            playerState = @"playing";
+        }
     }
     else {
         playerState = @"waiting";
@@ -674,10 +649,17 @@
     [userViewController setMovieTitle:remotemoviename];
     
     //PLAYER RELEASE COUNTER
+    if (releaseMOVIE > 0) {
+        if (releaseMOVIE == 1) [self releaseUnusedMovie:YES];
+        releaseMOVIE--;
+    }
+    
+    //LIVE RELEASE COUNTER
     if (releasePlayer1 > 0) {
         if (releasePlayer1 == 1) {
             player1view.layer.sublayers = nil;
             [self.playerAVF1 pause];
+            [self player1End:nil];
         }
         releasePlayer1--;
     }
@@ -685,6 +667,7 @@
         if (releasePlayer2 == 1) {
             player2view.layer.sublayers = nil;
             [self.playerAVF2 pause];
+            [self player2End:nil];
         }
         releasePlayer2--;
     }
@@ -692,120 +675,52 @@
         if (releasePlayer3 == 1) {
             player3view.layer.sublayers = nil;
             [self.playerAVF3 pause];
+            [self player3End:nil];
         } 
         releasePlayer3--;
     }
 
 }
 
+-(void) releaseUnusedMovie:(BOOL) clear {
+    //player 1
+    AVPlayer* currentP = [[[[movie1view layer] sublayers] objectAtIndex:0] player];
+    if ((playerMOVIE != currentP) && (movie1view.layer.sublayers != nil)) {
+        [currentP pause];
+        [currentP removeObserver:self forKeyPath:@"status" context:nil];
+        if (clear) movie1view.layer.sublayers = nil;
+    }
+    
+    //player 2
+    currentP = [[[[movie2view layer] sublayers] objectAtIndex:0] player];
+    if ((playerMOVIE != currentP) && (movie2view.layer.sublayers != nil)) {
+        [currentP pause];
+        [currentP removeObserver:self forKeyPath:@"status" context:nil];
+        if (clear) movie2view.layer.sublayers = nil;
+    }
+    
+    releaseMOVIE = 0;
+}
+
 //###########################################################
 // MOVIE PLAYER CONTROLS
 
-//PLAY
+//PLAY LOCAL with AVFoundation Player
 -(void) playMovie{
-    NSURL *mymovieURL;
-    
-    if(sourceMode == LOCAL_MODE) mymovieURL = [NSURL fileURLWithPath:self.remotemoviepath];
-    else mymovieURL = [NSURL URLWithString:self.remotemoviename];
-    
-    //if player already exist
-    if (!createPlayer) {
-        //if same movie just fast reward
-        if (([movieLast isEqualToString:self.remotemoviepath]) && ([self isPlaying])) [self skipMovie:0];
-        //else change movie url
-        else {
-            self.moviePlayer.contentURL = mymovieURL;
-            [self.moviePlayer play];
-        }
-    }
-    
-    //first movie : create player
-    else {     
-        MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:mymovieURL];
-        mp.movieSourceType = MPMovieSourceTypeFile;
-        playerState = @"loading movie";
-        if (mp) {
-            //init player
-            [mp prepareToPlay];
-            mp.controlStyle = MPMovieControlStyleNone;
-            mp.repeatMode = MPMovieRepeatModeOne;
-        
-            //set player on second screen
-            [[mp view] setFrame: [_secondWindow bounds]];
-            [_secondWindow insertSubview:[mp view] belowSubview:playerview];
-        
-            // Play the movie!
-            [self stopMovie];  //stop previous
-            self.moviePlayer = mp; //attach new player
-            [self.moviePlayer play]; //play
-        
-            //add observers
-            [self installMovieNotificationObservers];
-            createPlayer = NO;
-        
-            //keep mute state
-            [self muteMovie:muted];
-            
-            //hide mire
-            [self mirMovie:NO];
-        
-            //init slider
-            userViewController.timeSlider.continuous=NO;
-            userViewController.timeSlider.minimumValue=0.0;
-        }
-    }
-    
-    [movieLast release];
-    movieLast = [remotemoviepath mutableCopy];
-    
-    [self infoMovie:remotemoviename];
-    paused = NO;
-}
-
-//PLAY with AVFoundation Player
--(void) playMovieAVF{
+    //TODO TEST AND FIX
     NSURL *movieURL;
     
     //URL
-    if(sourceMode == LOCAL_MODE) movieURL = [NSURL fileURLWithPath:self.remotemoviepath];
-    else movieURL = [NSURL URLWithString:self.remotemoviename];
+    if(sourceMode == STREAM_MODE) movieURL = [NSURL URLWithString:self.remotemoviename];
+    else movieURL = [NSURL fileURLWithPath:self.remotemoviepath];
     
     //if same movie just rewind
-    if ((sourceMode != LIVE_MODE) && ([movieLast isEqualToString:self.remotemoviepath]) && ([self isPlaying])) [self skipMovie:0];
+    if (([movieLast isEqualToString:self.remotemoviepath]) && ([self isPlaying])) [self skipMovie:0];
     else {        
         //create players
-        if (usePlayer == 1) {
-            self.playerAVF1 = [AVPlayer playerWithURL:movieURL];
-            [playerAVF1 addObserver:self forKeyPath:@"status" options:0 context:nil];
-            
-            if (sourceMode == LIVE_MODE) {
-                playerAVF = playerAVF3;
-                [playerview bringSubviewToFront:player3view];
-                [playerAVF play];
-            }
-        }
-        else if (usePlayer == 2)  {
-            self.playerAVF2 = [AVPlayer playerWithURL:movieURL];
-            [playerAVF2 addObserver:self forKeyPath:@"status" options:0 context:nil];
-            
-            if (sourceMode == LIVE_MODE) {
-                playerAVF = playerAVF1;
-                [playerview bringSubviewToFront:player1view];
-                [playerAVF play];
-            }
-        }
-        else {
-            self.playerAVF3 = [AVPlayer playerWithURL:movieURL];
-            [playerAVF3 addObserver:self forKeyPath:@"status" options:0 context:nil];
-            
-            if (sourceMode == LIVE_MODE) {
-                playerAVF = playerAVF2;
-                [playerview bringSubviewToFront:player2view];
-                [playerAVF play];
-            }
-        }
+        playerMOVIE = [AVPlayer playerWithURL:movieURL];
+        [playerMOVIE addObserver:self forKeyPath:@"status" options:0 context:nil];
         
-        //createPlayer = NO;
         [self muteMovie:muted];
         [self mirMovie:NO];
         
@@ -820,81 +735,132 @@
     paused = NO;
 }
 
+//PLAY LIVE with AVFoundation Player
+-(void) playLive{
+    //TODO TEST AND FIX
+    NSURL *movieURL;
+    
+    //URL
+        if(sourceMode == LOCAL_MODE) movieURL = [NSURL fileURLWithPath:self.remotemoviepath];
+        else movieURL = [NSURL URLWithString:self.remotemoviename];
+    
+        //if all player busy, destroy the top one (we assume he's blocked)
+        if ((lock1) && (lock2) && (lock3)) {
+        //[[[[[playerview subviews] objectAtIndex:0] sublayers] objectAtIndex:0] player];
+            NSNotification* note; 
+            if (playerAVF == playerAVF1) [self player1End:note];
+            else if (playerAVF == playerAVF2) [self player2End:note];
+            else if (playerAVF == playerAVF3) [self player3End:note];
+               
+            NSLog(@"locked situation force segment end");
+            //[self sendUDP:@"unblocked"];
+        }
+            
+            
+        //create players
+        if (!lock1) {
+            self.playerAVF1 = [AVPlayer playerWithURL:movieURL];
+            self.playerAVF1.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            //observer for player ready to play
+            [playerAVF1 addObserver:self forKeyPath:@"status" options:0 context:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player1End:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.playerAVF1 currentItem]];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player1End:)
+                                                         name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                       object:[self.playerAVF1 currentItem]];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player1End:)
+                                                         name:AVPlayerItemFailedToPlayToEndTimeErrorKey
+                                                       object:[self.playerAVF1 currentItem]];
+            lock1 = YES;
+        }
+        else if (!lock2)  {
+            self.playerAVF2 = [AVPlayer playerWithURL:movieURL];
+            self.playerAVF2.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            [playerAVF2 addObserver:self forKeyPath:@"status" options:0 context:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player2End:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.playerAVF2 currentItem]];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player2End:)
+                                                         name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                       object:[self.playerAVF2 currentItem]];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player2End:)
+                                                         name:AVPlayerItemFailedToPlayToEndTimeErrorKey
+                                                       object:[self.playerAVF2 currentItem]];
+            lock2 = YES;
+        }
+        else if (!lock3) {
+            self.playerAVF3 = [AVPlayer playerWithURL:movieURL];
+            self.playerAVF3.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            [playerAVF3 addObserver:self forKeyPath:@"status" options:0 context:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player3End:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.playerAVF3 currentItem]];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player3End:)
+                                                         name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                       object:[self.playerAVF3 currentItem]];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(player3End:)
+                                                         name:AVPlayerItemFailedToPlayToEndTimeErrorKey
+                                                       object:[self.playerAVF3 currentItem]];
+            lock3 = YES;
+        }
+        
+        [self muteMovie:muted];
+        [self mirMovie:NO];
+    
+        userViewController.timeSlider.continuous=NO;
+        userViewController.timeSlider.minimumValue=0.0;
+
+    [self infoMovie:remotemoviename];
+    paused = NO;
+}
+
 //IS PLAYING
 -(BOOL) isPlaying{
-    if (useAVF) {
-        if (usePlayer == 3) {
-            if (sourceMode == LIVE_MODE) return (player1view.layer.sublayers != nil);
-            else return (player2view.layer.sublayers != nil);
-        }
-        else if (usePlayer == 2) {
-            if (sourceMode == LIVE_MODE) return (player3view.layer.sublayers != nil);
-            else return (player1view.layer.sublayers != nil);
-        }
-        else {
-            if (sourceMode == LIVE_MODE) return (player2view.layer.sublayers != nil);
-            else return (player3view.layer.sublayers != nil);
-        }
-    }
-    else return (self.moviePlayer.playbackState == MPMoviePlaybackStatePlaying);
+    //TODO TEST AND FIX
+    return ((movie1view.layer.sublayers != nil) && (movie2view.layer.sublayers != nil));
 }
 
 
 //STOP
 -(void) stopMovie{
-    if (useAVF) {
-        player1view.layer.sublayers = nil;
-        player2view.layer.sublayers = nil;
-        player3view.layer.sublayers = nil;
-        [self.playerAVF1 pause];
-        [self.playerAVF2 pause];
-        [self.playerAVF3 pause];
-        usePlayer = 1;
-    }
-    else {
-        if(!createPlayer)
-        {
-            [self.moviePlayer stop];
-            [self removeMovieNotificationHandlers];
-            [self.moviePlayer release];
-            createPlayer = YES;
-        }
-    }
+    movie1view.layer.sublayers = nil;
+    movie2view.layer.sublayers = nil;
     
-    //show mire
     paused = NO;
     [self infoMovie:@""];
 }
 
+//STOP LIVE
+-(void) stopLive{
+    player1view.layer.sublayers = nil;
+    player2view.layer.sublayers = nil;
+    player3view.layer.sublayers = nil;
+    playerview.alpha=0;
+}
+
 //PAUSE
 -(void) pauseMovie{
-    if (useAVF) {
-        if ([self isPlaying] && paused) [self.playerAVF pause];
-        else if (!paused) [self.playerAVF play];
-    }
-    else {
-        if ([self isPlaying] && paused) [self.moviePlayer pause];
-        else if (!paused) [self.moviePlayer play];
-    }
+    if (paused) [self.playerMOVIE pause];
+    else if (!paused) [self.playerMOVIE play];
 }
 
 //SKIP
 -(void) skipMovie:(int) playbacktimeWanted{
-    if (useAVF) {
-        if ( CMTimeGetSeconds(playerAVF.currentItem.duration) > (playbacktimeWanted/1000)) {
-                [playerAVF seekToTime:CMTimeMake(playbacktimeWanted, 1000) toleranceBefore: kCMTimeZero toleranceAfter: kCMTimeZero];
-                [playerAVF play];
-        }
-        else gostop=YES; 
+    if ( CMTimeGetSeconds(playerMOVIE.currentItem.duration) > (playbacktimeWanted/1000)) {
+            [playerMOVIE seekToTime:CMTimeMake(playbacktimeWanted, 1000) toleranceBefore: kCMTimeZero toleranceAfter: kCMTimeZero];
+            [playerMOVIE play];
     }
-    else {
-        double seekTime = playbacktimeWanted/1000;
-        if ((int)[moviePlayer duration]>seekTime) {
-            [moviePlayer setCurrentPlaybackTime:seekTime];
-            [moviePlayer play];
-        }
-        else gostop=YES;
-    }
+    else gostop=YES; 
 }
 
 //MUTE
@@ -988,8 +954,8 @@
 // PLAYER UTILITIES
 
 -(void) initGoMovieWithName:(NSString*)n:(BOOL)go {
+    
     if ([n length]>=1){
-        
         self.remotemoviename = n;
         
         //Streaming URL
@@ -999,19 +965,27 @@
             self.remotemoviepath = [self.pathformovie stringByAppendingString:@"/"];
             self.remotemoviepath = [self.remotemoviepath stringByAppendingString:n];
             
-            //set next button
-            if ([tableViewController.moviesList lastObject]!=n) {
-                [userViewController setNextTitle:[tableViewController.moviesList objectAtIndex:1 + [tableViewController.moviesList indexOfObject:n]]];
-                userViewController.nextButton.hidden=NO;
-            }else{
-                userViewController.nextButton.hidden=YES;
+            if ([tableViewController.moviesList containsObject:n]) {
+               //TODO TEST PLAY WITH EMPTY PATCH
+                // NSURL *movieURLtest = [NSURL fileURLWithPath:self.remotemoviepath];
+               // NSError *err;
+               // if ([movieURLtest checkResourceIsReachableAndReturnError:&err] == NO) 
+               // {
+                //set next button
+                if ([tableViewController.moviesList lastObject]!=n) {
+                    [userViewController setNextTitle:[tableViewController.moviesList objectAtIndex:1 + [tableViewController.moviesList indexOfObject:n]]];
+                    userViewController.nextButton.hidden=NO;
+                }else{
+                    userViewController.nextButton.hidden=YES;
+                }
+                
+                //set back button
+                if ([tableViewController.moviesList objectAtIndex:0]!=n) {
+                    [userViewController setBackTitle:[tableViewController.moviesList objectAtIndex: [tableViewController.moviesList indexOfObject:n]-1]];
+                    userViewController.backButton.hidden=NO;
+                }else userViewController.backButton.hidden=YES;
+               // }
             }
-            
-            //set back button
-            if ([tableViewController.moviesList objectAtIndex:0]!=n) {
-                [userViewController setBackTitle:[tableViewController.moviesList objectAtIndex: [tableViewController.moviesList indexOfObject:n]-1]];
-                userViewController.backButton.hidden=NO;
-            }else userViewController.backButton.hidden=YES;
         }
     }
     
@@ -1078,13 +1052,34 @@
                 [_secondWindow addSubview:backField];
                 [backField release];
             
+            //Create Masks (movieview)
+                movieview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                movieview.backgroundColor = [UIColor clearColor];
+                movieview.alpha=1;
+                [_secondWindow addSubview:movieview];
+            
+                //Create PLAYER 1 view
+                //movie1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,300,300)];
+                    movie1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    movie1view.backgroundColor = [UIColor clearColor];
+                    movie1view.alpha=1;
+                    [movieview addSubview:movie1view];
+            
+                //Create PLAYER 2 view
+                    movie2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    movie2view.backgroundColor = [UIColor clearColor];
+                    movie2view.alpha=1;
+                    [movieview addSubview:movie2view];
+
+            
             //Create Masks (playerview)
                 playerview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-                playerview.backgroundColor = [UIColor clearColor];
-                playerview.alpha=1;
+                playerview.backgroundColor = [UIColor blackColor];
+                playerview.alpha=0;
                 [_secondWindow addSubview:playerview];
             
                 //Create PLAYER 1 view
+                    //player1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,300,300)];
                     player1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
                     player1view.backgroundColor = [UIColor clearColor];
                     player1view.alpha=1;
@@ -1157,7 +1152,7 @@
 		//screen has been disconnected ?
 		if (!([[UIScreen screens] count] > 1)) {
             [viewController setInfoscreenText: @"Warning screen disconnected !"];
-            [viewController setInfoText: @"No Screen.."];
+            [viewController setInfoText: @"No Screen !"];
 			playerState = @"noscreen";
 			screenState = @"noscreen";
 			[self sendSync];
@@ -1176,9 +1171,8 @@
         if (![anAddress hasPrefix:@"127"] && [[anAddress componentsSeparatedByString:@"."] count] == 4) {
             ip = anAddress;
             break;
-        } else {
-            ip = @"Warning no IP address";
-        }
+        } 
+        else ip = @"No Wifi !";
     }
 	return ip;
 }
@@ -1188,31 +1182,21 @@
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
     char *machine = malloc(size);
     sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    NSString *platform = [NSString stringWithCString:machine];
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
     free(machine);
     return platform;
 }
 
 - (void) debug : (NSString*) s{
-	
-    s = [@"debug " stringByAppendingString:s];
-    
-	if (useTCP) [self sendTCP:s];
-    else [outPort sendThisMessage:[self oscWithString:s]];
+	[self sendUDP:[@"debug " stringByAppendingString:s]];
 }
 
 
 //###########################################################
-//notification for movie (MPMovie)
-
--(void) installMovieNotificationObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(moviePlayBackDidFinish:) 
-                                                 name:MPMoviePlayerPlaybackDidFinishNotification 
-                                               object:moviePlayer];      
-}
+//notification for movie
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
+    //TODO
     //if(![userViewController isMute]){
         //[userViewController muting:self];
         //[userViewController setMuteButtonColor:[UIColor grayColor]];
@@ -1221,14 +1205,36 @@
     [userViewController setMuteButtonColor:[UIColor grayColor]];
 }
 
--(void)removeMovieNotificationHandlers {    
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:moviePlayer];
-}
-
-
 //observer manager (AVPlayer,...)
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
 {
+    if ([keyPath isEqualToString:@"status"] )
+    {
+        if (object == playerMOVIE && playerMOVIE.status == AVPlayerStatusReadyToPlay) {
+            AVPlayerLayer *layerMOVIE = [AVPlayerLayer playerLayerWithPlayer:object];
+            layerMOVIE.frame = movie1view.layer.bounds;
+            
+            if (usePlayer == 1) {
+                movie1view.layer.sublayers = nil;
+                [movie1view.layer addSublayer:layerMOVIE];
+                //TODO ANIMATE ALPHA
+                [movieview bringSubviewToFront:movie1view];
+                usePlayer = 2;
+            }
+            else {
+                movie2view.layer.sublayers = nil;
+                [movie2view.layer addSublayer:layerMOVIE];
+                //TODO ANIMATE ALPHA
+                [movieview bringSubviewToFront:movie2view];
+                usePlayer = 1;
+            }
+            
+            if (releaseMOVIE > 0) [self releaseUnusedMovie:NO];
+            else releaseMOVIE = RELEASE_PLAYER;
+            
+            [playerMOVIE play];
+        }
+    }
     //AVF Player Statuts OBSERVER
     if ([keyPath isEqualToString:@"status"] )
     {    
@@ -1244,13 +1250,28 @@
                 [playerview sendSubviewToBack:player1view];
                 player1view.layer.sublayers = nil;
                 [player1view.layer addSublayer:layerAVF];
-                
+                 //NSLog(@"player1 ready");
                 if ((sourceMode == LOCAL_MODE) || (sourceMode == STREAM_MODE)) {
-                    releasePlayer3 = RELEASE_TIME;
+                    releasePlayer3 = RELEASE_PLAYER;
                     playerAVF = object;
-                    //TODO ANIMATE ??
                     [playerview bringSubviewToFront:player1view];
                     [playerAVF play];
+                }
+                else if (sourceMode == LIVE_MODE)  {                    
+                    if ((player2view.layer.sublayers == nil) && (player3view.layer.sublayers != nil)) {
+                        //when 1 is ready, we start the previous one : the number 3
+                        // this number 3 has RELEASE_LIVE time to play and terminate.
+                        //after that player3end will be called automatically.
+                        
+                        //TODO : maybe useless to preload 2 player before start ? maybe one is enough since
+                        //we use isReady state observer... 
+                        
+                        playerAVF = playerAVF3;
+                        releasePlayer3 = RELEASE_LIVE;
+                        [playerview bringSubviewToFront:player3view];
+                        [playerAVF play];
+                        NSLog(@"player3 first start");
+                    }
                 }
             }
             
@@ -1259,13 +1280,22 @@
                 [playerview sendSubviewToBack:player2view];
                 player2view.layer.sublayers = nil;
                 [player2view.layer addSublayer:layerAVF];
-                
+                //NSLog(@"player2 ready");
                 if ((sourceMode == LOCAL_MODE) || (sourceMode == STREAM_MODE)) {
-                    releasePlayer1 = RELEASE_TIME;
+                    releasePlayer1 = RELEASE_PLAYER;
                     playerAVF = object;
-                    //TODO ANIMATE ??
                     [playerview bringSubviewToFront:player2view];
                     [playerAVF play];
+                    
+                }
+                else if (sourceMode == LIVE_MODE) {                    
+                    if ((player3view.layer.sublayers == nil) && (player1view.layer.sublayers != nil)) {
+                        playerAVF = playerAVF1;
+                        releasePlayer1 = RELEASE_LIVE;
+                        [playerview bringSubviewToFront:player1view];
+                        [playerAVF play];
+                         NSLog(@"player1 first start");
+                    }
                 }
             }
             
@@ -1274,24 +1304,74 @@
                 [playerview sendSubviewToBack:player3view];
                 player3view.layer.sublayers = nil;
                 [player3view.layer addSublayer:layerAVF];
-                
+                //NSLog(@"player3 ready");
                 if ((sourceMode == LOCAL_MODE) || (sourceMode == STREAM_MODE)) {
-                    releasePlayer2 = RELEASE_TIME;
+                    releasePlayer2 = RELEASE_PLAYER;
                     playerAVF = object;
                     //TODO ANIMATE ??
                     [playerview bringSubviewToFront:player3view];
                     [playerAVF play];
                 }
+                else if (sourceMode == LIVE_MODE) {
+                    if ((player1view.layer.sublayers == nil) && (player2view.layer.sublayers != nil)) {
+                        playerAVF = playerAVF2;
+                        releasePlayer2 = RELEASE_LIVE;
+                        [playerview bringSubviewToFront:player2view];
+                        [playerAVF play];
+                         NSLog(@"player1 first start");
+                    }
+                }
             }
-            
-            
-            //[playerAVF seekToTime:kCMTimeZero];
-                
-            //change next player
-            usePlayer++;
-            if (usePlayer > 3) usePlayer = 1;
         }
     }
+}
+
+- (void)player1End:(NSNotification *)notification {
+    [playerAVF1 removeObserver:self forKeyPath:@"status" context:nil];
+    if (sourceMode == LIVE_MODE)  {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[self.playerAVF1 currentItem]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeNotification object:[self.playerAVF1 currentItem]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeErrorKey object:[self.playerAVF1 currentItem]];
+        
+        //TODO : delay charge if next player is not ready !
+        playerAVF = playerAVF2;
+        [playerview bringSubviewToFront:player2view];
+        [playerAVF play];
+    }
+    lock1 = NO;
+    releasePlayer1 = 0;
+}
+
+- (void)player2End:(NSNotification *)notification {
+    [playerAVF2 removeObserver:self forKeyPath:@"status" context:nil];
+    if (sourceMode == LIVE_MODE) {        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[self.playerAVF2 currentItem]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeNotification object:[self.playerAVF2 currentItem]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeErrorKey object:[self.playerAVF2 currentItem]];
+        
+        //TODO : delay charge if next player is not ready !
+        playerAVF = playerAVF3;
+        [playerview bringSubviewToFront:player3view];
+        [playerAVF play];
+    }
+    lock2 = NO;
+    releasePlayer2 = 0;
+}
+
+- (void)player3End:(NSNotification *)notification {
+    [playerAVF3 removeObserver:self forKeyPath:@"status" context:nil];
+    if (sourceMode == LIVE_MODE) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[self.playerAVF3 currentItem]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeNotification object:[self.playerAVF3 currentItem]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeErrorKey object:[self.playerAVF3 currentItem]];
+        
+        //TODO : delay charge if next player is not ready !
+        playerAVF = playerAVF1;
+        [playerview bringSubviewToFront:player1view];
+        [playerAVF play];
+    }
+    lock3 = NO;
+    releasePlayer3 = 0;
 }
 
 

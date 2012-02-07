@@ -9,7 +9,7 @@
 #import "remoteplayv2ViewController.h"
 
 @implementation remoteplayv2ViewController
-@synthesize info,infoscreen,infoip,infomovie;
+@synthesize info,infoscreen,infoip,infomovie,infotime;
 
 
 - (void)setInfoText:(NSString*)text {
@@ -26,6 +26,10 @@
 
 - (void)setInfoMovieText:(NSString*)text;	{
 	self.infomovie.text = text;
+}
+
+- (void)setTimeText:(NSString*)text;	{
+	self.infotime.text = text;
 }
 
 
