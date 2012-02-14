@@ -17,27 +17,24 @@
 -(IBAction)muting:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    appDelegate.paused = NO;
-    [appDelegate pauseMovie];
+    [appDelegate.moviePlayer unpause];
     
-    if (appDelegate.muted) {
-        [appDelegate muteMovie:NO];
+    if ([appDelegate.disPlay muted]) {
+        [appDelegate.disPlay mute:NO];
         [self setMuteButtonColor:[UIColor greenColor]];
-        //[fadeBlackButton setTitle:@">B" forState:UIControlStateNormal];
     }else{
-        [appDelegate muteMovie:YES];
+        [appDelegate.disPlay mute:YES];
         [self setMuteButtonColor:[UIColor orangeColor]];
     }
-    [appDelegate sendSync];
+    [appDelegate.comPort sendSync];
 }
 
 //double click = mute and pause
 - (IBAction)mutingAndPause:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    [appDelegate muteMovie:YES];
-    appDelegate.paused = YES;
-    [appDelegate pauseMovie];
+    [appDelegate.disPlay mute:YES];
+    [appDelegate.moviePlayer pause];
     
     [self setMuteButtonColor:[UIColor redColor]];
 }
@@ -46,72 +43,71 @@
 - (IBAction)goNext:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [nextButton titleForState:UIControlStateNormal];
-    [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m:YES];
+    [appDelegate.moviePlayer load:m];
+    [appDelegate.moviePlayer play];
 }
 
 //vidéo précedente
 - (IBAction)goBack:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [backButton titleForState:UIControlStateNormal];
-    [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m:YES];
+    [appDelegate.moviePlayer load:m];
+    [appDelegate.moviePlayer play];
 }
 
 //défilement
 -(IBAction)slide:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     int seekTime = timeSlider.value*1000;
-    [appDelegate skipMovie:seekTime];
-    [appDelegate sendSync];
+    [appDelegate.moviePlayer skip:seekTime];
+    [appDelegate.comPort sendSync];
 }
 
 //fondu au noir
 - (IBAction)fadeBlack:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    if (!appDelegate.faded) [appDelegate fadeColor:0:0:0:255];
-    [appDelegate fadeMovie:(!appDelegate.faded)];
-    [appDelegate sendSync];
+    if (![appDelegate.disPlay faded]) [appDelegate.disPlay fadeColor:0:0:0:255];
+    [appDelegate.disPlay fade:(![appDelegate.disPlay faded])];
+    [appDelegate.comPort sendSync];
 }
 
 //fondu au blanc
 - (IBAction)fadeWhite:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    if (!appDelegate.faded) [appDelegate fadeColor:255:255:255:255];
-    [appDelegate fadeMovie:(!appDelegate.faded)];
-    [appDelegate sendSync];
+    if (![appDelegate.disPlay faded]) [appDelegate.disPlay fadeColor:255:255:255:255];
+    [appDelegate.disPlay fade:(![appDelegate.disPlay faded])];
+    [appDelegate.comPort sendSync];
 }
 
 //mir switch 
 - (IBAction)mirSwitch:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    [appDelegate mirMovie:!appDelegate.mired];
+    [appDelegate.disPlay mir:(![appDelegate.disPlay mired])];
 }
 
 //pause switch 
 - (IBAction)pauseSwitch:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    appDelegate.paused = !appDelegate.paused;
-    [appDelegate pauseMovie];
+    [appDelegate.moviePlayer switchpause];
 }
 
 //flash
 - (IBAction)flash:(id)sender{
         remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    [appDelegate flashColor:255:255:255:255];
-    [appDelegate flashMovie];
+    [appDelegate.disPlay flashColor:255:255:255:255];
+    [appDelegate.disPlay flash];
 }
 
 //envoi message sos à la régie
 -(IBAction)sos:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    [appDelegate sendSOS];
+    [appDelegate.comPort sendSOS];
 }
 
 //fonction pour changer les attribut de la vue

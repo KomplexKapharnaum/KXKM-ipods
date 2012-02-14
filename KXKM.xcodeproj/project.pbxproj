@@ -26,7 +26,13 @@
 		CE9A29C314C47D3000003298 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9A29C214C47D3000003298 /* CFNetwork.framework */; };
 		CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9DA3081488F872005357EC /* AVFoundation.framework */; };
 		CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */; };
-		CEBE017B14D5FF85001E6E24 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBE017A14D5FF85001E6E24 /* GCDAsyncUdpSocket.m */; };
+		CE9F341114E406AC006ABD81 /* RunClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341014E406AC006ABD81 /* RunClass.m */; };
+		CE9F341614E42150006ABD81 /* MovieClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341514E42150006ABD81 /* MovieClass.m */; };
+		CE9F341914E42A42006ABD81 /* FilesClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341814E42A42006ABD81 /* FilesClass.m */; };
+		CE9F341C14E42BAE006ABD81 /* LiveClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341B14E42BAE006ABD81 /* LiveClass.m */; };
+		CE9F341F14E42BC8006ABD81 /* InterfaceClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */; };
+		CEC492A614E2C5C30094C710 /* DisplayClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC492A514E2C5C30094C710 /* DisplayClass.m */; };
+		CEC492AA14E2E39A0094C710 /* ComClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC492A914E2E39A0094C710 /* ComClass.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,8 +63,21 @@
 		CE9A29C214C47D3000003298 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		CE9DA3081488F872005357EC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		CEBE017914D5FF85001E6E24 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
-		CEBE017A14D5FF85001E6E24 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
+		CE9F340F14E406AC006ABD81 /* RunClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunClass.h; sourceTree = "<group>"; };
+		CE9F341014E406AC006ABD81 /* RunClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunClass.m; sourceTree = "<group>"; };
+		CE9F341314E40982006ABD81 /* ConfigConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigConst.h; sourceTree = "<group>"; };
+		CE9F341414E42150006ABD81 /* MovieClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieClass.h; sourceTree = "<group>"; };
+		CE9F341514E42150006ABD81 /* MovieClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieClass.m; sourceTree = "<group>"; };
+		CE9F341714E42A42006ABD81 /* FilesClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilesClass.h; sourceTree = "<group>"; };
+		CE9F341814E42A42006ABD81 /* FilesClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilesClass.m; sourceTree = "<group>"; };
+		CE9F341A14E42BAD006ABD81 /* LiveClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveClass.h; sourceTree = "<group>"; };
+		CE9F341B14E42BAE006ABD81 /* LiveClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveClass.m; sourceTree = "<group>"; };
+		CE9F341D14E42BC7006ABD81 /* InterfaceClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceClass.h; sourceTree = "<group>"; };
+		CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceClass.m; sourceTree = "<group>"; };
+		CEC492A414E2C5C30094C710 /* DisplayClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayClass.h; sourceTree = "<group>"; };
+		CEC492A514E2C5C30094C710 /* DisplayClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayClass.m; sourceTree = "<group>"; };
+		CEC492A814E2E39A0094C710 /* ComClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComClass.h; sourceTree = "<group>"; };
+		CEC492A914E2E39A0094C710 /* ComClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComClass.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,10 +101,16 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				CEBE017914D5FF85001E6E24 /* GCDAsyncUdpSocket.h */,
-				CEBE017A14D5FF85001E6E24 /* GCDAsyncUdpSocket.m */,
+				CE9F342014E42C8D006ABD81 /* Com */,
+				CE9F342214E42CA8006ABD81 /* Run */,
+				CE9F342614E42CE1006ABD81 /* Interface */,
+				CE9F342514E42CD2006ABD81 /* Files */,
+				CE9F342414E42CC6006ABD81 /* Live */,
+				CE9F342314E42CB7006ABD81 /* Movie */,
+				CE9F342114E42C9B006ABD81 /* Display */,
 				1D3623240D0F684500981E51 /* remoteplayv2AppDelegate.h */,
 				1D3623250D0F684500981E51 /* remoteplayv2AppDelegate.m */,
+				CE9F341314E40982006ABD81 /* ConfigConst.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -171,6 +196,69 @@
 			name = viewcontrollers;
 			sourceTree = "<group>";
 		};
+		CE9F342014E42C8D006ABD81 /* Com */ = {
+			isa = PBXGroup;
+			children = (
+				CEC492A814E2E39A0094C710 /* ComClass.h */,
+				CEC492A914E2E39A0094C710 /* ComClass.m */,
+			);
+			name = Com;
+			sourceTree = "<group>";
+		};
+		CE9F342114E42C9B006ABD81 /* Display */ = {
+			isa = PBXGroup;
+			children = (
+				CEC492A414E2C5C30094C710 /* DisplayClass.h */,
+				CEC492A514E2C5C30094C710 /* DisplayClass.m */,
+			);
+			name = Display;
+			sourceTree = "<group>";
+		};
+		CE9F342214E42CA8006ABD81 /* Run */ = {
+			isa = PBXGroup;
+			children = (
+				CE9F340F14E406AC006ABD81 /* RunClass.h */,
+				CE9F341014E406AC006ABD81 /* RunClass.m */,
+			);
+			name = Run;
+			sourceTree = "<group>";
+		};
+		CE9F342314E42CB7006ABD81 /* Movie */ = {
+			isa = PBXGroup;
+			children = (
+				CE9F341414E42150006ABD81 /* MovieClass.h */,
+				CE9F341514E42150006ABD81 /* MovieClass.m */,
+			);
+			name = Movie;
+			sourceTree = "<group>";
+		};
+		CE9F342414E42CC6006ABD81 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				CE9F341A14E42BAD006ABD81 /* LiveClass.h */,
+				CE9F341B14E42BAE006ABD81 /* LiveClass.m */,
+			);
+			name = Live;
+			sourceTree = "<group>";
+		};
+		CE9F342514E42CD2006ABD81 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE9F341714E42A42006ABD81 /* FilesClass.h */,
+				CE9F341814E42A42006ABD81 /* FilesClass.m */,
+			);
+			name = Files;
+			sourceTree = "<group>";
+		};
+		CE9F342614E42CE1006ABD81 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				CE9F341D14E42BC7006ABD81 /* InterfaceClass.h */,
+				CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */,
+			);
+			name = Interface;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -245,7 +333,13 @@
 				28D7ACF80DDB3853001CB0EB /* remoteplayv2ViewController.m in Sources */,
 				86D68AE314541853009897FD /* remoteplayv2UserViewController.m in Sources */,
 				86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */,
-				CEBE017B14D5FF85001E6E24 /* GCDAsyncUdpSocket.m in Sources */,
+				CEC492A614E2C5C30094C710 /* DisplayClass.m in Sources */,
+				CEC492AA14E2E39A0094C710 /* ComClass.m in Sources */,
+				CE9F341114E406AC006ABD81 /* RunClass.m in Sources */,
+				CE9F341614E42150006ABD81 /* MovieClass.m in Sources */,
+				CE9F341914E42A42006ABD81 /* FilesClass.m in Sources */,
+				CE9F341C14E42BAE006ABD81 /* LiveClass.m in Sources */,
+				CE9F341F14E42BC8006ABD81 /* InterfaceClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

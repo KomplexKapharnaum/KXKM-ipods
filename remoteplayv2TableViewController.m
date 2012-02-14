@@ -8,6 +8,7 @@
 
 #import "remoteplayv2TableViewController.h"
 #import "remoteplayv2AppDelegate.h"
+#import "ConfigConst.h"
 
 @implementation remoteplayv2TableViewController
 
@@ -52,7 +53,9 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *m = [moviesList objectAtIndex:indexPath.row];
     [appDelegate disableStreaming];
-    [appDelegate initGoMovieWithName:m:YES];
+    [appDelegate.moviePlayer load:m];
+    [appDelegate.moviePlayer play];
+    [appDelegate.interFace setMode:MANU];
 }
 
 
