@@ -8,6 +8,7 @@
 
 #import "DisplayClass.h"
 #import "ConfigConst.h"
+#import "remoteplayv2AppDelegate.h"
 
 @implementation DisplayClass
 
@@ -40,6 +41,9 @@
     
     if (muteMe) muteview.alpha = 1;
     else muteview.alpha = 0;
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bmute:muteMe];
 }
 
 -(BOOL) muted {
@@ -52,6 +56,9 @@
     
     if (mirDisp) mirview.alpha = 1;
     else mirview.alpha = 0;
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bmir:mirDisp];
 }
 
 -(BOOL) mired {
@@ -79,6 +86,9 @@
         fadeview.alpha=0;
         [UIView commitAnimations];
     }
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bfade:fadeMe];
 }
 
 -(void) fadeColor:(int)Red:(int)Green:(int)Blue:(int)Alpha{
@@ -96,6 +106,7 @@
 
 //FLASH
 -(void) flash{
+    
     float r = (float)flashcolorRed/255;
     float g = (float)flashcolorGreen/255;
     float b = (float)flashcolorBlue/255;
@@ -104,9 +115,12 @@
     
     flashview.alpha=a;
     [UIView beginAnimations:@"flash" context:NULL];
-    [UIView setAnimationDuration:0.35];
+    [UIView setAnimationDuration:FLASH_LENGHT];
     flashview.alpha=0;
     [UIView commitAnimations];
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bflash];
 }
 
 -(void) flashColor:(int)Red:(int)Green:(int)Blue:(int)Alpha{
@@ -237,7 +251,7 @@
             //Create Masks (fadeview)
             fadeview = [[UIView alloc] initWithFrame:secondScreen.bounds];
             fadeview.backgroundColor = [UIColor blackColor];
-            fadeview.alpha=VIEW_FADE;
+            fadeview.alpha=0;
             [_secondWindow addSubview:fadeview];
             
             //Create Masks (titlesview)
@@ -249,13 +263,13 @@
             //Create Masks (muteview)
             muteview = [[UIView alloc] initWithFrame:secondScreen.bounds];
             muteview.backgroundColor = [UIColor blackColor];
-            muteview.alpha=VIEW_MUTE;
+            muteview.alpha=0;
             [_secondWindow addSubview:muteview];
             
             //Create Masks (mirview)
             mirview = [[UIView alloc] initWithFrame:secondScreen.bounds];
             mirview.backgroundColor = [UIColor blackColor];
-            mirview.alpha=VIEW_MIR;
+            mirview.alpha=0;
             [_secondWindow addSubview:mirview];
             
             // Center a label in the view.
@@ -278,6 +292,12 @@
 			// Go ahead and show the window.
 			_secondWindow.hidden = NO;
 			newRes =  [NSString stringWithFormat: @"%.0f x %.0f",secondScreen.bounds.size.width,secondScreen.bounds.size.height];
+            
+            //init View visibility
+            [self mir: VIEW_MIR];
+            [self fade: VIEW_FADE];
+            [self mute: VIEW_MUTE];
+            
 		}
 	}
 	//screen connected check if still there

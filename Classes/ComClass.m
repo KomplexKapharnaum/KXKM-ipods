@@ -8,6 +8,8 @@
 
 #import "ComClass.h"
 #import "remoteplayv2AppDelegate.h"
+#include <ifaddrs.h>
+#include <arpa/inet.h>
 
 @implementation ComClass
 
@@ -23,8 +25,8 @@
     
     //COMMON UDP
     inPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_in_key"] intValue];
-    outPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_server_key"] intValue];
-    udpServerIP = [[NSUserDefaults standardUserDefaults] stringForKey:@"osc_ip_server_key"];
+    outPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_server_key"] intValue]; 
+    udpServerIP = [self getIPBroadcast];
     
     //VVOSC Communication (UDP)
     //MANAGER add osc manager object
@@ -35,8 +37,8 @@
     [manager createNewInputForPort:inPort];
 	
     //OUTPUT create outPort to the server
-    vvoscOUT= [manager createNewOutputToAddress:udpServerIP atPort:outPort];
-    
+     if ([self verifyIp:udpServerIP])
+        vvoscOUT = [manager createNewOutputToAddress:udpServerIP atPort:outPort];
     
     return [super init];	
 }
@@ -44,7 +46,8 @@
 //###########################################################
 // UTILITIES
 
-- (NSString *) getIPAddress{
+/* DEPRECATED WAY TO OBTAIN IP
+- (NSString *) OLDgetIPAddress{
     NSArray *addresses = [[NSHost currentHost] addresses];
     NSString * ip;
     for (NSString *anAddress in addresses) {
@@ -55,12 +58,122 @@
         else ip = @"No Wifi !";
     }
 	return ip;
+}*/
+
+//GET IP
+- (NSString *)getIPAddress
+{
+    NSString *address = @"noIP";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0)
+    {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL)
+        {
+            if(temp_addr->ifa_addr->sa_family == AF_INET)
+            {
+                // Check if interface is en0 which is the wifi connection on the iPhone
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
+                {
+                    // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    
+    // Free memory
+    freeifaddrs(interfaces);
+    
+    return address;
+}
+
+//GET NET MASK
+- (NSString *)getNetMask {
+    
+    NSString *netmask = @"noMASK";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0)
+    {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL)
+        {
+            if(temp_addr->ifa_addr->sa_family == AF_INET)
+            {
+                // Check if interface is en0 which is the wifi connection on the iPhone
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
+                {
+                    // Get NSString from C String
+                    netmask = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    
+    // Free memory
+    freeifaddrs(interfaces);
+    
+    return netmask;
+}
+
+//GET BROADCAST IP
+- (NSString *)getIPBroadcast {
+    
+    NSString *broadcast = @"";
+    NSString *str;
+    
+    NSArray *address = [[self getIPAddress] componentsSeparatedByString:@"."];
+    NSArray *netmask = [[self getNetMask] componentsSeparatedByString:@"."];
+    
+    //TODO BETTER BROADCAST CALCULATION FOR COMPLEX NETMASK NETWORKS and IPv6 networks !!!!
+    if (([address count] == 4) && ([netmask count] == 4)) {
+        for (int i = 0; i < 4; i ++) {
+            
+            if ([[netmask objectAtIndex:i] isEqualToString:@"0"]) str = @"255";
+            else str = [address objectAtIndex:i];
+                
+            broadcast = [broadcast stringByAppendingString:str];
+            if (i < 3) broadcast = [broadcast stringByAppendingString:@"."];
+        }
+    }
+    else broadcast = @"noSERVER";
+    
+    return broadcast;
+}
+
+- (BOOL) verifyIp: (NSString *) ip {
+    return (![ip hasPrefix:@"127"] && [[ip componentsSeparatedByString:@"."] count] == 4);
 }
 
 - (void) setIpServer: (NSString *) ipServer {
-    [manager deleteAllOutputs];
-    udpServerIP = [ipServer copy];
-    vvoscOUT= [manager createNewOutputToAddress:udpServerIP atPort:outPort];
+    
+    if ([self verifyIp:ipServer]) {
+        [manager deleteAllOutputs];
+        udpServerIP = [ipServer copy];
+        vvoscOUT= [manager createNewOutputToAddress:udpServerIP atPort:outPort];
+    }
+}
+
+- (NSString*) serverState {
+    
+    if ([udpServerIP isEqualToString:@"noSERVER"]) return @"noserver";
+    else if ([udpServerIP isEqualToString:[self getIPBroadcast]]) return @"broadcast";
+    else return @"ok";
+    
 }
 
 //###########################################################
@@ -157,27 +270,24 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
+    //Screen alert
+    if ([[appDelegate.disPlay resolution] isEqualToString:@"noscreen"]) {
+        [self send:@"noscreen"];
+        return;
+    }
+    
     //Player Mode : Auto, Manu, Streaming, ... 
     NSString* msg = [appDelegate.interFace modeName];
     
     //Player State : waiting, playing,
     msg = [msg stringByAppendingString:@" "];
-    
     NSString* movie = [appDelegate.moviePlayer movie];
-    
     if (movie == nil) msg = [msg stringByAppendingString:@"stopmovie"];
     else {
             msg = [msg stringByAppendingString:@"playmovie "];
             msg = [msg stringByAppendingString:movie];
             //msg = [msg stringByAppendingString:[NSString stringWithFormat:@" %i",[appDelegate.moviePlayer time]]];
     }
-    
-    //TODO construct detailed state message 
-    //TODO construct detailed state message
-    //TODO construct detailed state message
-    
-    //msg = [msg stringByAppendingString:[NSString stringWithFormat:@" %i",[moviePlayer currentPlaybackTime]]];
-    //msg = [msg stringByAppendingString:[NSString stringWithFormat:@" %i",[userViewController isMute]]];
     
     [self send:msg];
 }

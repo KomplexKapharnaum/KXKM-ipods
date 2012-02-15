@@ -40,6 +40,8 @@
 -(void) popAndStart;
 -(void) currentDidFinish:(NSNotification *)notification;
 -(void) stop;
+-(BOOL) isPlaying;
+-(int) queueSize;
 
 
 

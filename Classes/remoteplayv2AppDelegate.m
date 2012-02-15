@@ -23,16 +23,15 @@
 @implementation remoteplayv2AppDelegate
 
 @synthesize window,tabBarController;
+
 @synthesize disPlay;
 @synthesize comPort;
 @synthesize runMachine;
+@synthesize checkMachine;
 @synthesize filesManager;
 @synthesize moviePlayer;
 @synthesize livePlayer;
 @synthesize interFace;
-
-@synthesize timerchecker;
-@synthesize playerState,playerMode;
 
 
 #pragma mark -
@@ -47,16 +46,6 @@
     //VUES : pointeur vers l'objet de chacune des vues pour un accès rapide depuis le delegate
         //TABS : Add the view controller's view to the window and display.
         [self.window addSubview:tabBarController.view];
-    
-        //VUE 1 : remote control
-        viewController = (remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0];
-    
-        //VUE 2 : controle manuel
-        userViewController = (remoteplayv2UserViewController*) [self.tabBarController.viewControllers objectAtIndex:1];
-        [userViewController loadView];
-    
-        //VUE 3 : media liste
-        tableViewController = (remoteplayv2TableViewController*) [self.tabBarController.viewControllers objectAtIndex:2];
         [self.window makeKeyAndVisible];
     
     //OBJECTS
@@ -69,6 +58,9 @@
         //RUN MACHINE (Clock & Dispatch Orders) 
         runMachine = [[RunClass alloc] init];
     
+        //RUN MACHINE (Clock & Check states) 
+        checkMachine = [[CheckerClass alloc] init];
+    
         //FILES MANAGER
         filesManager = [[FilesClass alloc] init];
     
@@ -79,154 +71,28 @@
         livePlayer = [[LiveClass alloc] init];
     
         //INTERFACE CTRL
-        interFace = [[InterfaceClass alloc] init];
+        interFace = [[InterfaceClass alloc] initWithTabBar:tabBarController];
     
-    //APP Info and States
+    //APP Info and States        
+        //auto info
+        [interFace infoIP: @"noIP"];
+        [interFace infoScreen: @"noscreen"];
+        [interFace infoState: @"starting"];
+        [interFace infoMovie: @""];
+        [interFace infoServer: [comPort serverState]];
+        [interFace infoName: comPort.ipodName];
         
-        //initiatisations états
-        playerMode = @"auto"; 
-        playerState = @"starting";
-        
-        //display info
-        [viewController setInfoscreenText: @"No Screen"];
-        [viewController setInfoipText: [@"IP : " stringByAppendingString: [comPort getIPAddress]]];
-    
-	
-    //APP init       
         //list media
-        tableViewController.moviesList = [[filesManager list] copy];
-        [tableViewController.moviesTable reloadData];
+        [interFace setMediaList: [filesManager list]];
+	
     
-        //set up the timer
+    //APP START      
         [runMachine start];
-        [self topDepartChecker: timerchecker];
+        [checkMachine start];
     
 	//end of startup
     return YES;
 }
-
-
-//INFO (screen box info)
--(void) infoScreen:(NSString*)msg{
-    [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoscreenText:msg];
-}
-
-//INFO (state box info)
--(void) infoState:(NSString*)msg{
-    [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoText:msg];
-}
-
-//INFO (state box info)
--(void) infoMovie:(NSString*)msg{
-    [(remoteplayv2ViewController*)[ self.tabBarController.viewControllers objectAtIndex:0] setInfoMovieText:msg];
-}
-
-
-
-
-
-
-
-//lancer le timer de Check (screen, players, connection TCP)
--(void)topDepartChecker: (NSTimer*)timer{
-	timer = [NSTimer scheduledTimerWithTimeInterval:TIME_CHECKER
-											 target:self 
-										   selector:@selector(topChecker) 
-										   userInfo:nil 
-											repeats:YES];
-	timerchecker = timer;
-}
-
--(void)topChecker{
-	
-    //CHECK IF SCREEN CHANGED
-    if ([disPlay checkScreen]) {
-               
-        if ([[disPlay resolution] isEqualToString: @"noscreen"]) {
-            [moviePlayer stop];
-            [self infoScreen: @"No Screen !"];
-        }
-        else [self infoScreen: [NSString stringWithFormat: @"Screen %@",[disPlay resolution]]];
-        
-        [comPort sendSync];    
-    }
-    
-    //UPDATE CLOCK DISPLAY
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"HH:mm:ss"];
-    [viewController setTimeText: [dateFormatter stringFromDate:[NSDate date]]];
-    [dateFormatter release];
-    
-    //UPDATE MOVIE SCROLLER
-    /* TODO UPDATE TIME
-    if ([self isPlaying]) {
-        if(!userViewController.timeSlider.touchInside){
-            userViewController.timeSlider.maximumValue=(CGFloat)CMTimeGetSeconds([[playerMOVIE currentItem] duration]);
-            userViewController.timeSlider.value = (CGFloat)CMTimeGetSeconds([playerMOVIE currentTime]);
-        }
-        else [self skipMovie:(int)userViewController.timeSlider.value*1000];
-    }
-    */
-     
-    //RE LAUNCH VIDEO IF PAUSED (debug streaming)
-    //TODO, check player state to know if it is usefull..
-    //TODO ADD Observer !
-    //if (streamingMode) [self.moviePlayer play]; 
-    //if (sourceMode == LIVE_MODE) [playerAVF play]; 
-     
-    //UPDATE PLAYER STATE
-    /* TODO PLAYER STATE GENERATED BY MOVIE CLASS
-    if (paused) playerState = @"paused";
-    else if ([disPlay faded]) playerState = @"faded";
-    else if ([self isPlaying]) 
-    {
-        if ([disPlay muted]) playerState = @"muted";
-        else if ([disPlay mired]) playerState = @"mired";
-        else if(sourceMode == STREAM_MODE) playerState = @"streaming";
-        else if(sourceMode == LIVE_MODE) playerState = @"live";
-        else {
-            playerState = @"playing";
-        }
-    }
-    else {
-        playerState = @"waiting";
-    }
-    */
-    
-    //UPDATE DISPLAY STATE
-    [self infoState:playerState];
-    //[userViewController setMovieTitle:remotemoviename];
-
-    
-    //LIVE RELEASE COUNTER
-    /*if (releasePlayer1 > 0) {
-        if (releasePlayer1 == 1) {
-            disPlay.player1view.layer.sublayers = nil;
-            [self.playerAVF1 pause];
-            [self player1End:nil];
-        }
-        releasePlayer1--;
-    }
-    if (releasePlayer2 > 0) {
-        if (releasePlayer2 == 1) {
-            disPlay.player2view.layer.sublayers = nil;
-            [self.playerAVF2 pause];
-            [self player2End:nil];
-        }
-        releasePlayer2--;
-    }
-    if (releasePlayer3 > 0) {
-        if (releasePlayer3 == 1) {
-            disPlay.player3view.layer.sublayers = nil;
-            [self.playerAVF3 pause];
-            [self player3End:nil];
-        } 
-        releasePlayer3--;
-    }
-    */
-}
-
-
 
 
 //###########################################################
@@ -302,22 +168,20 @@
 
 - (void)dealloc {
     
-    //controllers
-    [userViewController release];
-    [tableViewController release];
-    [viewController release];
-    
     //objects
     [disPlay release];
     [comPort release];
     [runMachine release];
+    [checkMachine release];
     [filesManager release];
     [moviePlayer release];
     [livePlayer release];
     [interFace release];
     
+    //interface
     [tabBarController release];
     [window release];
+    
     [super dealloc];	
 }
 

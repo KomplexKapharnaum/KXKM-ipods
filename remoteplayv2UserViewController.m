@@ -11,32 +11,13 @@
 
 @implementation remoteplayv2UserViewController
 
-@synthesize muteButton,pauseButton,nextButton,backButton,timeSlider,fadeBlackButton,fadeWhiteButton,mirButton,messageRegie;
+@synthesize movieButton,pauseButton,nextButton,backButton,timeSlider,fadeBlackButton,fadeWhiteButton,mirButton,messageRegie, sosButton, flashButton;
 
 //mute ou unmute la sortie vidéo (vue avec un cache noir devant la vidéo)
--(IBAction)muting:(id)sender{
+-(IBAction)mute:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    [appDelegate.moviePlayer unpause];
-    
-    if ([appDelegate.disPlay muted]) {
-        [appDelegate.disPlay mute:NO];
-        [self setMuteButtonColor:[UIColor greenColor]];
-    }else{
-        [appDelegate.disPlay mute:YES];
-        [self setMuteButtonColor:[UIColor orangeColor]];
-    }
-    [appDelegate.comPort sendSync];
-}
-
-//double click = mute and pause
-- (IBAction)mutingAndPause:(id)sender{
-    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-    [appDelegate.disPlay mute:YES];
-    [appDelegate.moviePlayer pause];
-    
-    [self setMuteButtonColor:[UIColor redColor]];
+    [appDelegate.disPlay mute:![appDelegate.disPlay muted]];
 }
 
 //vidéo suivante
@@ -60,7 +41,6 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     int seekTime = timeSlider.value*1000;
     [appDelegate.moviePlayer skip:seekTime];
-    [appDelegate.comPort sendSync];
 }
 
 //fondu au noir
@@ -69,7 +49,6 @@
     
     if (![appDelegate.disPlay faded]) [appDelegate.disPlay fadeColor:0:0:0:255];
     [appDelegate.disPlay fade:(![appDelegate.disPlay faded])];
-    [appDelegate.comPort sendSync];
 }
 
 //fondu au blanc
@@ -82,14 +61,14 @@
 }
 
 //mir switch 
-- (IBAction)mirSwitch:(id)sender{
+- (IBAction)mir:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.disPlay mir:(![appDelegate.disPlay mired])];
 }
 
 //pause switch 
-- (IBAction)pauseSwitch:(id)sender{
+- (IBAction)pause:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.moviePlayer switchpause];
@@ -110,32 +89,12 @@
     [appDelegate.comPort sendSOS];
 }
 
-//fonction pour changer les attribut de la vue
--(void)setMuteButtonColor:(UIColor*)c{
-    muteButton.backgroundColor =c;
-}
-
--(void) setMovieTitle:(NSString*)t {
-    [muteButton setTitle:t forState:UIControlStateNormal];
-}
-
--(void) setNextTitle:(NSString*)t {
-    [nextButton setTitle:t forState:UIControlStateNormal];
-}
--(void) setBackTitle:(NSString*)t {
-    [backButton setTitle:t forState:UIControlStateNormal];
-}
-
--(void)setMessage:(NSString*)m{
-    [messageRegie setText:m];
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {    }
     return self;
-    mute = NO;
 }
 
 - (void)didReceiveMemoryWarning

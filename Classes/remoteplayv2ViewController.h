@@ -8,27 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface remoteplayv2ViewController : UIViewController {
-	NSString *MyNotificationName;
-  
-	UITextField *info;
-	UITextField *infoscreen;
-	UITextField *infoip;
-	UITextField *infomovie;
-    UITextField *infotime;
-}
+@interface remoteplayv2ViewController : UIViewController 
 
-@property (nonatomic, retain) IBOutlet UITextField *info;
-@property (nonatomic, retain) IBOutlet UITextField *infoscreen;
 @property (nonatomic, retain) IBOutlet UITextField *infoip;
+@property (nonatomic, retain) IBOutlet UITextField *infoscreen;
+@property (nonatomic, retain) IBOutlet UITextField *infostate;
 @property (nonatomic, retain) IBOutlet UITextField *infomovie;
-@property (nonatomic, retain) IBOutlet UITextField *infotime;
-
-- (void)setInfoText:(NSString*)text;
-- (void)setInfoscreenText:(NSString*)text;
-- (void)setInfoipText:(NSString*)text;
-- (void)setInfoMovieText:(NSString*)text;
-- (void)setTimeText:(NSString*)text;
+@property (nonatomic, retain) IBOutlet UITextField *infoserver;
+@property (nonatomic, retain) IBOutlet UITextField *infoname;
 
 @end
 

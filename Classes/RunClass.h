@@ -28,7 +28,9 @@
     
     BOOL gomessage;
     
-    BOOL gotitles;    
+    BOOL gotitles; 
+    
+    NSString* message;
 }
 
 - (void) dispatch:(NSString*) rcvCommand;

@@ -69,6 +69,28 @@
     return NO;
 }
 
+//SEARCH NEXT MEDIA
+- (NSString *) after:(NSString *) file {
+    
+    if ([self find:file]) {
+        int index = [mediaList indexOfObject:file]+1;
+        if (index < [mediaList count]) return [mediaList objectAtIndex:index];
+    }
+    
+    return nil;
+}
+
+//SEARCH PREVIOUS MEDIA
+- (NSString *) before:(NSString *) file {
+    
+    if ([self find:file]) {
+        int index = [mediaList indexOfObject:file]-1;
+        if (index >= 0) return [mediaList objectAtIndex:index];
+    }
+    
+    return nil;
+}
+
 //GET URL
 //RETURN LOCAL URL or STREAM SERVER URL
 - (NSURL*) url:(NSString *) file {

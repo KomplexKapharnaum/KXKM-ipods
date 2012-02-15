@@ -31,6 +31,7 @@
 		CE9F341914E42A42006ABD81 /* FilesClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341814E42A42006ABD81 /* FilesClass.m */; };
 		CE9F341C14E42BAE006ABD81 /* LiveClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341B14E42BAE006ABD81 /* LiveClass.m */; };
 		CE9F341F14E42BC8006ABD81 /* InterfaceClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */; };
+		CEACE5F914EADC9E007BF3AE /* CheckerClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEACE5F814EADC9E007BF3AE /* CheckerClass.m */; };
 		CEC492A614E2C5C30094C710 /* DisplayClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC492A514E2C5C30094C710 /* DisplayClass.m */; };
 		CEC492AA14E2E39A0094C710 /* ComClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC492A914E2E39A0094C710 /* ComClass.m */; };
 /* End PBXBuildFile section */
@@ -74,6 +75,8 @@
 		CE9F341B14E42BAE006ABD81 /* LiveClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveClass.m; sourceTree = "<group>"; };
 		CE9F341D14E42BC7006ABD81 /* InterfaceClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceClass.h; sourceTree = "<group>"; };
 		CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceClass.m; sourceTree = "<group>"; };
+		CEACE5F714EADC9E007BF3AE /* CheckerClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckerClass.h; sourceTree = "<group>"; };
+		CEACE5F814EADC9E007BF3AE /* CheckerClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckerClass.m; sourceTree = "<group>"; };
 		CEC492A414E2C5C30094C710 /* DisplayClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayClass.h; sourceTree = "<group>"; };
 		CEC492A514E2C5C30094C710 /* DisplayClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayClass.m; sourceTree = "<group>"; };
 		CEC492A814E2E39A0094C710 /* ComClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComClass.h; sourceTree = "<group>"; };
@@ -103,6 +106,7 @@
 			children = (
 				CE9F342014E42C8D006ABD81 /* Com */,
 				CE9F342214E42CA8006ABD81 /* Run */,
+				CEAE136A14EBD5C100F6F07A /* Checker */,
 				CE9F342614E42CE1006ABD81 /* Interface */,
 				CE9F342514E42CD2006ABD81 /* Files */,
 				CE9F342414E42CC6006ABD81 /* Live */,
@@ -259,6 +263,15 @@
 			name = Interface;
 			sourceTree = "<group>";
 		};
+		CEAE136A14EBD5C100F6F07A /* Checker */ = {
+			isa = PBXGroup;
+			children = (
+				CEACE5F714EADC9E007BF3AE /* CheckerClass.h */,
+				CEACE5F814EADC9E007BF3AE /* CheckerClass.m */,
+			);
+			name = Checker;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -340,6 +353,7 @@
 				CE9F341914E42A42006ABD81 /* FilesClass.m in Sources */,
 				CE9F341C14E42BAE006ABD81 /* LiveClass.m in Sources */,
 				CE9F341F14E42BC8006ABD81 /* InterfaceClass.m in Sources */,
+				CEACE5F914EADC9E007BF3AE /* CheckerClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,7 +371,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KXKM_Prefix.pch;
 				INFOPLIST_FILE = "KXKM-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -377,7 +391,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = KXKM_Prefix.pch;
 				INFOPLIST_FILE = "KXKM-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",

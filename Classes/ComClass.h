@@ -32,7 +32,11 @@
 @property (readwrite, retain) OSCOutPort *vvoscOUT;
 
 - (NSString *) getIPAddress;
+- (NSString *)getNetMask;
+- (NSString *)getIPBroadcast;
+- (BOOL) verifyIp: (NSString *) ip ;
 - (void) setIpServer: (NSString *) ipServer;
+- (NSString*) serverState;
 
 - (OSCMessage*)oscWithString:(NSString*)msg;
 - (NSString*) oscValueToString: (OSCValue*) val;

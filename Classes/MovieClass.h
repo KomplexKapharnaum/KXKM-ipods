@@ -31,5 +31,8 @@
 -(void) switchpause;
 -(void) skip:(int) playbacktimeWanted;
 -(NSString*) movie;
+-(BOOL) isPlaying;
+-(CMTime) duration;
+-(CMTime) currentTime;
 
 @end

@@ -8,17 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface remoteplayv2TableViewController : UITableViewController {
-    
-    IBOutlet UITableView *moviesTable;
-    //list des fichier présent dans le dossier document de l'app (upload via iexplorer)
-    NSArray *moviesList;
-    
-    NSArray *test;
-}
+@interface remoteplayv2TableViewController : UITableViewController 
 
 @property (readwrite,retain) IBOutlet UITableView *moviesTable;
-@property (readwrite,retain) NSArray *moviesList;
-@property (readwrite,retain) NSArray *test;
+@property (readwrite,retain) NSArray *movies;
+@property (readwrite,retain) NSMutableArray *sections;
+@property (readwrite,retain) NSMutableArray *listSections;
 
 @end

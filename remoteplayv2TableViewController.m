@@ -12,65 +12,93 @@
 
 @implementation remoteplayv2TableViewController
 
-@synthesize moviesList,test,moviesTable;
+@synthesize movies,sections,moviesTable,listSections;
 
+- (id) init {
+    
+    moviesTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    return [super init];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // There is only one section.
-    return 1;
+
+	return [self.sections count];	
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	
+	return [sections objectAtIndex:section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of time zone names.
-    return [moviesList count];
+	
+    listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+    
+    for (NSString *movie in movies)
+    {
+        NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
+        if ([[sections objectAtIndex:section] isEqualToString:c]) [listSections addObject:[movie copy]];
+    } 
+	
+	return [listSections count];
 }
 
 
-//dessiner les cases de la liste
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *MyIdentifier = @"MyIdentifier";
-    
-    // Try to retrieve from the table view a now-unused cell with the given identifier.
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
-    
-    // If no cell is available, create a new one using the given identifier.
-    if (cell == nil) {
-        // Use the default cell style.
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier] autorelease];
+	
+	
+	static NSString *identity = @"MainCell";
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
+	
+	if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identity] autorelease];
     }
     
-    // Set up the cell.
-    NSString *movieName = [moviesList objectAtIndex:indexPath.row];
-    cell.textLabel.text = movieName;
+    listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+    for (NSString *movie in movies)
+    {
+        NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
+        if ([[sections objectAtIndex:indexPath.section] isEqualToString:c]) [listSections addObject:[movie copy]];
+    } 
     
-    return cell;
+    //simplification du nom affiche
+    NSString *label; 
+    if ([[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:@"_"] count] > 1) 
+        label = [[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:@"_"] objectAtIndex:1];
+    else label = [listSections objectAtIndex:indexPath.row];
+    
+    //ajout du film à la liste
+	cell.textLabel.text = [@"      " stringByAppendingString:[[label componentsSeparatedByString:@"."] objectAtIndex:0]];
+	
+	return cell;
 }
 
 //selection de la case -> lecture du film
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    NSString *m = [moviesList objectAtIndex:indexPath.row];
+    
+    listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+    for (NSString *movie in movies)
+    {
+        NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
+        if ([[sections objectAtIndex:indexPath.section] isEqualToString:c]) [listSections addObject:[movie copy]];
+    } 
+    
+    NSString *m = [listSections objectAtIndex:indexPath.row];
     [appDelegate disableStreaming];
     [appDelegate.moviePlayer load:m];
     [appDelegate.moviePlayer play];
     [appDelegate.interFace setMode:MANU];
 }
 
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-     
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
+    [super initWithCoder:aDecoder];
+    [self initWithStyle:UITableViewStyleGrouped];
     return self;
-    moviesList = [[NSMutableArray alloc] init];
-   
-    
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -85,12 +113,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    moviesTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     // Do any additional setup after loading the view from its nib.
 }
 
 - (void)viewDidUnload
 {
-    [moviesList release];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

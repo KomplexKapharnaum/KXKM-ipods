@@ -167,6 +167,17 @@
     appDelegate.disPlay.playerview.alpha=0;
 }
 
+//IS PLAYING
+-(BOOL) isPlaying{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    return (appDelegate.disPlay.playerview.alpha != 0);
+}
+
+//BUFFER SIZE
+-(int) queueSize{
+    return [queue count];
+}
+
 
 - (void) dealloc
 {

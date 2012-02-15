@@ -64,7 +64,7 @@
     
     //DISPLAY MESSAGE
     else if ([command isEqualToString: @"/message"]) {
-        //appDelegate.message = [[orders componentsJoinedByString:@" "] copy];
+        message = [[orders componentsJoinedByString:@" "] copy];
         gomessage=YES;
     }
     
@@ -87,10 +87,7 @@
         
         //SKIP AT TIME
         else if ([command isEqualToString: @"/attime"]) {
-            if ([orders count] >= 1) {
-                [appDelegate.moviePlayer skip:[[orders objectAtIndex:0] intValue]];
-                [appDelegate.comPort sendSync];
-            }
+            if ([orders count] >= 1) [appDelegate.moviePlayer skip:[[orders objectAtIndex:0] intValue]];
         }
         
         //STOP MOVIE
@@ -102,13 +99,11 @@
         //PAUSE
         else if ([command isEqualToString: @"/pause"]) {
             [appDelegate.moviePlayer pause];
-            [appDelegate.comPort sendSync];
         }
         
         //UNPAUSE
         else if ([command isEqualToString: @"/unpause"]) {
             [appDelegate.moviePlayer unpause];
-            [appDelegate.comPort sendSync];
         }
         
         //MUTE
@@ -172,7 +167,7 @@
 
 // start Runner timer
 -(void) start {
-	timerRunner = [NSTimer scheduledTimerWithTimeInterval:0.01 //10ms
+	timerRunner = [NSTimer scheduledTimerWithTimeInterval:TIMER_RUN
 											 target:self 
 										   selector:@selector(beat) 
 										   userInfo:nil 
@@ -216,7 +211,7 @@
     }
     
     //message TODO
-    //if (gomessage) [appDelegate.userViewController setMessage:message];
+    if (gomessage) [appDelegate.interFace Bmessage:message];
     
     //IMPORTANT : if use of a new command BOOL, don't forget to register it in clear function !!!!
     [self clear];

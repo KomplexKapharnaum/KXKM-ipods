@@ -51,7 +51,6 @@
         return;
     }
     
-    //TODO FIX isPlaying !!!!
     //if same movie just rewind
     if ([movieCurrent isEqualToString:movieLoad]) [self restart];
 
@@ -86,40 +85,20 @@
         
         movieCurrent = [movieLoad copy];
         
-        // TODO IF LOCAL SET PROGRESS BAR
-        /*
-        appDelegate.userViewController.timeSlider.continuous=NO;
-        appDelegate.userViewController.timeSlider.minimumValue=0.0;
-        
-        // TODO IF LOCAL SET NEXT - PREVIOUS 
-        
-         if ([tableViewController.moviesList containsObject:n]) {
-         //set next button
-         if ([tableViewController.moviesList lastObject]!=n) {
-         [userViewController setNextTitle:[tableViewController.moviesList objectAtIndex:1 + [tableViewController.moviesList indexOfObject:n]]];
-         userViewController.nextButton.hidden=NO;
-         }else{
-         userViewController.nextButton.hidden=YES;
-         }
-         
-         //set back button
-         if ([tableViewController.moviesList objectAtIndex:0]!=n) {
-         [userViewController setBackTitle:[tableViewController.moviesList objectAtIndex: [tableViewController.moviesList indexOfObject:n]-1]];
-         userViewController.backButton.hidden=NO;
-         }else userViewController.backButton.hidden=YES;
-         }
-         */
-    }
-    
-    //TODO INFO
-    //[self infoMovie:remotemoviename];
-    
+        //SET CURRENT - NEXT - PREVIOUS 
+        [appDelegate.interFace Bmovie:movieCurrent:[appDelegate.disPlay muted]];
+        [appDelegate.interFace Bnext:[appDelegate.filesManager after:movieCurrent]];
+        [appDelegate.interFace Bprev:[appDelegate.filesManager before:movieCurrent]];
+    }    
 }
 
 //START
 -(void) start {
     [player play];
     paused = NO;
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bpause:NO];
 }
 
 //RESTART (from beginning)
@@ -133,22 +112,24 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    //TODO Remove Observer before destroy 
     appDelegate.disPlay.movie1view.layer.sublayers = nil;
     appDelegate.disPlay.movie2view.layer.sublayers = nil;
     
-    //TODO INFO
-    //[self infoMovie:@""];
     paused = NO;
     
     if ([movieLoad isEqualToString:@"*"] && (movieCurrent != nil)) movieLoad = [movieCurrent copy];
     movieCurrent = nil;
+    
+    [appDelegate.interFace Bmovie:nil:[appDelegate.disPlay muted]];
 }
 
 //PAUSE
 -(void) pause{
     [player pause];
     paused = YES;
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bpause:YES];
 }
 
 //UNPAUSE
@@ -164,6 +145,9 @@
 
 //SKIP
 -(void) skip:(int) playbacktimeWanted{
+    
+    if (![self isPlaying]) return;
+    
     if ( CMTimeGetSeconds(player.currentItem.duration) > (playbacktimeWanted/1000)) {
         //TODO Optimize seekToTime, and seekToTime 0 (rewind)
         [player seekToTime:CMTimeMake(playbacktimeWanted, 1000) toleranceBefore: kCMTimeZero toleranceAfter: kCMTimeZero];
@@ -181,5 +165,20 @@
     return movieCurrent;
 }
 
+//IS PLAYING
+-(BOOL) isPlaying{
+    return (movieCurrent != nil);
+}
+
+
+-(CMTime) duration{
+    if ([self isPlaying]) return [[player currentItem] duration];
+    else return CMTimeMakeWithSeconds(0, 1);
+}
+
+-(CMTime) currentTime{
+    if ([self isPlaying]) return [player currentTime];
+    else return CMTimeMakeWithSeconds(0, 1);
+}
 
 @end
