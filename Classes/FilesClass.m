@@ -103,18 +103,19 @@
         path = [docPath stringByAppendingString:@"/"];
         path = [path stringByAppendingString:file];
         myURL = [NSURL fileURLWithPath:path];
+        NSLog(@"local file");
         return myURL;
     }
     
     //REMOTE FILE
     else {
         remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-        
+        NSLog(@"streaming file");
         path = @"http://";
         path = [path stringByAppendingString:appDelegate.comPort.udpServerIP];
         path = [path stringByAppendingString:@":8074/"]; //TODO : CONFIGURABLE !!
         path = [path stringByAppendingString:file];
-        
+        path=file;
         myURL = [NSURL URLWithString:path];
         
     }

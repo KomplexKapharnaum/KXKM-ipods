@@ -14,8 +14,9 @@
 // CONFIGURATION & CONSTANTS
 
 //TIMERS
-#define TIMER_RUN       0.01 //10ms
-#define TIMER_CHECK     0.2  //200ms
+#define TIMER_RUN           0.05 //10ms   Runner : recieved orders
+#define TIMER_CHECK         0.8  //800ms  Checker : IP / Screen / ..
+#define TIMER_RELMOVIE      0.4  //400ms  Movie Releaser (remove movie in the back)
 
 //MODES
 #define UNKNOWN     0
@@ -30,8 +31,11 @@
 //EFFECTS
 #define FLASH_LENGHT   0.35   //flash duration
 
-//AUTO RELEASER
-#define LIVE_BUFFER    1
+//SEGMENT BUFFER LIVE MODE
+#define LIVE_BUFFER    2
+
+//DEBUG
+#define DEBUG_PLAYERS   NO   //separate and colorize rotative players views
 
 //HTTP SERVER PORT
 //#define HTTP_PORT   8074 unused: TODO make it configurable or sended by the server

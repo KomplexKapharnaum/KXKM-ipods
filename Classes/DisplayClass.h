@@ -14,10 +14,9 @@
     NSString *screenResolution;
     
     //views
-    UIView *playerview;
-        UIView *player1view;
-        UIView *player2view;
-        UIView *player3view;
+    UIView *liveview;
+        UIView *live1view;
+        UIView *live2view;
     
     UIView *movieview;
         UIView *movie1view;
@@ -51,10 +50,9 @@
 @property (nonatomic, retain) IBOutlet UIWindow *_secondWindow;
 @property (nonatomic, retain) NSString *screenResolution;
 
-@property (nonatomic,retain) UIView *playerview;
-@property (nonatomic,retain) UIView *player1view;
-@property (nonatomic,retain) UIView *player2view;
-@property (nonatomic,retain) UIView *player3view;
+@property (nonatomic,retain) UIView *liveview;
+@property (nonatomic,retain) UIView *live1view;
+@property (nonatomic,retain) UIView *live2view;
 
 @property (nonatomic,retain) UIView *movieview;
 @property (nonatomic,retain) UIView *movie1view;
@@ -86,5 +84,7 @@
 -(void) titles;
 -(void) titlesColor:(int)Red:(int)Green:(int)Blue:(int)Alpha;
 -(void) titlesText:(NSString*) txt;
+
+-(void) live:(BOOL)go;
 
 @end

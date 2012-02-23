@@ -13,7 +13,7 @@
 @implementation DisplayClass
 
 @synthesize _secondWindow,screenResolution;
-@synthesize playerview, player1view, player2view, player3view;
+@synthesize liveview, live1view, live2view;
 @synthesize movieview, movie1view, movie2view;
 @synthesize muteview, fadeview, flashview, titlesview, mirview;
 
@@ -137,8 +137,8 @@
     
     //suppress all titlesview subviews (sinon les titrages s'empilent)
     //TODO check if it is still working !
-    for (UIView *titlesview in [titlesview subviews]) { [titlesview removeFromSuperview]; }
-    //for (UIView *tview in [self.titlesview subviews]) { [tview removeFromSuperview]; }
+    NSArray* tv = [titlesview subviews];
+    if ([tv count] > 0) for (UIView *v in tv) { [v removeFromSuperview]; }
     
     float r = (float)titlescolorRed/255;
     float g = (float)titlescolorGreen/255;
@@ -170,6 +170,11 @@
 
 -(void) titlesText:(NSString*) txt {
     customTitles = [txt copy];
+}
+
+- (void) live:(BOOL)go {
+    if (go) liveview.alpha = 1;
+    else liveview.alpha = 0;
 }
 
 //###########################################################
@@ -208,45 +213,71 @@
             [_secondWindow addSubview:backField];
             [backField release];
             
+            //MOVIE PLAYER
             //Create Masks (movieview)
             movieview = [[UIView alloc] initWithFrame:secondScreen.bounds];
             movieview.backgroundColor = [UIColor clearColor];
             movieview.alpha=1;
             [_secondWindow addSubview:movieview];
             
-            //Create PLAYER 1 view
-            //movie1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,300,300)];
-            movie1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            movie1view.backgroundColor = [UIColor clearColor];
-            movie1view.alpha=1;
-            [movieview addSubview:movie1view];
+                //Create PLAYER 1 view
+                if (DEBUG_PLAYERS) {
+                    movie1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,350,350)];
+                    movie1view.backgroundColor = [UIColor greenColor];
+                }
+                else 
+                {
+                    movie1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    movie1view.backgroundColor = [UIColor clearColor];
+                }
+                movie1view.alpha=1;
+                [movieview addSubview:movie1view];
             
-            //Create PLAYER 2 view
-            //movie2view = [[UIView alloc] initWithFrame:CGRectMake(200,200,300,300)];
-            movie2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            movie2view.backgroundColor = [UIColor clearColor];
-            movie2view.alpha=1;
-            [movieview addSubview:movie2view];
+                //Create PLAYER 2 view
+                if (DEBUG_PLAYERS) {
+                    movie2view = [[UIView alloc] initWithFrame:CGRectMake(200,100,350,350)];
+                    movie2view.backgroundColor = [UIColor yellowColor];
+                }
+                else 
+                {
+                    movie2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    movie2view.backgroundColor = [UIColor clearColor];
+                }
+                movie2view.alpha=1;
+                [movieview addSubview:movie2view];
             
+            //LIVE PLAYER
+            //Create Masks (liveview)
+            liveview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+            liveview.backgroundColor = [UIColor blackColor];
+            liveview.alpha=0;
+            [_secondWindow addSubview:liveview];
             
-            //Create Masks (playerview)
-            playerview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            playerview.backgroundColor = [UIColor blackColor];
-            playerview.alpha=0;
-            [_secondWindow addSubview:playerview];
+                //Create PLAYER 1 view
+                if (DEBUG_PLAYERS) {
+                    live1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,350,350)];
+                    live1view.backgroundColor = [UIColor blueColor];
+                }
+                else 
+                {
+                    live1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    live1view.backgroundColor = [UIColor clearColor];
+                }
+                live1view.alpha=1;
+                [liveview addSubview:live1view];
             
-            //Create PLAYER 1 view
-            //player1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,300,300)];
-            player1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            player1view.backgroundColor = [UIColor redColor];
-            player1view.alpha=1;
-            [playerview addSubview:player1view];
-            
-            //Create PLAYER 2 view
-            player2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            player2view.backgroundColor = [UIColor yellowColor];
-            player2view.alpha=1;
-            [playerview addSubview:player2view];
+                //Create PLAYER 2 view
+                if (DEBUG_PLAYERS) {
+                    live2view = [[UIView alloc] initWithFrame:CGRectMake(200,100,350,350)];
+                    live2view.backgroundColor = [UIColor redColor];
+                }
+                else 
+                {
+                    live2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
+                    live2view.backgroundColor = [UIColor clearColor];
+                }
+                live2view.alpha=1;
+                [liveview addSubview:live2view];
             
             //Create Masks (fadeview)
             fadeview = [[UIView alloc] initWithFrame:secondScreen.bounds];
@@ -288,7 +319,8 @@
             flashview.backgroundColor = [UIColor blackColor];
             flashview.alpha=0;
             [_secondWindow addSubview:flashview];
-			
+            
+            
 			// Go ahead and show the window.
 			_secondWindow.hidden = NO;
 			newRes =  [NSString stringWithFormat: @"%.0f x %.0f",secondScreen.bounds.size.width,secondScreen.bounds.size.height];

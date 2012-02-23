@@ -62,9 +62,16 @@
     } 
     
     //simplification du nom affiche
-    NSString *label; 
-    if ([[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:@"_"] count] > 1) 
-        label = [[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:@"_"] objectAtIndex:1];
+    NSString *label;
+    NSString *prefix;
+
+    if ([[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:@"_"] count] > 1) {
+        
+        prefix = [[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:@"_"] objectAtIndex:0];
+        prefix = [prefix stringByAppendingString:@"_"];
+        
+        label = [[[listSections objectAtIndex:indexPath.row] componentsSeparatedByString:prefix] objectAtIndex:1];       
+    }
     else label = [listSections objectAtIndex:indexPath.row];
     
     //ajout du film à la liste

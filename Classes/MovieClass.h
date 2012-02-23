@@ -19,6 +19,7 @@
     NSString *movieLoad;
     NSString *movieCurrent;
     
+    NSTimer *Releaser;
 }
 
 -(void) load:(NSString*)file;
@@ -34,5 +35,6 @@
 -(BOOL) isPlaying;
 -(CMTime) duration;
 -(CMTime) currentTime;
+- (void) releaseMovie;
 
 @end

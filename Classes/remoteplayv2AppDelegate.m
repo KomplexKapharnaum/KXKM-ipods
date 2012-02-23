@@ -30,7 +30,7 @@
 @synthesize checkMachine;
 @synthesize filesManager;
 @synthesize moviePlayer;
-@synthesize livePlayer;
+@synthesize live2Player;
 @synthesize interFace;
 
 
@@ -68,7 +68,7 @@
         moviePlayer = [[MovieClass alloc] init];
     
         //MOVIE PLAYER
-        livePlayer = [[LiveClass alloc] init];
+        live2Player = [[Live2Class alloc] init];
     
         //INTERFACE CTRL
         interFace = [[InterfaceClass alloc] initWithTabBar:tabBarController];
@@ -175,7 +175,7 @@
     [checkMachine release];
     [filesManager release];
     [moviePlayer release];
-    [livePlayer release];
+    [live2Player release];
     [interFace release];
     
     //interface

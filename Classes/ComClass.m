@@ -173,7 +173,6 @@
     if ([udpServerIP isEqualToString:@"noSERVER"]) return @"noserver";
     else if ([udpServerIP isEqualToString:[self getIPBroadcast]]) return @"broadcast";
     else return @"ok";
-    
 }
 
 //###########################################################

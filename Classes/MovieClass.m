@@ -8,6 +8,7 @@
 
 #import "MovieClass.h"
 #import "remoteplayv2AppDelegate.h"
+#import "ConfigConst.h"
 
 @implementation MovieClass
 
@@ -39,6 +40,7 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
+    if ([appDelegate.disPlay resolution] == @"noscreen") return;
     if (movieLoad == nil) return;    
     
     if ([movieLoad isEqualToString:@"*"] && (movieCurrent != nil)) {
@@ -72,18 +74,23 @@
         view.layer.sublayers = nil;
         [view.layer addSublayer:layer];
         [appDelegate.disPlay.movieview bringSubviewToFront:view];
-        //TODO ADD OBSERVER ON LAYER TO RELEASE THE OTHER ONE
+        
+        movieCurrent = [movieLoad copy];
         
         [self start];
-        
         use1 = !use1;
+        
+        //Releaser
+        if (Releaser != nil) [Releaser invalidate];
+        Releaser = [NSTimer scheduledTimerWithTimeInterval:TIMER_RELMOVIE 
+                                                    target:self selector:@selector(releaseMovie) userInfo:nil repeats:NO];
+        
         
         [appDelegate.disPlay mute:[appDelegate.disPlay muted]];
         //TODO CHECK WITH JEX
         //[appDelegate.disPlay mir:[appDelegate.disPlay mired]];
         [appDelegate.disPlay mir:NO];
         
-        movieCurrent = [movieLoad copy];
         
         //SET CURRENT - NEXT - PREVIOUS 
         [appDelegate.interFace Bmovie:movieCurrent:[appDelegate.disPlay muted]];
@@ -94,6 +101,9 @@
 
 //START
 -(void) start {
+    
+    if (![self isPlaying]) return;
+    
     [player play];
     paused = NO;
     
@@ -125,6 +135,9 @@
 
 //PAUSE
 -(void) pause{
+    
+    if (![self isPlaying]) return;
+    
     [player pause];
     paused = YES;
     
@@ -170,15 +183,26 @@
     return (movieCurrent != nil);
 }
 
-
+//DURATION
 -(CMTime) duration{
     if ([self isPlaying]) return [[player currentItem] duration];
     else return CMTimeMakeWithSeconds(0, 1);
 }
 
+//CURRENT TIME
 -(CMTime) currentTime{
     if ([self isPlaying]) return [player currentTime];
     else return CMTimeMakeWithSeconds(0, 1);
+}
+
+//RELEASE PLAYER
+- (void) releaseMovie {
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (use1) appDelegate.disPlay.movie1view.layer.sublayers = nil;
+    else appDelegate.disPlay.movie2view.layer.sublayers = nil;
+
+    Releaser = nil;
 }
 
 @end

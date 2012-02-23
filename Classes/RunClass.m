@@ -27,7 +27,7 @@
 // Dispatch recieved orders : some actions can be performed directly
 // but some actions must be performed by the BEAT clocked function
 - (void) dispatch:(NSString*) rcvCommand {
-    
+    //NSLog(@" cmd recieved");
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     NSArray *pieces = [rcvCommand componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -79,9 +79,10 @@
         
         //PLAY LIVE
         else if ([command isEqualToString: @"/playlive"]) {
-            appDelegate.disPlay.playerview.alpha=1;
-            [appDelegate.livePlayer load : [[orders componentsJoinedByString:@" "] copy]];
-            playlive = YES;
+            //appDelegate.disPlay.playerview.alpha=1;
+            //[appDelegate.livePlayer load : [[orders componentsJoinedByString:@" "] copy]];
+            [appDelegate.live2Player load : [[orders componentsJoinedByString:@" "] copy]];     
+            //playlive = YES;
             return;
         }
         
@@ -190,10 +191,11 @@
         if (stopmovie) [appDelegate.moviePlayer stop];
         
         //play live
-        if (playlive) [appDelegate.livePlayer play];
+        //if (playlive) [appDelegate.livePlayer play];
+        if ([appDelegate.live2Player isLive]) [appDelegate.live2Player beat];
         
         //stop live
-        if (stoplive) [appDelegate.livePlayer stop];
+        if (stoplive) [appDelegate.live2Player stop];
         
         //mute
         if (gomute) [appDelegate.disPlay mute:YES];
@@ -223,7 +225,7 @@
     playmovie = NO;
 	stopmovie = NO;
     
-    playlive = NO;
+    //playlive = NO;
     stoplive = NO;
     
     gomute = NO;
