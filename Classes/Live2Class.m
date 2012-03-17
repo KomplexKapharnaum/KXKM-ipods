@@ -26,7 +26,7 @@
     loadQueue = [[NSMutableArray alloc] init];
     
     use1 = YES;
-    isLive = NO;
+    live = NO;
     itemPlaying = NO;
     
     return [super init];
@@ -37,7 +37,6 @@
 -(void) load:(NSString*)file {
     if ([file length]>=1) newsegment = [file copy];
     //NSLog(@" segment recieved %@",file);
-    [self start];
 }
 
 //###########################################################
@@ -45,15 +44,13 @@
 
 // start Runner timer
 -(void) start {
-    if (!isLive) {
         remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-        isLive = YES;
+        live = YES;
         [appDelegate.disPlay live:YES];
-    }
 }
 
 - (BOOL) isLive {
-    return isLive;
+    return live;
 }
 
 // Runner command executed on each timer beat
@@ -188,7 +185,7 @@
 //STOP LIVE
 -(void) stop{
     
-    isLive = NO;
+    live = NO;
     
     [preQueue removeAllObjects];
     [loadQueue removeAllObjects];

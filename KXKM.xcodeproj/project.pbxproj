@@ -30,6 +30,7 @@
 		CE9F341614E42150006ABD81 /* MovieClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341514E42150006ABD81 /* MovieClass.m */; };
 		CE9F341914E42A42006ABD81 /* FilesClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341814E42A42006ABD81 /* FilesClass.m */; };
 		CE9F341F14E42BC8006ABD81 /* InterfaceClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */; };
+		CEA99D691513E1FC000EC74D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA99D681513E1FC000EC74D /* QuartzCore.framework */; };
 		CEACE5F914EADC9E007BF3AE /* CheckerClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEACE5F814EADC9E007BF3AE /* CheckerClass.m */; };
 		CEC2481D14ED399100F7B2D2 /* Live2Class.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2481C14ED399100F7B2D2 /* Live2Class.m */; };
 		CEC492A614E2C5C30094C710 /* DisplayClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC492A514E2C5C30094C710 /* DisplayClass.m */; };
@@ -73,6 +74,7 @@
 		CE9F341814E42A42006ABD81 /* FilesClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilesClass.m; sourceTree = "<group>"; };
 		CE9F341D14E42BC7006ABD81 /* InterfaceClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceClass.h; sourceTree = "<group>"; };
 		CE9F341E14E42BC8006ABD81 /* InterfaceClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceClass.m; sourceTree = "<group>"; };
+		CEA99D681513E1FC000EC74D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CEACE5F714EADC9E007BF3AE /* CheckerClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckerClass.h; sourceTree = "<group>"; };
 		CEACE5F814EADC9E007BF3AE /* CheckerClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckerClass.m; sourceTree = "<group>"; };
 		CEC2481B14ED399100F7B2D2 /* Live2Class.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Live2Class.h; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEA99D691513E1FC000EC74D /* QuartzCore.framework in Frameworks */,
 				CE9A29C314C47D3000003298 /* CFNetwork.framework in Frameworks */,
 				CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */,
 				CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */,
@@ -130,6 +133,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				CEA99D681513E1FC000EC74D /* QuartzCore.framework */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,

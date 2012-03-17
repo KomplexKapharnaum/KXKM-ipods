@@ -7,11 +7,26 @@
 //
 
 #import "remoteplayv2ViewController.h"
+#import "remoteplayv2AppDelegate.h"
 
 @implementation remoteplayv2ViewController
 
-@synthesize infostate,infoscreen,infoip,infomovie,infoserver,infoname;
+@synthesize infostate,infoctrl,infoscreen,infoip,infomovie,infoserver,infoname, mirButtonauto;
 
+
+//mir switch 
+- (IBAction)mir:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [appDelegate.disPlay mir:(![appDelegate.disPlay mired])];
+}
+
+//envoi message sos à la régie
+-(IBAction)sos:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [appDelegate.comPort sendSOS];
+}
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {

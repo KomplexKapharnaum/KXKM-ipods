@@ -61,7 +61,13 @@
         
         //Player
         player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];
-        player.actionAtItemEnd = AVPlayerActionAtItemEndPause;
+        player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+        
+        //auto-loop
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(movieDidEnd:)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                     object:[player currentItem]];
         
         //Layer
         AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:player];
@@ -99,6 +105,12 @@
     }    
 }
 
+//MOVIE END OBSEREVER (auto loop)
+- (void)movieDidEnd:(NSNotification *)notification {
+    AVPlayerItem *p = [notification object];
+    [p seekToTime:kCMTimeZero];
+}
+
 //START
 -(void) start {
     
@@ -133,6 +145,7 @@
     [appDelegate.interFace Bmovie:nil:[appDelegate.disPlay muted]];
 }
 
+
 //PAUSE
 -(void) pause{
     
@@ -148,6 +161,10 @@
 //UNPAUSE
 -(void) unpause{
     [self start];
+}
+
+-(BOOL) isPause{
+    return paused;
 }
 
 //SWITCH PAUSE

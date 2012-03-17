@@ -45,6 +45,10 @@
     int titlescolorAlpha;
 
     NSString *customTitles;
+    int titlesCounter;
+    NSArray *subTitles;
+    UILabel* soustitres;
+    UILabel* soustitres2;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *_secondWindow;

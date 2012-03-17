@@ -19,7 +19,7 @@
     AVPlayer* liveCurrent;
     
     BOOL use1;
-    BOOL isLive;
+    BOOL live;
     BOOL itemPlaying;
     
     double prorat;

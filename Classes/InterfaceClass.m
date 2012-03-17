@@ -41,6 +41,32 @@
 
 -(void) setMode:(int) md {
     mode = md;
+    
+    if (mode == AUTO){
+        //manuView.backButton.enabled=NO;
+        //manuView.backButton.hidden=YES;
+        //manuView.nextButton.enabled=NO;
+        //manuView.nextButton.hidden=YES;
+        //manuView.fadeBlackButton.enabled=NO;
+        //manuView.fadeBlackButton.hidden=YES;
+        //manuView.fadeWhiteButton.enabled=NO;
+        //manuView.fadeWhiteButton.hidden=YES;
+        //manuView.pauseButton.enabled=NO;
+        //manuView.pauseButton.hidden=YES;
+    }
+    else if (mode == MANU){
+        //manuView.backButton.enabled=YES;
+        //manuView.backButton.hidden=NO;
+        //manuView.nextButton.enabled=YES;
+        //manuView.nextButton.hidden=NO;
+        //manuView.fadeBlackButton.enabled=YES;
+        //manuView.fadeBlackButton.hidden=NO;
+        //manuView.fadeWhiteButton.enabled=YES;
+        //manuView.fadeWhiteButton.hidden=NO;
+        //manuView.pauseButton.enabled=YES;
+        //manuView.pauseButton.hidden=NO;
+    }
+
 }
 
 -(int) mode {
@@ -85,6 +111,11 @@
 //INFO (state box info)
 -(void) infoState:(NSString*)msg{
     autoView.infostate.text = msg;
+}
+
+//INFO (ctrl box info)
+-(void) infoCtrl:(NSString*)msg{
+    autoView.infoctrl.text = msg;
 }
 
 //INFO (movie box info)
@@ -158,6 +189,9 @@
     
     if (m) manuView.mirButton.backgroundColor = [UIColor orangeColor];
     else manuView.mirButton.backgroundColor = [UIColor whiteColor];
+    
+    if (m) autoView.mirButtonauto.backgroundColor = [UIColor orangeColor];
+    else autoView.mirButtonauto.backgroundColor = [UIColor colorWithWhite:1 alpha:0.09]; 
 }
 
 -(void) Bpause:(BOOL)m{

@@ -251,12 +251,12 @@
     [self send:@"allo"];
 }
 
-//Info message : IP, media list
+//FULLSYNCTEST Info message : IP, media list
 -(void) sendInfo{
     
     NSString *msg = @"initinfo ";
     msg = [msg stringByAppendingString:[self getIPAddress]];
-    [self send:msg];
+    [self send:msg];    
     
     //for (NSString *movies in mediaList) 
         //[self sendUDP:[@"fileinfo " stringByAppendingString:movies]];
@@ -264,7 +264,7 @@
 }
 
 
-//Sync message : send player state message
+//SYNCTEST Sync message : send player state message
 -(void)sendSync{
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -278,6 +278,11 @@
     //Player Mode : Auto, Manu, Streaming, ... 
     NSString* msg = [appDelegate.interFace modeName];
     
+    //Faded
+    msg = [msg stringByAppendingString:@" "];
+    if ([appDelegate.disPlay faded]) msg = [msg stringByAppendingString:@"faded"];
+    else msg = [msg stringByAppendingString:@"normal"];
+    
     //Player State : waiting, playing,
     msg = [msg stringByAppendingString:@" "];
     NSString* movie = [appDelegate.moviePlayer movie];
@@ -289,6 +294,16 @@
     }
     
     [self send:msg];
+}
+
+//BATTERY STATE
+-(void)sendBat {
+    
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
+    NSString *msg2 = @"";
+    msg2 = [NSString stringWithFormat:@"batterystatus %0.2f",[UIDevice currentDevice].batteryLevel];
+    [self send:msg2];
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:NO];
 }
 
 //send SOS

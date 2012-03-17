@@ -17,6 +17,9 @@
 
 - (id) init
 {
+    lastTab = 0;
+    timeHere = 0;
+    batteryRefresh = TIMER_CHECK_BATT;
     return [super init];	
 }
 
@@ -53,12 +56,11 @@
     //UPDATE PLAYER STATE    
     if ([appDelegate.live2Player isLive]) {
         [appDelegate.interFace infoState:@"live"];
-        //TODO info buffer
-        //NSString* buffer = [@"Buffer " stringByAppendingFormat:@"%i",[appDelegate.live2Player ]];
-        //[appDelegate.interFace infoMovie:buffer];
+        [appDelegate.interFace infoMovie:@""];
     }
     else if ([appDelegate.moviePlayer isPlaying]) {
-        [appDelegate.interFace infoState:@"play"];
+        if(appDelegate.interFace.mode==MANU)[appDelegate.interFace infoState:@"play manu"];
+        if(appDelegate.interFace.mode==AUTO)[appDelegate.interFace infoState:@"play auto"];
         [appDelegate.interFace infoMovie:[appDelegate.moviePlayer movie]];
     }
     else {
@@ -66,10 +68,62 @@
         [appDelegate.interFace infoMovie:@""];
     }
     
+    //UPDATE CTRL STATE
+    if ([appDelegate.disPlay faded]) [appDelegate.interFace infoCtrl:@"faded"];
+    else [appDelegate.interFace infoCtrl:@""];
+    
     //UPDATE MOVIE SCROLLER
     if ([appDelegate.moviePlayer isPlaying])
         [appDelegate.interFace Bslide:[appDelegate.moviePlayer duration]:[appDelegate.moviePlayer currentTime]];
+    
+    
+    //UPDATE BATTERY STATE
+    if (TIMER_CHECK_BATT > 0) batteryRefresh++;
+    if (batteryRefresh > TIMER_CHECK_BATT) {
+        [appDelegate.comPort sendBat];
+        batteryRefresh = 0;
+    }
+    
+    //CHECK ACTIVE TAB
+    //tab change
+    if (lastTab != [appDelegate.tabBarController selectedIndex]) {
+        timeHere = 0;
+        lastTab = [appDelegate.tabBarController selectedIndex];
+    }
+    
+    //auto mode : go back home if needed
+    if (TIMER_CHECK_HOME > 0) {
+        //tab counter and auto back to home
+        if ([appDelegate.interFace mode] == AUTO) {
+            if ((lastTab == 1)||(lastTab == 2)) timeHere++;
             
+            if ((lastTab == 1) && (timeHere > TIMER_CHECK_HOME)) 
+                if ((![appDelegate.moviePlayer isPause]) && (![appDelegate.disPlay faded])) 
+                        [appDelegate.tabBarController setSelectedIndex:0];
+            
+            if ((lastTab == 2) && (timeHere > (TIMER_CHECK_USER))) 
+                if ((![appDelegate.moviePlayer isPause]) && (![appDelegate.disPlay faded]))
+                    [appDelegate.tabBarController setSelectedIndex:0];
+                else [appDelegate.tabBarController setSelectedIndex:1];
+        }
+    }
+    
+    //manu mode : go back user ctrl if needed
+    if (TIMER_CHECK_USER > 0) {
+        //tab counter and auto back to user∂∂
+        if ([appDelegate.interFace mode] == MANU) {
+            if (lastTab == 2) timeHere++;
+            
+            if ((lastTab == 2) && (timeHere > TIMER_CHECK_USER)) 
+               [appDelegate.tabBarController setSelectedIndex:1];
+        }
+    }
+    
+}
+
+- (void) userAct : (int) tim {
+    //on manual action reset timeHere
+    timeHere = tim;
 }
 
 @end

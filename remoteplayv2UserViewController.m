@@ -18,6 +18,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.disPlay mute:![appDelegate.disPlay muted]];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //vidéo suivante
@@ -26,6 +27,7 @@
     NSString *m = [nextButton titleForState:UIControlStateNormal];
     [appDelegate.moviePlayer load:m];
     [appDelegate.moviePlayer play];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //vidéo précedente
@@ -34,6 +36,7 @@
     NSString *m = [backButton titleForState:UIControlStateNormal];
     [appDelegate.moviePlayer load:m];
     [appDelegate.moviePlayer play];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //défilement
@@ -41,6 +44,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     int seekTime = timeSlider.value*1000;
     [appDelegate.moviePlayer skip:seekTime];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //fondu au noir
@@ -49,6 +53,7 @@
     
     if (![appDelegate.disPlay faded]) [appDelegate.disPlay fadeColor:0:0:0:255];
     [appDelegate.disPlay fade:(![appDelegate.disPlay faded])];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //fondu au blanc
@@ -58,6 +63,7 @@
     if (![appDelegate.disPlay faded]) [appDelegate.disPlay fadeColor:255:255:255:255];
     [appDelegate.disPlay fade:(![appDelegate.disPlay faded])];
     [appDelegate.comPort sendSync];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //mir switch 
@@ -65,6 +71,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.disPlay mir:(![appDelegate.disPlay mired])];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //pause switch 
@@ -72,6 +79,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.moviePlayer switchpause];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //flash
@@ -80,6 +88,7 @@
     
     [appDelegate.disPlay flashColor:255:255:255:255];
     [appDelegate.disPlay flash];
+    [appDelegate.checkMachine userAct:0];
 }
 
 //envoi message sos à la régie
@@ -87,6 +96,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.comPort sendSOS];
+    [appDelegate.checkMachine userAct:0];
 }
 
 

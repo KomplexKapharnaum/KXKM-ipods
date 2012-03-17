@@ -8,14 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface remoteplayv2ViewController : UIViewController 
+@interface remoteplayv2ViewController : UIViewController
 
 @property (nonatomic, retain) IBOutlet UITextField *infoip;
 @property (nonatomic, retain) IBOutlet UITextField *infoscreen;
 @property (nonatomic, retain) IBOutlet UITextField *infostate;
+@property (nonatomic, retain) IBOutlet UITextField *infoctrl;
 @property (nonatomic, retain) IBOutlet UITextField *infomovie;
 @property (nonatomic, retain) IBOutlet UITextField *infoserver;
 @property (nonatomic, retain) IBOutlet UITextField *infoname;
+
+@property (nonatomic,retain) IBOutlet UIButton *mirButtonauto;
+
+- (IBAction)mir:(id)sender;
+- (IBAction)sos:(id)sender;
 
 @end
 

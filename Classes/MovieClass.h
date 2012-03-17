@@ -27,8 +27,10 @@
 -(void) stop;
 -(void) start;
 -(void) restart;
+-(void)movieDidEnd:(NSNotification *)notification;
 -(void) pause;
 -(void) unpause;
+-(BOOL) isPause;
 -(void) switchpause;
 -(void) skip:(int) playbacktimeWanted;
 -(NSString*) movie;

@@ -97,6 +97,7 @@
     [appDelegate.moviePlayer load:m];
     [appDelegate.moviePlayer play];
     [appDelegate.interFace setMode:MANU];
+    [appDelegate.checkMachine userAct:TIMER_CHECK_USER];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder

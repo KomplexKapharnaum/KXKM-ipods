@@ -47,6 +47,7 @@
 - (void) sayAllo;
 - (void) sendInfo;
 - (void) sendSync;
+- (void) sendBat;
 - (void) sendSOS;
 - (void) sendError: (NSString *) m;
 - (void) sendDebug: (NSString *) s;

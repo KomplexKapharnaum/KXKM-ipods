@@ -28,7 +28,9 @@
     
     BOOL gomessage;
     
-    BOOL gotitles; 
+    BOOL gotitles;
+    
+    BOOL gomaster;
     
     NSString* message;
 }

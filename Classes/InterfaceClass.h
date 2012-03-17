@@ -35,6 +35,7 @@
 -(void) infoIP:(NSString*)msg;
 -(void) infoScreen:(NSString*)msg;
 -(void) infoState:(NSString*)msg;
+-(void) infoCtrl:(NSString*)msg;
 -(void) infoMovie:(NSString*)msg;
 -(void) infoServer:(NSString*)msg;
 -(void) infoName:(NSString*)msg;

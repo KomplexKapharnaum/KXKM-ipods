@@ -46,7 +46,10 @@
 	else if ([command isEqualToString: @"/ipregie"]) [appDelegate.comPort setIpServer:[orders objectAtIndex:0]];
     
     //FORCE AUTO :
-	else if ([command isEqualToString: @"/mastermode"]) [appDelegate.interFace setMode:AUTO];
+	else if ([command isEqualToString: @"/mastermode"]) {
+        [appDelegate.interFace setMode:AUTO];
+        gomaster = YES;
+    }
     
     //FLASH (RGBA 8bit)
     else if ([command isEqualToString: @"/flash"]) {
@@ -68,6 +71,14 @@
         gomessage=YES;
     }
     
+    //TITLES
+    //ADD TEXT
+    else if ([command isEqualToString: @"/titles"]) {
+        [appDelegate.disPlay titlesText:[orders componentsJoinedByString:@" "]];
+        //NSLog([orders componentsJoinedByString:@" "]);
+        gotitles=YES;
+    }
+    
     //ONLY IN AUTO MODE
     else if ([appDelegate.interFace mode] == AUTO) {
         
@@ -79,11 +90,8 @@
         
         //PLAY LIVE
         else if ([command isEqualToString: @"/playlive"]) {
-            //appDelegate.disPlay.playerview.alpha=1;
-            //[appDelegate.livePlayer load : [[orders componentsJoinedByString:@" "] copy]];
-            [appDelegate.live2Player load : [[orders componentsJoinedByString:@" "] copy]];     
-            //playlive = YES;
-            return;
+            [appDelegate.live2Player load : [[orders componentsJoinedByString:@" "] copy]];  
+            playlive = YES;
         }
         
         //SKIP AT TIME
@@ -130,12 +138,6 @@
         
         //UNFADE
         else if ([command isEqualToString: @"/unfade"]) gounfade = YES;
-        
-        //ADD TEXT
-        else if ([command isEqualToString: @"/titles"]) {
-            [appDelegate.disPlay titlesText:[orders componentsJoinedByString:@" "]];
-            gotitles=YES;
-        }
         
         //CHANGE TEXT COLOR
         else if ([command isEqualToString: @"/titlescolor"]) {
@@ -191,7 +193,7 @@
         if (stopmovie) [appDelegate.moviePlayer stop];
         
         //play live
-        //if (playlive) [appDelegate.livePlayer play];
+        if (playlive) [appDelegate.live2Player start];
         if ([appDelegate.live2Player isLive]) [appDelegate.live2Player beat];
         
         //stop live
@@ -215,6 +217,9 @@
     //message TODO
     if (gomessage) [appDelegate.interFace Bmessage:message];
     
+    //CHANGE TABBAR WHEN RECEIVE MASTERMODE MESSAGE
+    if (gomaster) [appDelegate.tabBarController setSelectedIndex:0];
+    
     //IMPORTANT : if use of a new command BOOL, don't forget to register it in clear function !!!!
     [self clear];
 }
@@ -225,7 +230,7 @@
     playmovie = NO;
 	stopmovie = NO;
     
-    //playlive = NO;
+    playlive = NO;
     stoplive = NO;
     
     gomute = NO;
@@ -238,6 +243,8 @@
     
     gotitles = NO;
     gomessage = NO;
+    
+    gomaster = NO;
 }
 
 
