@@ -12,6 +12,7 @@
     
     NSTimer *timerChecker;
     
+    int lastSync;
     int lastTab;
     int timeHere;
     int batteryRefresh;
@@ -21,5 +22,6 @@
 - (void) start;
 - (void) beat;
 - (void) userAct: (int) tim;
+- (void) syncAct;
 
 @end

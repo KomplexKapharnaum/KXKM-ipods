@@ -17,6 +17,7 @@
 @property (nonatomic, retain) IBOutlet UITextField *infomovie;
 @property (nonatomic, retain) IBOutlet UITextField *infoserver;
 @property (nonatomic, retain) IBOutlet UITextField *infoname;
+@property (nonatomic, retain) IBOutlet UITextField *infolink;
 
 @property (nonatomic,retain) IBOutlet UIButton *mirButtonauto;
 

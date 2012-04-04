@@ -108,6 +108,19 @@
     }
 }
 
+//LINK
+-(void) infoLink:(NSString*)msg{
+    
+    if ([msg isEqualToString:@"nolink"]) {
+        autoView.infolink.text = @"NO";
+        autoView.infolink.textColor = [UIColor redColor];
+    }
+    else {
+        autoView.infolink.text = msg;
+        autoView.infolink.textColor = [UIColor greenColor];
+    }
+}
+
 //INFO (state box info)
 -(void) infoState:(NSString*)msg{
     autoView.infostate.text = msg;

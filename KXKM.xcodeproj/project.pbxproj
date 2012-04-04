@@ -133,7 +133,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				CEA99D681513E1FC000EC74D /* QuartzCore.framework */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -166,6 +165,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEA99D681513E1FC000EC74D /* QuartzCore.framework */,
 				CE9A29C214C47D3000003298 /* CFNetwork.framework */,
 				CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */,
 				CE9DA3081488F872005357EC /* AVFoundation.framework */,

@@ -37,7 +37,10 @@
     [orders removeObjectAtIndex:0];
     
     //SYNC : mode, state, args (movie, time, ...)
-	if ([command isEqualToString: @"/synctest"]) [appDelegate.comPort sendSync];
+	if ([command isEqualToString: @"/synctest"]) {
+        [appDelegate.comPort sendSync];
+        [appDelegate.checkMachine syncAct];
+    }
     
     //INIT INFO : ipod ip
 	else if ([command isEqualToString: @"/fullsynctest"]) [appDelegate.comPort sendInfo];
@@ -83,10 +86,11 @@
     else if ([appDelegate.interFace mode] == AUTO) {
         
         //LOAD & PLAY MOVIE
-        if (([command isEqualToString: @"/loadmovie"]) || ([command isEqualToString: @"/playmovie"])) {
+        if (([command isEqualToString: @"/loadmovie"]) || ([command isEqualToString: @"/playmovie"]) || ([command isEqualToString: @"/playstream"])) {
             [appDelegate.moviePlayer load: [[orders componentsJoinedByString:@" "] copy]];
-            playmovie = [command isEqualToString: @"/playmovie"];
+            playmovie = ([command isEqualToString: @"/playmovie"] || [command isEqualToString: @"/playstream"]);
         }
+        
         
         //PLAY LIVE
         else if ([command isEqualToString: @"/playlive"]) {
@@ -214,7 +218,7 @@
         if (gotitles) [appDelegate.disPlay titles];
     }
     
-    //message TODO
+    //message
     if (gomessage) [appDelegate.interFace Bmessage:message];
     
     //CHANGE TABBAR WHEN RECEIVE MASTERMODE MESSAGE

@@ -39,6 +39,7 @@
 -(void) infoMovie:(NSString*)msg;
 -(void) infoServer:(NSString*)msg;
 -(void) infoName:(NSString*)msg;
+-(void) infoLink:(NSString*)msg;
 
 //MANU INFO
 -(void) Bmute:(BOOL)m;

@@ -263,9 +263,6 @@
                      completion:^(BOOL finished){
                      }];
     
-    
-    
-    /*
     [UIView beginAnimations:@"movetxt" context:NULL];
     [UIView setAnimationDuration:MAX((3.6-0.06*titlesCounter),0.1)];
     //[UIView setAnimationDelay:1.0];
@@ -275,6 +272,7 @@
     soustitres.frame = framz;
     [UIView commitAnimations];
     */
+    
     titlesCounter++;
 }
 

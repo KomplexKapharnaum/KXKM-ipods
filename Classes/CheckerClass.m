@@ -17,6 +17,7 @@
 
 - (id) init
 {
+    lastSync = 3;
     lastTab = 0;
     timeHere = 0;
     batteryRefresh = TIMER_CHECK_BATT;
@@ -45,6 +46,11 @@
     
     //CHECK SERVER CONNECTION
     [appDelegate.interFace infoServer: [appDelegate.comPort serverState]];
+    
+    //UPDATE LINK STATE
+    if (lastSync > 2) [appDelegate.interFace infoLink: @"nolink"];
+    else [appDelegate.interFace infoLink: @"OK"];
+    if (lastSync < 1000) lastSync++; //security increaser
     
     //CHECK IF SCREEN CHANGED
     if ([appDelegate.disPlay checkScreen]) {
@@ -83,6 +89,7 @@
         [appDelegate.comPort sendBat];
         batteryRefresh = 0;
     }
+    
     
     //CHECK ACTIVE TAB
     //tab change
@@ -124,6 +131,11 @@
 - (void) userAct : (int) tim {
     //on manual action reset timeHere
     timeHere = tim;
+}
+
+- (void) syncAct {
+    //on manual action reset timeHere
+    lastSync = 0;
 }
 
 @end

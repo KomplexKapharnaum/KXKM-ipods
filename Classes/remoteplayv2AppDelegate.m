@@ -7,12 +7,6 @@
 //
 
 
-#define TIME_CHECKER    0.2 //clock for cheker in seconds
-//#define RELEASE_PLAYER  6   // multiply x TIME_CHECKER
-//#define RELEASE_LIVE    20  // multiply x TIME_CHECKER //MUST BE HIGHER THAN SEGMENT PLAYED!
-
-#define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
-
 #import "ConfigConst.h"
 #import "remoteplayv2AppDelegate.h"
 #import "remoteplayv2ViewController.h"
@@ -107,10 +101,6 @@
 -(void) enableGoMovie{
     [runMachine dispatch:@"/playmovie"];
 }
-
-
-
-
 
 
 //###########################################################
