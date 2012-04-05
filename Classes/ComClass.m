@@ -10,6 +10,7 @@
 #import "remoteplayv2AppDelegate.h"
 #include <ifaddrs.h>
 #include <arpa/inet.h>
+#import "ConfigConst.h"
 
 @implementation ComClass
 
@@ -161,18 +162,26 @@
 
 - (void) setIpServer: (NSString *) ipServer {
     
+    NSLog(@"New Server IP : %@ ",ipServer);
+    
     if ([self verifyIp:ipServer]) {
         [manager deleteAllOutputs];
         udpServerIP = [ipServer copy];
         vvoscOUT= [manager createNewOutputToAddress:udpServerIP atPort:outPort];
+        NSLog(@"SET !");
     }
+    
+    else NSLog(@"FAILED !");
 }
 
 - (NSString*) serverState {
     
+    if ([[self getIPAddress] isEqualToString:@"noIP"]) return @"noserver";
+    else if ([udpServerIP isEqualToString:@"noSERVER"]) [self setIpServer:[self getIPBroadcast]];
+    
     if ([udpServerIP isEqualToString:@"noSERVER"]) return @"noserver";
     else if ([udpServerIP isEqualToString:[self getIPBroadcast]]) return @"broadcast";
-    else return @"ok";
+    else return udpServerIP;
 }
 
 //###########################################################
@@ -288,8 +297,10 @@
     NSString* movie = [appDelegate.moviePlayer movie];
     if (movie == nil) msg = [msg stringByAppendingString:@"stopmovie"];
     else {
-            msg = [msg stringByAppendingString:@"playmovie "];
-            msg = [msg stringByAppendingString:movie];
+        if ([appDelegate.moviePlayer type] == PLAYER_LOCAL) msg = [msg stringByAppendingString:@"playmovie "];
+        else  msg = [msg stringByAppendingString:@"playstream "];   
+        
+        msg = [msg stringByAppendingString:movie];
             //msg = [msg stringByAppendingString:[NSString stringWithFormat:@" %i",[appDelegate.moviePlayer time]]];
     }
     
@@ -304,6 +315,11 @@
     msg2 = [NSString stringWithFormat:@"batterystatus %0.2f",[UIDevice currentDevice].batteryLevel];
     [self send:msg2];
     [[UIDevice currentDevice] setBatteryMonitoringEnabled:NO];
+}
+
+//send Ask IP Regie
+-(void) sendAskip {    
+    [self send:@"askipregie"];
 }
 
 //send SOS

@@ -23,6 +23,8 @@
     movieLoad = nil;
     movieCurrent = nil;
     
+    playerType = PLAYER_LOCAL;
+    
     return [super init];	
 }
 
@@ -58,6 +60,10 @@
 
     //else create new player
     else {  
+        
+        //Player Type
+        if ([appDelegate.filesManager find:movieLoad]) playerType = PLAYER_LOCAL;
+        else playerType = PLAYER_STREAM;
         
         //Player
         player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];
@@ -143,6 +149,8 @@
     movieCurrent = nil;
     
     [appDelegate.interFace Bmovie:nil:[appDelegate.disPlay muted]];
+    
+    playerType = PLAYER_LOCAL;
 }
 
 
@@ -193,6 +201,11 @@
 //CURRENT MOVIE
 -(NSString*) movie{
     return movieCurrent;
+}
+
+//CURRENT MOVIE TYPE
+-(int) type{
+    return playerType;
 }
 
 //IS PLAYING

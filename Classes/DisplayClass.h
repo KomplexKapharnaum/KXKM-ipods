@@ -46,6 +46,7 @@
 
     NSString *customTitles;
     int titlesCounter;
+    int titlesMode;
     NSArray *subTitles;
     UILabel* soustitres;
     UILabel* soustitres2;

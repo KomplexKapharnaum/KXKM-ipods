@@ -48,6 +48,7 @@
 - (void) sendInfo;
 - (void) sendSync;
 - (void) sendBat;
+- (void) sendAskip;
 - (void) sendSOS;
 - (void) sendError: (NSString *) m;
 - (void) sendDebug: (NSString *) s;

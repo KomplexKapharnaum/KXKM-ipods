@@ -21,7 +21,6 @@
 - (BOOL) find:(NSString *) file;
 - (NSString *) after:(NSString *) file;
 - (NSString *) before:(NSString *) file;
-
 - (NSURL*) url:(NSString *) file;
 
 @end

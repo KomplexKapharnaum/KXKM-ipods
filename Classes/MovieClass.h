@@ -18,6 +18,7 @@
     
     NSString *movieLoad;
     NSString *movieCurrent;
+    int playerType;
     
     NSTimer *Releaser;
 }
@@ -27,13 +28,14 @@
 -(void) stop;
 -(void) start;
 -(void) restart;
--(void)movieDidEnd:(NSNotification *)notification;
+-(void) movieDidEnd:(NSNotification *)notification;
 -(void) pause;
 -(void) unpause;
 -(BOOL) isPause;
 -(void) switchpause;
 -(void) skip:(int) playbacktimeWanted;
 -(NSString*) movie;
+-(int) type;
 -(BOOL) isPlaying;
 -(CMTime) duration;
 -(CMTime) currentTime;

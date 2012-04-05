@@ -16,6 +16,7 @@
     int lastTab;
     int timeHere;
     int batteryRefresh;
+    int broadcastRefresh;
 }
 
 

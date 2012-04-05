@@ -17,10 +17,11 @@
 
 - (id) init
 {
-    lastSync = 3;
+    lastSync = 1000;
     lastTab = 0;
     timeHere = 0;
     batteryRefresh = TIMER_CHECK_BATT;
+    broadcastRefresh = TIMER_CHECK_BROAD;
     return [super init];	
 }
 
@@ -45,10 +46,20 @@
     [appDelegate.interFace infoIP: [appDelegate.comPort getIPAddress]];
     
     //CHECK SERVER CONNECTION
-    [appDelegate.interFace infoServer: [appDelegate.comPort serverState]];
+    NSString *serverIPstate = [appDelegate.comPort serverState];
+    [appDelegate.interFace infoServer: serverIPstate];
+    
+    //RE-ASK IP REGIE WHEN BROADCAST MODE
+    if ([serverIPstate isEqualToString:@"broadcast"]) {
+        if (TIMER_CHECK_BROAD > 0) broadcastRefresh++;
+        if (broadcastRefresh > TIMER_CHECK_BROAD) {
+            [appDelegate.comPort sendAskip];
+            broadcastRefresh = 0;
+        }
+    }    
     
     //UPDATE LINK STATE
-    if (lastSync > 2) [appDelegate.interFace infoLink: @"nolink"];
+    if (lastSync > 4) [appDelegate.interFace infoLink: @"nolink"];
     else [appDelegate.interFace infoLink: @"OK"];
     if (lastSync < 1000) lastSync++; //security increaser
     
@@ -88,8 +99,7 @@
     if (batteryRefresh > TIMER_CHECK_BATT) {
         [appDelegate.comPort sendBat];
         batteryRefresh = 0;
-    }
-    
+    }    
     
     //CHECK ACTIVE TAB
     //tab change

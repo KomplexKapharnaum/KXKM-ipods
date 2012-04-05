@@ -138,6 +138,7 @@
 
 //INFO (server box info)
 -(void) infoServer:(NSString*)msg{ 
+    
     if ([msg isEqualToString:@"noserver"]) {
         autoView.infoserver.text = @"NO";
         autoView.infoserver.textColor = [UIColor redColor];
@@ -147,7 +148,7 @@
         autoView.infoserver.textColor = [UIColor orangeColor];
     }
     else {
-        autoView.infoserver.text = @"Ok";
+        autoView.infoserver.text = msg;
         autoView.infoserver.textColor = [UIColor greenColor];
     }
 }
