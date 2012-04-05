@@ -219,7 +219,7 @@
                              CGRect framz = [prev1 frame];	
                              framz.origin.y = (titlesview.bounds.size.height-240);
                              prev1.frame = framz;      
-                             prev1.alpha = 1;
+                             prev1.alpha = 0.9;
                          } 
                          completion:^(BOOL finished){
                              
@@ -261,11 +261,11 @@
                                     options: UIViewAnimationCurveEaseIn
                                  animations:^{
                                      CGRect framz = [prev3 frame];
-                                     int dec = MAX(10,90-(10*i_sub));
+                                     int dec = MAX(10,90-(11*i_sub));
                                      framz.origin.y = (framz.origin.y+dec);
                                      prev3.frame = framz;
                                      
-                                     prev3.alpha = MAX(0.2,(prev3.alpha-0.3));
+                                     prev3.alpha = MAX(0.3,(prev3.alpha-0.2));
                                      
                                      if (framz.origin.y > titlesview.bounds.size.height+10) {
                                          [prev3 removeFromSuperview];
@@ -298,12 +298,12 @@
                          
                          //Message
                          CGRect framz = [prev1 frame];	
-                         framz.origin.y = (titlesview.bounds.size.height-70-6*titlesCounter);
+                         framz.origin.y = (titlesview.bounds.size.height-70-8*titlesCounter);
                          prev1.frame = framz;
             
                          //Sub Message (Time)
                          CGRect framz2 = [prev2 frame];	
-                         framz2.origin.y = (titlesview.bounds.size.height-6*titlesCounter);
+                         framz2.origin.y = (titlesview.bounds.size.height-8*titlesCounter);
                          prev2.frame = framz2;
                          
                          prev1.alpha = 0.4; 
