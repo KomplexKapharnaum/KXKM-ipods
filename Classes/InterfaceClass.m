@@ -158,6 +158,10 @@
     autoView.infoname.text = msg;
 }
 
+-(NSString*) getInfoName{
+    return autoView.infoname.text;
+}
+
 
 //###########################################################
 // MANU BUTTON INFO

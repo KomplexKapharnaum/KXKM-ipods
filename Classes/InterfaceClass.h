@@ -40,6 +40,7 @@
 -(void) infoServer:(NSString*)msg;
 -(void) infoName:(NSString*)msg;
 -(void) infoLink:(NSString*)msg;
+-(NSString*) getInfoName;
 
 //MANU INFO
 -(void) Bmute:(BOOL)m;

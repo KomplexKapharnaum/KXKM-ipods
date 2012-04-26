@@ -30,6 +30,8 @@
 
 // start Runner timer
 -(void) start {
+    
+    //LAUNCH BEAT REPEAT
 	timerChecker = [NSTimer scheduledTimerWithTimeInterval:TIMER_CHECK 
                                                    target:self 
                                                  selector:@selector(beat) 
@@ -42,6 +44,12 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
 
+    //INITIAL INFO (DISABLE ONCE DONE) FIX 4.3 compatibility
+    if (![[appDelegate.interFace getInfoName] isEqualToString:appDelegate.comPort.ipodName]) {
+        [appDelegate.interFace infoName: appDelegate.comPort.ipodName];
+        [appDelegate.interFace infoScreen: [appDelegate.disPlay resolution]];
+    }
+    
     //CHECK IF WIFI CONNECTED
     [appDelegate.interFace infoIP: [appDelegate.comPort getIPAddress]];
     

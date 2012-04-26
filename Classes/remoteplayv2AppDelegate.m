@@ -69,12 +69,8 @@
     
     //APP Info and States        
         //auto info
-        [interFace infoIP: @"noIP"];
-        [interFace infoScreen: @"noscreen"];
         [interFace infoState: @"starting"];
         [interFace infoMovie: @""];
-        [interFace infoServer: [comPort serverState]];
-        [interFace infoName: comPort.ipodName];
         
         //list media
         [interFace setMediaList: [filesManager list]];
