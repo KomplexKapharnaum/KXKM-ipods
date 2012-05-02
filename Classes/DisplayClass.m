@@ -152,11 +152,38 @@
 //TITLES
 -(void) titles {
     
-    //CLEAR
+    //INSTANT CLEAR
     if ([customTitles isEqualToString:@"megaclear"]) {
         NSArray* tv = [titlesview subviews];
         if ([tv count] > 0) for (UIView *v in tv) { [v removeFromSuperview]; }
         titlesCounter = 0;
+        titlesMode = 1;
+        return;
+    }
+    
+    //POP OUT RANDOM CLEAR
+    if ([customTitles isEqualToString:@"popclear"]) {
+        NSArray* tv = [titlesview subviews];
+        
+        if ([tv count] > 0) 
+            for (UIView *Tview in tv) { 
+                
+                [UIView animateWithDuration:0.5
+                                      delay:(60*(arc4random() % 1000)/1000)
+                                    options: UIViewAnimationCurveEaseIn
+                                 animations:^{
+                                     
+                                     Tview.alpha = 0;
+                                     
+                                 } 
+                                 completion:^(BOOL finished){
+                                    
+                                     [Tview removeFromSuperview];        
+                                     titlesCounter = [[titlesview subviews] count];
+                                 }];
+            }
+        
+
         titlesMode = 1;
         return;
     }
@@ -185,29 +212,6 @@
         if (titlesMode == 1) {
             
             [prev2 removeFromSuperview];
-            
-            //DELETE IF TOO MANY MESSAGES
-            /*if (titlesCounter >= 12) {
-                UIView* prev11 = [[titlesview subviews] objectAtIndex:([[titlesview subviews] count] - 12)];
-                UIView* prev12 = [[titlesview subviews] objectAtIndex:([[titlesview subviews] count] - 11)];
-                
-                [UIView animateWithDuration:1
-                                      delay:0
-                                    options: UIViewAnimationCurveEaseOut
-                                 animations:^{
-                                     CGRect framzf = [prev1 frame];	
-                                     framzf.origin.y = titlesview.bounds.size.height+70;
-                                     prev1.frame = framzf;
-                                     
-                                 } 
-                                 completion:^(BOOL finished){
-                                     
-                                     [prev11 removeFromSuperview];
-                                     [prev12 removeFromSuperview];
-                                     titlesCounter = titlesCounter - 2;
-                                     
-                                 }];
-            }*/
         
             //ANIMATE PREVIOUS MESSAGE
             [UIView animateWithDuration:0
@@ -215,7 +219,7 @@
                             options: UIViewAnimationCurveLinear
                          animations:^{
                              
-                             //First animation : go to bottom with alpha 50%
+                             //First animation : go to bottom
                              CGRect framz = [prev1 frame];	
                              framz.origin.y = (titlesview.bounds.size.height-240);
                              prev1.frame = framz;      
@@ -223,36 +227,11 @@
                          } 
                          completion:^(BOOL finished){
                              
-                             //Second animation : go down with alpha 100%
-                             /*[UIView animateWithDuration:5
-                                                   delay:0
-                                                 options: UIViewAnimationCurveLinear
-                                              animations:^{
-                                                  CGRect framz = [prev1 frame];	
-                                                  framz.origin.y = (titlesview.bounds.size.height-90);
-                                                  prev1.frame = framz;
-                                                  prev1.alpha = 1; 
-                                              } 
-                                              completion:^(BOOL finished){
-                                                  
-                                                  //Third anim: disappear 
-                                                  [UIView animateWithDuration:0.5
-                                                                        delay:0
-                                                                      options: UIViewAnimationCurveEaseIn
-                                                                   animations:^{
-                                                                       CGRect framz = [prev1 frame];	
-                                                                       framz.origin.y = (titlesview.bounds.size.height-70);
-                                                                       prev1.frame = framz;
-                                                                   } 
-                                                                   completion:^(BOOL finished){
-                                                                       
-                                                                       [prev1 removeFromSuperview];
-                                                                       titlesCounter--;
-                                                                   }];
-                                              }];
-                              */
+                             //
+                    
                          }];
             
+            //MOVE DOWN ALL OTHER MESSAGES
             for (int i_sub = 2; i_sub <= [[titlesview subviews] count]; i_sub++) {
                 
                 UIView* prev3 = [[titlesview subviews] objectAtIndex:([[titlesview subviews] count] - i_sub)];
@@ -313,12 +292,12 @@
                          
                           //Second animation : go down with alpha 100%
                          
-                         [UIView animateWithDuration:30
+                         [UIView animateWithDuration:15
                                                delay:0
                                              options: UIViewAnimationCurveEaseOut
                                           animations:^{
                                               CGRect framz = [prev1 frame];	
-                                              framz.origin.y = (titlesview.bounds.size.height-30-5*titlesCounter);
+                                              framz.origin.y = framz.origin.y+30;
                                               prev1.frame = framz;
                                               prev1.alpha = 1; 
                                           } 
