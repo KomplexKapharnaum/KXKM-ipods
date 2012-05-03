@@ -162,7 +162,7 @@
     }
     
     //POP OUT RANDOM CLEAR
-    if ([customTitles isEqualToString:@"popclear"]) {
+    if ([customTitles isEqualToString:@"starterase"]) {
         NSArray* tv = [titlesview subviews];
         
         if ([tv count] > 0) 
