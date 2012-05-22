@@ -27,6 +27,7 @@
     customTitles = @"";
     titlesCounter = 0;
     titlesMode = 1;
+    titlesOr = 1;
     
     subTitles = [[NSArray alloc] initWithObjects:
                  @"Maintenant",
@@ -149,42 +150,24 @@
     else flashcolorAlpha = 255;
 }
 
+
 //TITLES
+-(void) cleartitles {
+    NSArray* tv = [titlesview subviews];
+    if ([tv count] > 0) for (UIView *v in tv) { [v removeFromSuperview]; }
+    NSArray* tv2 = [titlesview2 subviews];
+    if ([tv2 count] > 0) for (UIView *v in tv2) { [v removeFromSuperview]; }
+    titlesCounter = 0;
+}
+
 -(void) titles {
     
-    //INSTANT CLEAR
-    if ([customTitles isEqualToString:@"megaclear"]) {
-        NSArray* tv = [titlesview subviews];
-        if ([tv count] > 0) for (UIView *v in tv) { [v removeFromSuperview]; }
-        titlesCounter = 0;
-        titlesMode = 1;
-        return;
-    }
     
-    //POP OUT RANDOM CLEAR
-    if ([customTitles isEqualToString:@"starterase"]) {
-        NSArray* tv = [titlesview subviews];
-        
-        if ([tv count] > 0) 
-            for (UIView *Tview in tv) { 
-                
-                [UIView animateWithDuration:0.5
-                                      delay:(60*(arc4random() % 1000)/1000)
-                                    options: UIViewAnimationCurveEaseIn
-                                 animations:^{
-                                     
-                                     Tview.alpha = 0;
-                                     
-                                 } 
-                                 completion:^(BOOL finished){
-                                    
-                                     [Tview removeFromSuperview];        
-                                     titlesCounter = [[titlesview subviews] count];
-                                 }];
-            }
-        
-
-        titlesMode = 1;
+    //RE-INIT ALL
+    if ([customTitles isEqualToString:@"megainit"]) {
+        [self cleartitles];  //CLEAR
+        titlesOr = 1;        //VERTICAL
+        titlesMode = 1;      //MODE 1
         return;
     }
     
@@ -200,10 +183,63 @@
         return;
     }
     
-    if ([[titlesview subviews] count] >= 2) {
+    //SET VERTICAL (1)
+    if ([customTitles isEqualToString:@"vertimode"]) {
+        if (titlesOr != 1) [self cleartitles];
+        titlesOr = 1;
+        return;
+    }
+    
+    //SET HORIZONTAL (2)
+    if ([customTitles isEqualToString:@"horizonmode"]) {
+        if (titlesOr != 2) [self cleartitles];
+        titlesOr = 2;
+        return;
+    }
+    
+    //INSTANT CLEAR AND SWITCH BACK TO MODE 1
+    if ([customTitles isEqualToString:@"megaclear"]) {
+        [self cleartitles];
+        titlesMode = 1;    
+        return;
+    }
+    
+    //POP OUT RANDOM CLEAR
+    if ([customTitles isEqualToString:@"starterase"]) {
+        NSArray* tv;
+        if (titlesOr == 1) tv = [titlesview subviews];
+        if (titlesOr == 2) tv = [titlesview2 subviews];
         
-        UIView* prev1 = [[titlesview subviews] objectAtIndex:([[titlesview subviews] count] - 2)];
-        UIView* prev2 = [[titlesview subviews] objectAtIndex:([[titlesview subviews] count] - 1)];
+        if ([tv count] > 0) 
+            for (UIView *Tview in tv) { 
+                
+                [UIView animateWithDuration:0.5
+                                      delay:(60*(arc4random() % 1000)/1000)
+                                    options: UIViewAnimationCurveEaseIn
+                                 animations:^{
+                                     
+                                     Tview.alpha = 0;
+                                     
+                                 } 
+                                 completion:^(BOOL finished){
+                                    
+                                     [Tview removeFromSuperview];        
+                                     titlesCounter = [[titlesview subviews] count] + [[titlesview2 subviews] count];
+                                 }];
+            }        
+
+        titlesMode = 1;
+        return;
+    }
+    
+    UIView* titleV;
+    if (titlesOr == 1) titleV = titlesview;
+    else titleV = titlesview2;
+    
+    if ([[titleV subviews] count] >= 2) {
+        
+        UIView* prev1 = [[titleV subviews] objectAtIndex:([[titleV subviews] count] - 2)];
+        UIView* prev2 = [[titleV subviews] objectAtIndex:([[titleV subviews] count] - 1)];
     
         soustitres.textColor = [UIColor whiteColor];
         prev1.alpha = 0; 
@@ -221,7 +257,7 @@
                              
                              //First animation : go to bottom
                              CGRect framz = [prev1 frame];	
-                             framz.origin.y = (titlesview.bounds.size.height-240);
+                             framz.origin.y = (titleV.bounds.size.height-240);
                              prev1.frame = framz;      
                              prev1.alpha = 0.9;
                          } 
@@ -232,9 +268,9 @@
                          }];
             
             //MOVE DOWN ALL OTHER MESSAGES
-            for (int i_sub = 2; i_sub <= [[titlesview subviews] count]; i_sub++) {
+            for (int i_sub = 2; i_sub <= [[titleV subviews] count]; i_sub++) {
                 
-                UIView* prev3 = [[titlesview subviews] objectAtIndex:([[titlesview subviews] count] - i_sub)];
+                UIView* prev3 = [[titleV subviews] objectAtIndex:([[titleV subviews] count] - i_sub)];
                 [UIView animateWithDuration:0.5
                                       delay:(0.07*i_sub)
                                     options: UIViewAnimationCurveEaseIn
@@ -246,7 +282,7 @@
                                      
                                      prev3.alpha = MAX(0.3,(prev3.alpha-0.2));
                                      
-                                     if (framz.origin.y > titlesview.bounds.size.height+10) {
+                                     if (framz.origin.y > titleV.bounds.size.height+10) {
                                          [prev3 removeFromSuperview];
                                          titlesCounter--;
                                      }
@@ -277,12 +313,12 @@
                          
                          //Message
                          CGRect framz = [prev1 frame];	
-                         framz.origin.y = (titlesview.bounds.size.height-70-8*titlesCounter);
+                         framz.origin.y = (titleV.bounds.size.height-70-8*titlesCounter);
                          prev1.frame = framz;
             
                          //Sub Message (Time)
                          CGRect framz2 = [prev2 frame];	
-                         framz2.origin.y = (titlesview.bounds.size.height-8*titlesCounter);
+                         framz2.origin.y = (titleV.bounds.size.height-8*titlesCounter);
                          prev2.frame = framz2;
                          
                          prev1.alpha = 0.4; 
@@ -315,22 +351,22 @@
     
     
     //ADD MAIN MESSAGE TEXT (change font size and add second line if necessary)
-    int fontsize = 70;
+    int fontsize = 80;
     
     CGSize stringSize = [customTitles sizeWithFont:[UIFont fontWithName:@"Thonburi" size:fontsize]];
     
-    if (stringSize.width > titlesview.bounds.size.width) {
-        fontsize = 40;
+    if (stringSize.width > titleV.bounds.size.width) {
+        fontsize = 50;
         stringSize = [customTitles sizeWithFont:[UIFont fontWithName:@"Thonburi" size:fontsize]];
         
-        if (stringSize.width > titlesview.bounds.size.width) {
-            stringSize.width = titlesview.bounds.size.width;
+        if (stringSize.width > titleV.bounds.size.width) {
+            stringSize.width = titleV.bounds.size.width;
             stringSize.height = stringSize.height*2;
         }
         
     }
     
-    int positionX = ((titlesview.bounds.size.width - stringSize.width) * (arc4random() % 100) / 100 );
+    int positionX = ((titleV.bounds.size.width - stringSize.width) * (arc4random() % 100) / 100 );
     CGRect labelSize = CGRectMake(positionX,0,stringSize.width, stringSize.height);
     
     soustitres = [[UILabel alloc] initWithFrame:labelSize];
@@ -340,7 +376,7 @@
     soustitres.text = customTitles;
     soustitres.font = [UIFont fontWithName:@"Thonburi" size:fontsize];
     soustitres.alpha = 1;
-    [titlesview addSubview:soustitres];
+    [titleV addSubview:soustitres];
     
     //ADD RANDOM PIC
     //UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
@@ -357,7 +393,7 @@
     soustitres2.text = subtit;
     soustitres2.font = [UIFont fontWithName:@"Thonburi" size:20];
     soustitres2.alpha = 1;
-    [titlesview addSubview:soustitres2];
+    [titleV addSubview:soustitres2];
 
     
     //ANIMATED SHOW 
@@ -511,20 +547,24 @@
             [_secondWindow addSubview:fadeview];
             
             //Create Masks (titlesview)
-            if (ROTATE_TITLES) {
-                CGRect titleframe = CGRectMake(
+            CGRect titleframe = CGRectMake(
                                         (secondScreen.bounds.size.width-secondScreen.bounds.size.height)/2,
                                            (secondScreen.bounds.size.height-secondScreen.bounds.size.width)/2
                                            ,secondScreen.bounds.size.height, secondScreen.bounds.size.width);
-                titlesview = [[UIView alloc] initWithFrame:titleframe];
-            }
-            else titlesview = [[UIView alloc] initWithFrame:secondScreen.bounds];
             
+
+            //VERTICAL TITLES VIEW
+            titlesview = [[UIView alloc] initWithFrame:titleframe];
             titlesview.backgroundColor = [UIColor clearColor];
             titlesview.alpha=1;
             [_secondWindow addSubview:titlesview];
+            [titlesview.layer setTransform: CATransform3DMakeRotation((M_PI/2), 0, 0.0, 1.0)];
             
-            if (ROTATE_TITLES) [titlesview.layer setTransform: CATransform3DMakeRotation((M_PI/2), 0, 0.0, 1.0)];
+            //HORIZONTAL TITLES VIEW
+            titlesview2 = [[UIView alloc] initWithFrame:secondScreen.bounds];
+            titlesview2.backgroundColor = [UIColor clearColor];
+            titlesview2.alpha=1;
+            [_secondWindow addSubview:titlesview2];
             
             
             //Create Masks (muteview)

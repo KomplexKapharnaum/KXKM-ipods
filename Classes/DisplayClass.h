@@ -27,6 +27,7 @@
     UIView *fadeview;
     UIView *flashview;
     UIView *titlesview;
+    UIView *titlesview2;
     
     //Colors
     int flashcolorRed;
@@ -47,6 +48,7 @@
     NSString *customTitles;
     int titlesCounter;
     int titlesMode;
+    int titlesOr;
     NSArray *subTitles;
     UILabel* soustitres;
     UILabel* soustitres2;
