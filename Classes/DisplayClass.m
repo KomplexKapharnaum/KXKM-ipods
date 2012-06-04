@@ -214,7 +214,7 @@
             for (UIView *Tview in tv) { 
                 
                 [UIView animateWithDuration:0.5
-                                      delay:(60*(arc4random() % 1000)/1000)
+                                      delay:(ERASE_TIME*(arc4random() % 1000)/1000)
                                     options: UIViewAnimationCurveEaseIn
                                  animations:^{
                                      

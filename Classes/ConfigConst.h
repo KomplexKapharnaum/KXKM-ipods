@@ -13,6 +13,9 @@
 //###########################################################
 // CONFIGURATION & CONSTANTS
 
+//TITRAGE
+#define ERASE_TIME          30  //temps d'effacement des titrages en seconde
+
 //TIMERS
 #define TIMER_RUN           0.1 //10ms   Runner : recieved orders
 #define TIMER_CHECK         0.8  //800ms  Checker : IP / Screen / ..
