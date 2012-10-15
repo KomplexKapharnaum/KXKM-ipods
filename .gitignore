@@ -10,3 +10,7 @@ xcuserdata
 *.xcuserstate
 UserInterfaceState.xcuserstate
 xcuserstate
+
+.DS_Store
+
+KXKM.xcodeproj/project.pbxproj
