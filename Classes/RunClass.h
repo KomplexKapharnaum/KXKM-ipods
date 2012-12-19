@@ -18,6 +18,9 @@
     BOOL playlive;
     BOOL stoplive;
     
+    BOOL startrecord;
+    BOOL stoprecord;
+    
     BOOL gomute;
     BOOL gounmute;
     

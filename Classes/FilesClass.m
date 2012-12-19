@@ -12,6 +12,7 @@
 
 @implementation FilesClass
 
+@synthesize docPath;
 
 //###########################################################
 // INIT
@@ -27,7 +28,7 @@
     if ([[self platform] isEqualToString:@"i386"]) docPath = @"/Media/Video/";
     
     //make list
-    mediaList = [[self list] copy];
+    [self mediaList];
     
     return [super init];	
 }
@@ -57,6 +58,14 @@
     NSArray *mL = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
     
     return mL;
+}
+
+//UPDATE MEDIA LIST
+- (NSArray *) mediaList
+{
+    //make list
+    mediaList = [[self list] copy];
+    return mediaList;
 }
 
 //SEARCH A MEDIA
@@ -113,6 +122,19 @@
         myURL = [NSURL URLWithString:path];
         
     }
+    return myURL;
+}
+
+//MAKE URL
+- (NSURL*) urlnew:(NSString *) file {
+    
+    NSURL* myURL;
+    NSString* path;
+    
+    //LOCAL FILE
+    path = [docPath stringByAppendingString:@"/"];
+    path = [path stringByAppendingString:file];
+    myURL = [NSURL fileURLWithPath:path];
     return myURL;
 }
 

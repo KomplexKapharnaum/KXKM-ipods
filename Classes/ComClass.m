@@ -26,7 +26,11 @@
     
     //COMMON UDP
     inPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_in_key"] intValue];
-    outPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_server_key"] intValue]; 
+    outPort = [[[NSUserDefaults standardUserDefaults] stringForKey:@"osc_port_server_key"] intValue];
+    
+    if (inPort == 0) inPort = 1222;
+    if (outPort == 0) outPort = 3737;
+    
     udpServerIP = [self getIPBroadcast];
     
     //VVOSC Communication (UDP)
@@ -162,16 +166,16 @@
 
 - (void) setIpServer: (NSString *) ipServer {
     
-    NSLog(@"New Server IP : %@ ",ipServer);
+    //NSLog(@"New Server IP : %@ ",ipServer);
     
     if ([self verifyIp:ipServer]) {
         [manager deleteAllOutputs];
         udpServerIP = [ipServer copy];
         vvoscOUT= [manager createNewOutputToAddress:udpServerIP atPort:outPort];
-        NSLog(@"SET !");
+        //NSLog(@"SET !");
     }
     
-    else NSLog(@"FAILED !");
+    //else NSLog(@"FAILED !");
 }
 
 - (NSString*) serverState {
@@ -199,7 +203,7 @@
 - (NSString*) oscValueToString: (OSCValue*) val {
     switch (val.type)   {
         case OSCValInt:
-            return [NSString stringWithFormat:@"%ld",[val intValue]];
+            return [NSString stringWithFormat:@"%i",[val intValue]];
         case OSCValFloat:
             return  [NSString stringWithFormat:@"%f",[val floatValue]];
         case OSCValString:
@@ -267,6 +271,7 @@
     msg = [msg stringByAppendingString:[self getIPAddress]];
     [self send:msg];    
     
+    //MEDIA LIST / DEPRECATED: Message too big !
     //for (NSString *movies in mediaList) 
         //[self sendUDP:[@"fileinfo " stringByAppendingString:movies]];
     
@@ -278,12 +283,6 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    //Screen alert
-    if ([[appDelegate.disPlay resolution] isEqualToString:@"noscreen"]) {
-        [self send:@"noscreen"];
-        return;
-    }
-    
     //Player Mode : Auto, Manu, Streaming, ... 
     NSString* msg = [appDelegate.interFace modeName];
     
@@ -292,10 +291,20 @@
     if ([appDelegate.disPlay faded]) msg = [msg stringByAppendingString:@"faded"];
     else msg = [msg stringByAppendingString:@"normal"];
     
+    //screen state
+    msg = [msg stringByAppendingString:@" "];
+    if ([[appDelegate.disPlay resolution] isEqualToString:@"noscreen"]) msg = [msg stringByAppendingString:@"noscreen"];
+    else msg = [msg stringByAppendingString:@"screen"];
+    
     //Player State : waiting, playing,
     msg = [msg stringByAppendingString:@" "];
     NSString* movie = [appDelegate.moviePlayer movie];
-    if (movie == nil) msg = [msg stringByAppendingString:@"stopmovie"];
+    if ([appDelegate.recOrder isRecording])
+    {
+        msg = [msg stringByAppendingString:@"recording "];
+        msg = [msg stringByAppendingString:appDelegate.recOrder.MovieFileName];
+    }
+    else if (movie == nil) msg = [msg stringByAppendingString:@"stopmovie"];
     else {
         if ([appDelegate.moviePlayer type] == PLAYER_LOCAL) msg = [msg stringByAppendingString:@"playmovie "];
         else  msg = [msg stringByAppendingString:@"playstream "];   
@@ -305,6 +314,12 @@
     }
     
     [self send:msg];
+}
+
+//RECORDER
+-(void)sendRec:(NSString*)info
+{
+    [self send:[@"recstatus " stringByAppendingString:info]];
 }
 
 //BATTERY STATE

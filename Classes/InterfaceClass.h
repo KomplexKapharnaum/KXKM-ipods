@@ -40,6 +40,7 @@
 -(void) infoServer:(NSString*)msg;
 -(void) infoName:(NSString*)msg;
 -(void) infoLink:(NSString*)msg;
+-(void) infoRec:(BOOL)recording;
 -(NSString*) getInfoName;
 
 //MANU INFO

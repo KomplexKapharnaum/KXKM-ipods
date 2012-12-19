@@ -11,8 +11,31 @@
 
 @implementation remoteplayv2ViewController
 
-@synthesize infostate,infoctrl,infoscreen,infoip,infomovie,infoserver,infoname, mirButtonauto,infolink;
+@synthesize infostate,infoctrl,infoscreen,infoip,infomovie,infoserver,infoname, mirButtonauto,infolink,inforec;
 
+//rec switch
+/*
+- (IBAction)recON:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    NSDateFormatter *formatter;
+    NSString        *dateString;
+    
+    formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"_HH-mm-ss"];
+    
+    dateString = [appDelegate.comPort.ipodName stringByAppendingString:[formatter stringFromDate:[NSDate date]]];
+    //NSLog(dateString);
+    
+    [appDelegate.recOrder setFile:[dateString stringByAppendingString:@".mp4"]];
+    [appDelegate.recOrder start];
+}
+
+- (IBAction)recOFF:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [appDelegate.recOrder stop];
+}*/
 
 //mir switch 
 - (IBAction)mir:(id)sender{
@@ -26,6 +49,7 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.comPort sendSOS];
+    [appDelegate.comPort sendInfo];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -42,6 +66,7 @@
 }
 
 - (void)viewDidUnload {
+    [self setInforec:nil];
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 }

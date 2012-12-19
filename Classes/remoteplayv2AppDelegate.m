@@ -25,6 +25,7 @@
 @synthesize filesManager;
 @synthesize moviePlayer;
 @synthesize live2Player;
+@synthesize recOrder;
 @synthesize interFace;
 
 
@@ -39,7 +40,7 @@
     
     //VUES : pointeur vers l'objet de chacune des vues pour un accès rapide depuis le delegate
         //TABS : Add the view controller's view to the window and display.
-        [self.window addSubview:tabBarController.view];
+        self.window.rootViewController = tabBarController;
         [self.window makeKeyAndVisible];
     
     //OBJECTS
@@ -64,6 +65,9 @@
         //MOVIE PLAYER
         live2Player = [[Live2Class alloc] init];
     
+        //MOVIE PLAYER
+        recOrder = [[RecClass alloc] init];
+    
         //INTERFACE CTRL
         interFace = [[InterfaceClass alloc] initWithTabBar:tabBarController];
     
@@ -79,6 +83,9 @@
     //APP START      
         [runMachine start];
         [checkMachine start];
+    
+    //SEND INFO
+        [comPort sendInfo];
     
 	//end of startup
     return YES;
@@ -162,6 +169,7 @@
     [filesManager release];
     [moviePlayer release];
     [live2Player release];
+    [recOrder release];
     [interFace release];
     
     //interface

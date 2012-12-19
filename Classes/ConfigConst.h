@@ -47,6 +47,9 @@
 //SEGMENT BUFFER LIVE MODE
 #define LIVE_BUFFER    2
 
+//RECODER
+#define CAPTURE_FRAMES_PER_SECOND   30
+
 //DEBUG
 #define DEBUG_PLAYERS   NO   //separate and colorize rotative players views
 

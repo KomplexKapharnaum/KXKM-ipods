@@ -27,7 +27,7 @@
 // Dispatch recieved orders : some actions can be performed directly
 // but some actions must be performed by the BEAT clocked function
 - (void) dispatch:(NSString*) rcvCommand {
-    //NSLog(@" cmd recieved");
+    //NSLog(rcvCommand);
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     NSArray *pieces = [rcvCommand componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -104,7 +104,11 @@
         }
         
         //STOP MOVIE
-        else if ([command isEqualToString: @"/stopmovie"]) stopmovie = YES;
+        else if ([command isEqualToString: @"/stopmovie"])
+        {
+            stopmovie = YES;
+            stoprecord = YES;
+        }
         
         //STOP MOVIE
         else if ([command isEqualToString: @"/stoplive"]) stoplive = YES;
@@ -117,6 +121,13 @@
         //UNPAUSE
         else if ([command isEqualToString: @"/unpause"]) {
             [appDelegate.moviePlayer unpause];
+        }
+        
+        //START RECORD
+        else if ([command isEqualToString: @"/rec"]) {
+            [appDelegate.recOrder setFile: [[orders objectAtIndex:0] copy]];
+            [appDelegate.recOrder setOrientation: [[orders objectAtIndex:1] copy]];
+            startrecord = YES;
         }
         
         //MUTE
@@ -139,6 +150,9 @@
             
             gofade = YES;
         }
+        
+        //STOP RECORD
+        else if ([command isEqualToString: @"/recstop"]) stoprecord = YES;
         
         //UNFADE
         else if ([command isEqualToString: @"/unfade"]) gounfade = YES;
@@ -191,13 +205,23 @@
         
         //SCHEDULED ORDERS
         //play movie
-        if (playmovie) [appDelegate.moviePlayer play];
+        if (playmovie)
+        {
+            if ([appDelegate.recOrder isRecording]) [appDelegate.recOrder stop];
+            if ([appDelegate.live2Player isLive]) [appDelegate.live2Player stop];
+            [appDelegate.moviePlayer play];
+        }
         
         //stop movie
         if (stopmovie) [appDelegate.moviePlayer stop];
         
         //play live
-        if (playlive) [appDelegate.live2Player start];
+        if (playlive)
+        {
+            if ([appDelegate.recOrder isRecording]) [appDelegate.recOrder stop];
+            if ([appDelegate.moviePlayer isPlaying]) [appDelegate.moviePlayer stop];
+            [appDelegate.live2Player start];
+        }
         if ([appDelegate.live2Player isLive]) [appDelegate.live2Player beat];
         
         //stop live
@@ -218,6 +242,16 @@
         if (gotitles) [appDelegate.disPlay titles];
     }
     
+    //start record
+    if (startrecord)
+    {
+        if ([appDelegate.moviePlayer isPlaying]) [appDelegate.moviePlayer stop];
+        if ([appDelegate.live2Player isLive]) [appDelegate.live2Player stop];
+        [appDelegate.recOrder start];
+    }
+    //stop record
+    if (stoprecord) [appDelegate.recOrder stop];
+    
     //message
     if (gomessage) [appDelegate.interFace Bmessage:message];
     
@@ -233,6 +267,9 @@
     
     playmovie = NO;
 	stopmovie = NO;
+    
+    startrecord = NO;
+	stoprecord = NO;
     
     playlive = NO;
     stoplive = NO;

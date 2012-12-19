@@ -61,13 +61,19 @@
     if ([serverIPstate isEqualToString:@"broadcast"]) {
         if (TIMER_CHECK_BROAD > 0) broadcastRefresh++;
         if (broadcastRefresh > TIMER_CHECK_BROAD) {
+            [appDelegate.comPort sendInfo];
             [appDelegate.comPort sendAskip];
             broadcastRefresh = 0;
         }
     }    
     
     //UPDATE LINK STATE
-    if (lastSync > 4) [appDelegate.interFace infoLink: @"nolink"];
+    if (lastSync > 4)
+    {
+        [appDelegate.interFace infoLink: @"nolink"];
+        [appDelegate.comPort sendInfo];
+        //NSLog(@"nolink send sos");
+    }
     else [appDelegate.interFace infoLink: @"OK"];
     if (lastSync < 1000) lastSync++; //security increaser
     
@@ -92,6 +98,9 @@
         [appDelegate.interFace infoState:@"wait"];
         [appDelegate.interFace infoMovie:@""];
     }
+    
+    //UPDATE RECORDER STATE
+    [appDelegate.interFace infoRec:[appDelegate.recOrder isRecording]];
     
     //UPDATE CTRL STATE
     if ([appDelegate.disPlay faded]) [appDelegate.interFace infoCtrl:@"faded"];
@@ -126,10 +135,11 @@
                 if ((![appDelegate.moviePlayer isPause]) && (![appDelegate.disPlay faded])) 
                         [appDelegate.tabBarController setSelectedIndex:0];
             
-            if ((lastTab == 2) && (timeHere > (TIMER_CHECK_USER))) 
-                if ((![appDelegate.moviePlayer isPause]) && (![appDelegate.disPlay faded]))
-                    [appDelegate.tabBarController setSelectedIndex:0];
+            if ((lastTab == 2) && (timeHere > (TIMER_CHECK_USER)))
+            {
+                if ((![appDelegate.moviePlayer isPause]) && (![appDelegate.disPlay faded])) [appDelegate.tabBarController setSelectedIndex:0];
                 else [appDelegate.tabBarController setSelectedIndex:1];
+            }
         }
     }
     

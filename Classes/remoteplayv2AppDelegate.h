@@ -16,6 +16,7 @@
 #import "FilesClass.h"
 #import "MovieClass.h"
 #import "Live2Class.h"
+#import "RecClass.h"
 #import "InterfaceClass.h"
 
 
@@ -32,7 +33,8 @@
     CheckerClass *checkMachine; //Check states
     FilesClass *filesManager;   //Files Manager
     MovieClass *moviePlayer;    //Movie Player 
-    Live2Class *live2Player;      //Live Player 
+    Live2Class *live2Player;      //Live Player
+    RecClass *recOrder;      //Recorder
     InterfaceClass *interFace;  //User Interface
            
 }
@@ -48,6 +50,7 @@
 @property (nonatomic, retain) FilesClass *filesManager;
 @property (nonatomic, retain) MovieClass *moviePlayer;
 @property (nonatomic, retain) Live2Class *live2Player;
+@property (nonatomic, retain) RecClass *recOrder;
 @property (nonatomic, retain) InterfaceClass *interFace;
 
 

@@ -136,6 +136,12 @@
     autoView.infomovie.text = msg;
 }
 
+//INFO (record info)
+-(void) infoRec:(BOOL)recording{
+    if (recording) autoView.inforec.backgroundColor = [UIColor redColor];
+    else autoView.inforec.backgroundColor = [UIColor blackColor];
+}
+
 //INFO (server box info)
 -(void) infoServer:(NSString*)msg{ 
     

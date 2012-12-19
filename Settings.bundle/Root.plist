@@ -10,25 +10,23 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>OSC IP serveur</string>
+			<string>NAME iPod</string>
 			<key>Key</key>
-			<string>osc_ip_server_key</string>
+			<string>osc_id_name_key</string>
 			<key>DefaultValue</key>
-			<string>192.168.1.30</string>
+			<string>ipodX</string>
 			<key>IsSecure</key>
 			<false/>
-			<key>KeyboardType</key>
-			<string>NumbersAndPunctuation</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>OSC port serveur</string>
+			<string>PORT iPod</string>
 			<key>Key</key>
-			<string>osc_port_server_key</string>
+			<string>osc_port_in_key</string>
 			<key>DefaultValue</key>
-			<string>1221</string>
+			<string>0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>KeyboardType</key>
@@ -38,23 +36,11 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>ipod ID name</string>
+			<string>PORT Server</string>
 			<key>Key</key>
-			<string>osc_id_name_key</string>
+			<string>osc_port_server_key</string>
 			<key>DefaultValue</key>
-			<string>pierre</string>
-			<key>IsSecure</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>OSC in port</string>
-			<key>Key</key>
-			<string>osc_port_in_key</string>
-			<key>DefaultValue</key>
-			<string>1221</string>
+			<string>0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>KeyboardType</key>

@@ -18,8 +18,11 @@
 @property (nonatomic, retain) IBOutlet UITextField *infoserver;
 @property (nonatomic, retain) IBOutlet UITextField *infoname;
 @property (nonatomic, retain) IBOutlet UITextField *infolink;
+@property (retain, nonatomic) IBOutlet UILabel *inforec;
 
 @property (nonatomic,retain) IBOutlet UIButton *mirButtonauto;
+
+@property (nonatomic,retain) IBOutlet UISwitch *recSwitch;
 
 - (IBAction)mir:(id)sender;
 - (IBAction)sos:(id)sender;
