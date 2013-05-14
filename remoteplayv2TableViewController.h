@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface remoteplayv2TableViewController : UITableViewController 
+@interface remoteplayv2TableViewController : UITableViewController {
+    BOOL displaySEC[200];
+}
 
 @property (readwrite,retain) IBOutlet UITableView *moviesTable;
 @property (readwrite,retain) NSArray *movies;

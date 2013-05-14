@@ -25,7 +25,7 @@
     docPath = [[paths objectAtIndex:0] copy];
     
     //simulator path (dev only)
-    if ([[self platform] isEqualToString:@"i386"]) docPath = @"/Media/Video/";
+    if ([[self platform] isEqualToString:@"i386"] || [[self platform] isEqualToString:@"x86_64"]) docPath = @"/Media/Video/";
     
     //make list
     [self mediaList];

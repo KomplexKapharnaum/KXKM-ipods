@@ -16,7 +16,7 @@
 
 - (id) init {
     
-    moviesTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    moviesTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     return [super init];
 }
 
@@ -26,21 +26,29 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	
+    
 	return [sections objectAtIndex:section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
-    listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+    if (displaySEC[section]) {
+		listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+        
+        for (NSString *movie in movies)
+        {
+            NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
+            if ([[sections objectAtIndex:section] isEqualToString:c]) [listSections addObject:[movie copy]];
+        }
+        
+        return ([listSections count]+1);
+        
+	} else {
+		///we just want the header cell
+		return 1;
+	}
     
-    for (NSString *movie in movies)
-    {
-        NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
-        if ([[sections objectAtIndex:section] isEqualToString:c]) [listSections addObject:[movie copy]];
-    } 
-	
-	return [listSections count];
+    
 }
 
 
@@ -55,6 +63,11 @@
     }
     
     listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+    
+    //add header
+    [listSections addObject:[sections objectAtIndex:indexPath.section]];
+    
+    //list films
     for (NSString *movie in movies)
     {
         NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
@@ -74,10 +87,25 @@
     }
     else label = [listSections objectAtIndex:indexPath.row];
     
+    //header
+    if (indexPath.row == 0)
+        if (displaySEC[indexPath.section]) cell.textLabel.text = @"-";
+        else cell.textLabel.text = @"+";
+    
     //ajout du film à la liste
-	cell.textLabel.text = [@"      " stringByAppendingString:[[label componentsSeparatedByString:@"."] objectAtIndex:0]];
+	else
+        cell.textLabel.text = [@"        " stringByAppendingString:[[label componentsSeparatedByString:@"."] objectAtIndex:0]];
 	
 	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0)
+    {
+        cell.backgroundColor = [UIColor colorWithRed:83/255.0f green:110/255.0f blue:245/255.0f alpha:1.0f];
+        cell.textLabel.textColor = [UIColor whiteColor];
+    }
+    else cell.textLabel.textColor = [UIColor blackColor];
 }
 
 //selection de la case -> lecture du film
@@ -85,25 +113,40 @@
 {
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    listSections = [[NSMutableArray arrayWithObjects: nil] retain];
-    for (NSString *movie in movies)
+    //Header clicked (toggle section)
+    if (indexPath.row == 0)
     {
-        NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
-        if ([[sections objectAtIndex:indexPath.section] isEqualToString:c]) [listSections addObject:[movie copy]];
-    } 
-    
-    NSString *m = [listSections objectAtIndex:indexPath.row];
-    [appDelegate disableStreaming];
-    [appDelegate.moviePlayer load:m];
-    [appDelegate.moviePlayer play];
-    [appDelegate.interFace setMode:MANU];
-    [appDelegate.checkMachine userAct:TIMER_CHECK_USER];
+		///it's the first row of any section so it would be your custom section header
+        
+		///put in your code to toggle your boolean value here
+		displaySEC[indexPath.section] = !displaySEC[indexPath.section];
+        
+		///reload this section
+		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+	}
+    //Movie selected
+    else
+    {
+        listSections = [[NSMutableArray arrayWithObjects: nil] retain];
+        for (NSString *movie in movies)
+        {
+            NSString *c = [[movie componentsSeparatedByString:@"_"] objectAtIndex:0];
+            if ([[sections objectAtIndex:indexPath.section] isEqualToString:c]) [listSections addObject:[movie copy]];
+        } 
+        
+        NSString *m = [listSections objectAtIndex:(indexPath.row-1)];
+        [appDelegate disableStreaming];
+        [appDelegate.moviePlayer load:m];
+        [appDelegate.moviePlayer play];
+        [appDelegate.interFace setMode:MANU];
+        [appDelegate.checkMachine userAct:TIMER_CHECK_USER];
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self initWithStyle:UITableViewStyleGrouped];
+    [self initWithStyle:UITableViewStylePlain];
     return self;
 }
 
@@ -125,7 +168,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    moviesTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    moviesTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     // Do any additional setup after loading the view from its nib.
 }
 
