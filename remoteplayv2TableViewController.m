@@ -26,8 +26,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    
-	return [sections objectAtIndex:section];
+	return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -41,11 +40,11 @@
             if ([[sections objectAtIndex:section] isEqualToString:c]) [listSections addObject:[movie copy]];
         }
         
-        return ([listSections count]+1);
+        return [listSections count];
         
 	} else {
 		///we just want the header cell
-		return 1;
+        return 0;
 	}
     
     
@@ -63,9 +62,6 @@
     }
     
     listSections = [[NSMutableArray arrayWithObjects: nil] retain];
-    
-    //add header
-    [listSections addObject:[sections objectAtIndex:indexPath.section]];
     
     //list films
     for (NSString *movie in movies)
@@ -87,25 +83,49 @@
     }
     else label = [listSections objectAtIndex:indexPath.row];
     
-    //header
-    if (indexPath.row == 0)
-        if (displaySEC[indexPath.section]) cell.textLabel.text = @"-";
-        else cell.textLabel.text = @"+";
-    
-    //ajout du film à la liste
-	else
         cell.textLabel.text = [@"        " stringByAppendingString:[[label componentsSeparatedByString:@"."] objectAtIndex:0]];
 	
 	return cell;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0)
-    {
-        cell.backgroundColor = [UIColor colorWithRed:83/255.0f green:110/255.0f blue:245/255.0f alpha:1.0f];
-        cell.textLabel.textColor = [UIColor whiteColor];
-    }
-    else cell.textLabel.textColor = [UIColor blackColor];
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+        return 50.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 45.0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0,0, 320, 44)] autorelease]; // x,y,width,height
+    
+    UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    reportButton.frame = CGRectMake(0, 0, 320.0, 52.0); // x,y,width,height
+    [reportButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    if (!displaySEC[section]) reportButton.backgroundColor = [UIColor blackColor];
+    else reportButton.backgroundColor = [UIColor grayColor];
+    [reportButton setTitle:[sections objectAtIndex:section] forState:UIControlStateNormal];
+    [reportButton addTarget:self
+                     action:@selector(buttonPressed:)
+           forControlEvents:UIControlEventTouchDown];
+    reportButton.tag = section;
+    reportButton.titleLabel.textColor = [UIColor whiteColor];
+    reportButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    reportButton.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    reportButton.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size: 17.0];
+    [reportButton.layer setBorderWidth:2.0f];
+    [reportButton.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+    [headerView addSubview:reportButton];
+    return headerView;
+}
+
+- (IBAction) buttonPressed:(id)sender {
+    UIButton *clicked = (UIButton *) sender;
+    displaySEC[clicked.tag] = !displaySEC[clicked.tag];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:clicked.tag] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 //selection de la case -> lecture du film
@@ -113,20 +133,6 @@
 {
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    //Header clicked (toggle section)
-    if (indexPath.row == 0)
-    {
-		///it's the first row of any section so it would be your custom section header
-        
-		///put in your code to toggle your boolean value here
-		displaySEC[indexPath.section] = !displaySEC[indexPath.section];
-        
-		///reload this section
-		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
-	}
-    //Movie selected
-    else
-    {
         listSections = [[NSMutableArray arrayWithObjects: nil] retain];
         for (NSString *movie in movies)
         {
@@ -134,19 +140,19 @@
             if ([[sections objectAtIndex:indexPath.section] isEqualToString:c]) [listSections addObject:[movie copy]];
         } 
         
-        NSString *m = [listSections objectAtIndex:(indexPath.row-1)];
+        NSString *m = [listSections objectAtIndex:(indexPath.row)];
         [appDelegate disableStreaming];
         [appDelegate.moviePlayer load:m];
         [appDelegate.moviePlayer play];
         [appDelegate.interFace setMode:MANU];
         [appDelegate.checkMachine userAct:TIMER_CHECK_USER];
-    }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
     [self initWithStyle:UITableViewStylePlain];
+    //self.view.backgroundColor = [UIColor grayColor];
     return self;
 }
 

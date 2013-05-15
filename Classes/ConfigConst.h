@@ -14,7 +14,8 @@
 // CONFIGURATION & CONSTANTS
 
 //TITRAGE
-#define ERASE_TIME          30  //temps d'effacement des titrages en seconde
+#define ERASE_TIME          25  //temps d'effacement des titrages en seconde (à partir de OFFSET)
+#define ERASE_TIME_OFFSET   5   //OFFSET avant début effacement temps d'effacement des titrages en seconde
 
 //TIMERS
 #define TIMER_RUN           0.1 //10ms   Runner : recieved orders
