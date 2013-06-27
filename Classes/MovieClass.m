@@ -63,7 +63,13 @@
         
         //Player Type
         if ([appDelegate.filesManager find:movieLoad]) playerType = PLAYER_LOCAL;
-        else playerType = PLAYER_STREAM;
+        else {
+            if (STREAM_UNKNOWN_MOVIE) playerType = PLAYER_STREAM;
+            else {
+                [self stop];
+                return;
+            }
+        }
         
         //Player
         player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];

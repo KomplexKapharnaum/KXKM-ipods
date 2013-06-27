@@ -28,13 +28,22 @@
 // but some actions must be performed by the BEAT clocked function
 - (void) dispatch:(NSString*) rcvCommand {
     //NSLog(rcvCommand);
+    if (rcvCommand == nil) return;
+    
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     NSArray *pieces = [rcvCommand componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([pieces count] < 1) return;
+    
     NSString *command = [pieces objectAtIndex:0];
     
-    NSMutableArray *orders = [NSMutableArray arrayWithArray: pieces];
-    [orders removeObjectAtIndex:0];
+    NSMutableArray *orders;
+    if ([pieces count] >= 2)
+    {
+        orders = [NSMutableArray arrayWithArray: pieces];
+        [orders removeObjectAtIndex:0];
+    }
+    
     
     //SYNC : mode, state, args (movie, time, ...)
 	if ([command isEqualToString: @"/synctest"]) {
@@ -46,7 +55,9 @@
 	else if ([command isEqualToString: @"/fullsynctest"]) [appDelegate.comPort sendInfo];
     
     //SET IP SERVER :
-	else if ([command isEqualToString: @"/ipregie"]) [appDelegate.comPort setIpServer:[orders objectAtIndex:0]];
+	else if ([command isEqualToString: @"/ipregie"]) {
+        if ([orders count] >= 1) [appDelegate.comPort setIpServer:[orders objectAtIndex:0]];
+    }
     
     //FORCE AUTO :
 	else if ([command isEqualToString: @"/mastermode"]) {
@@ -70,16 +81,22 @@
     
     //DISPLAY MESSAGE
     else if ([command isEqualToString: @"/message"]) {
-        message = [[orders componentsJoinedByString:@" "] copy];
-        gomessage=YES;
+        if ([orders count] >= 1)
+        {
+            message = [[orders componentsJoinedByString:@" "] copy];
+            gomessage=YES;
+        }
     }
     
     //TITLES
     //ADD TEXT
     else if ([command isEqualToString: @"/titles"]) {
-        [appDelegate.disPlay titlesText:[orders componentsJoinedByString:@" "]];
-        //NSLog([orders componentsJoinedByString:@" "]);
-        gotitles=YES;
+        if ([orders count] >= 1)
+        {
+            [appDelegate.disPlay titlesText:[orders componentsJoinedByString:@" "]];
+            //NSLog([orders componentsJoinedByString:@" "]);
+            gotitles=YES;
+        }
     }
     
     //ONLY IN AUTO MODE
@@ -87,14 +104,14 @@
         
         //LOAD & PLAY MOVIE
         if (([command isEqualToString: @"/loadmovie"]) || ([command isEqualToString: @"/playmovie"]) || ([command isEqualToString: @"/playstream"])) {
-            [appDelegate.moviePlayer load: [[orders componentsJoinedByString:@" "] copy]];
+            if ([orders count] >= 1) [appDelegate.moviePlayer load: [[orders componentsJoinedByString:@" "] copy]];
             playmovie = ([command isEqualToString: @"/playmovie"] || [command isEqualToString: @"/playstream"]);
         }
         
         
         //PLAY LIVE
         else if ([command isEqualToString: @"/playlive"]) {
-            [appDelegate.live2Player load : [[orders componentsJoinedByString:@" "] copy]];  
+            if ([orders count] >= 1) [appDelegate.live2Player load : [[orders componentsJoinedByString:@" "] copy]];
             playlive = YES;
         }
         
@@ -125,9 +142,12 @@
         
         //START RECORD
         else if ([command isEqualToString: @"/rec"]) {
-            [appDelegate.recOrder setFile: [[orders objectAtIndex:0] copy]];
-            [appDelegate.recOrder setOrientation: [[orders objectAtIndex:1] copy]];
-            startrecord = YES;
+            if ([orders count] >= 1)
+            {
+                [appDelegate.recOrder setFile: [[orders objectAtIndex:0] copy]];
+                [appDelegate.recOrder setOrientation: [[orders objectAtIndex:1] copy]];
+                startrecord = YES;
+            }
         }
         
         //MUTE

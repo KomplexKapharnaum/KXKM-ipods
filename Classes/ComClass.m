@@ -231,22 +231,27 @@
 // OSC RECEIVER
 - (void) receivedOSCMessage: (OSCMessage *) m {
     
-    NSString *command = [m address];
+    if ([m respondsToSelector:@selector(address)] && ([m address] != nil))
+    {
+        
+        NSString *command = [m address];
     
-    if ([m valueCount] == 1) {
-        command = [command stringByAppendingString:@" "];
-        command = [command stringByAppendingString:[self oscValueToString:[m value]]];
-    }
-    else if ([m valueCount] > 0) {
-        for (int y = 0; y < [m valueCount] ; y++) 
-        {            
+        if ([m valueCount] == 1)
+        {
             command = [command stringByAppendingString:@" "];
-            command = [command stringByAppendingString:[self oscValueToString:[m valueAtIndex:y]]];
+            command = [command stringByAppendingString:[self oscValueToString:[m value]]];
         }
-    }
+        else if ([m valueCount] > 0) {
+            for (int y = 0; y < [m valueCount] ; y++) 
+            {            
+                command = [command stringByAppendingString:@" "];
+                command = [command stringByAppendingString:[self oscValueToString:[m valueAtIndex:y]]];
+            }
+        }
     
-    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.runMachine dispatch:command];
+        remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.runMachine dispatch:command];
+    }
 }
 
 //OSC SENDER

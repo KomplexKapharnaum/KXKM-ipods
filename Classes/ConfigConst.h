@@ -13,6 +13,9 @@
 //###########################################################
 // CONFIGURATION & CONSTANTS
 
+//PLAYER
+#define STREAM_UNKNOWN_MOVIE  NO    //When /playmovie unknown file try to stream it (like playstream)
+
 //TITRAGE
 #define ERASE_TIME          25  //temps d'effacement des titrages en seconde (à partir de OFFSET)
 #define ERASE_TIME_OFFSET   5   //OFFSET avant début effacement temps d'effacement des titrages en seconde
