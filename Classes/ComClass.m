@@ -84,9 +84,14 @@
             if(temp_addr->ifa_addr->sa_family == AF_INET)
             {
                 // Check if interface is en0 which is the wifi connection on the iPhone
-                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
+                /*if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
                 {
                     // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }*/
+                NSRange range = [[NSString stringWithUTF8String:temp_addr->ifa_name] rangeOfString : @"en"];
+                if(range.location != NSNotFound)
+                {
                     address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
                 }
             }
@@ -119,9 +124,14 @@
             if(temp_addr->ifa_addr->sa_family == AF_INET)
             {
                 // Check if interface is en0 which is the wifi connection on the iPhone
-                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
+                /*if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
                 {
                     // Get NSString from C String
+                    netmask = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
+                }*/
+                NSRange range = [[NSString stringWithUTF8String:temp_addr->ifa_name] rangeOfString : @"en"];
+                if(range.location != NSNotFound)
+                {
                     netmask = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
                 }
             }
