@@ -11,7 +11,7 @@
 
 @implementation remoteplayv2ViewController
 
-@synthesize infostate,infoctrl,infoscreen,infoip,infomovie,infoserver,infoname, mirButtonauto,infolink,inforec;
+@synthesize infostate,infoctrl,infoscreen,infoip,infomovie,infoserver,infoname, mirButtonauto,infolink,inforec,recSwitch;
 
 //rec switch
 /*
