@@ -15,6 +15,9 @@
     
     BOOL use1;
     BOOL paused;
+    BOOL autoloop;
+    int volume;
+    BOOL mute;
     
     NSString *movieLoad;
     NSString *movieCurrent;
@@ -29,7 +32,14 @@
 -(void) start;
 -(void) restart;
 -(void) movieDidEnd:(NSNotification *)notification;
+-(void) loopMedia:(BOOL)loop;
+-(void) switchLoop;
+-(BOOL) isLoop;
 -(void) pause;
+-(void) muteSound:(BOOL)muteMe;
+-(void) setVolume:(int)vol;
+-(int)  getVolume;
+-(void) applyVolume;
 -(void) unpause;
 -(BOOL) isPause;
 -(void) switchpause;

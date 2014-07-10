@@ -25,6 +25,10 @@
     
     playerType = PLAYER_LOCAL;
     
+    [self loopMedia:FALSE];
+    [self setVolume:100];
+    [self muteSound:FALSE];
+    
     return [super init];	
 }
 
@@ -42,7 +46,7 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    if ([appDelegate.disPlay resolution] == @"noscreen") return;
+    if ([[appDelegate.disPlay resolution]  isEqual: @"noscreen"]) return;
     if (movieLoad == nil) return;    
     
     if ([movieLoad isEqualToString:@"*"] && (movieCurrent != nil)) {
@@ -119,8 +123,12 @@
 
 //MOVIE END OBSEREVER (auto loop)
 - (void)movieDidEnd:(NSNotification *)notification {
-    AVPlayerItem *p = [notification object];
-    [p seekToTime:kCMTimeZero];
+    if (autoloop)
+    {
+        AVPlayerItem *p = [notification object];
+        [p seekToTime:kCMTimeZero];
+    }
+    else [self stop];
 }
 
 //START
@@ -159,6 +167,71 @@
     playerType = PLAYER_LOCAL;
 }
 
+//LOOP
+-(void) loopMedia:(BOOL)loop{
+    autoloop = loop;
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bloop:autoloop];
+}
+
+//LOOP
+-(BOOL) isLoop{
+    return autoloop;
+}
+
+//SWITCH LOOP
+-(void) switchLoop{
+    [self loopMedia:!autoloop];
+}
+
+//MUTE
+-(void) muteSound:(BOOL)muteMe {
+    mute = muteMe;
+    [self applyVolume];
+}
+
+//VOLUME
+-(void) setVolume:(int)vol{
+    volume = vol;
+    [self applyVolume];
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bvolume:volume];
+}
+
+//VOLUME
+-(int) getVolume{
+    return volume;
+}
+
+//VOLUME
+-(void) applyVolume{
+    
+    if (![self isPlaying]) return;
+    
+    float vol;
+    if (mute) vol = 0.0;
+    else vol = volume/100.0;
+    
+    if ([player respondsToSelector:@selector(setVolume:)]) {
+        player.volume = vol;
+    }else {
+        NSArray *audioTracks = player.currentItem.asset.tracks;
+        
+        // Mute all the audio tracks
+        NSMutableArray *allAudioParams = [NSMutableArray array];
+        for (AVAssetTrack *track in audioTracks) {
+            AVMutableAudioMixInputParameters *audioInputParams =[AVMutableAudioMixInputParameters audioMixInputParameters];
+            [audioInputParams setVolume:vol atTime:kCMTimeZero];
+            [audioInputParams setTrackID:[track trackID]];
+            [allAudioParams addObject:audioInputParams];
+        }
+        AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
+        [audioMix setInputParameters:allAudioParams];
+        
+        [player.currentItem setAudioMix:audioMix];
+    }
+}
 
 //PAUSE
 -(void) pause{
@@ -206,7 +279,8 @@
 
 //CURRENT MOVIE
 -(NSString*) movie{
-    return movieCurrent;
+    if ([self isPlaying]) return movieCurrent;
+    else return nil;
 }
 
 //CURRENT MOVIE TYPE

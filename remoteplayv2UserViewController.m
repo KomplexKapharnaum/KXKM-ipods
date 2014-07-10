@@ -11,7 +11,7 @@
 
 @implementation remoteplayv2UserViewController
 
-@synthesize movieButton,pauseButton,nextButton,backButton,timeSlider,fadeBlackButton,fadeWhiteButton,mirButton,messageRegie, sosButton, flashButton;
+@synthesize movieButton,pauseButton,nextButton,backButton,timeSlider,volumeSlider,fadeBlackButton,fadeWhiteButton,mirButton,messageRegie,timeLabel, sosButton, flashButton,loopButton;
 
 //mute ou unmute la sortie vidéo (vue avec un cache noir devant la vidéo)
 -(IBAction)mute:(id)sender{
@@ -47,6 +47,14 @@
     [appDelegate.checkMachine userAct:0];
 }
 
+//volume
+-(IBAction)volume:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    int volume = volumeSlider.value;
+    [appDelegate.moviePlayer setVolume:volume];
+    [appDelegate.checkMachine userAct:0];
+}
+
 //fondu au noir
 - (IBAction)fadeBlack:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -71,6 +79,14 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     [appDelegate.disPlay mir:(![appDelegate.disPlay mired])];
+    [appDelegate.checkMachine userAct:0];
+}
+
+//mir switch
+- (IBAction)loop:(id)sender{
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [appDelegate.moviePlayer switchLoop];
     [appDelegate.checkMachine userAct:0];
 }
 

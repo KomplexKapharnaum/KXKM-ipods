@@ -38,12 +38,8 @@
     NSString *command = [pieces objectAtIndex:0];
     
     NSMutableArray *orders;
-    if ([pieces count] >= 2)
-    {
-        orders = [NSMutableArray arrayWithArray: pieces];
-        [orders removeObjectAtIndex:0];
-    }
-    
+    orders = [NSMutableArray arrayWithArray: pieces];
+    [orders removeObjectAtIndex:0]; //remove command
     
     //SYNC : mode, state, args (movie, time, ...)
 	if ([command isEqualToString: @"/synctest"]) {
@@ -104,7 +100,9 @@
         
         //LOAD & PLAY MOVIE
         if (([command isEqualToString: @"/loadmovie"]) || ([command isEqualToString: @"/playmovie"]) || ([command isEqualToString: @"/playstream"])) {
+            
             if ([orders count] >= 1) [appDelegate.moviePlayer load: [[orders componentsJoinedByString:@" "] copy]];
+            else NSLog(@"dry playmovie");
             playmovie = ([command isEqualToString: @"/playmovie"] || [command isEqualToString: @"/playstream"]);
         }
         
@@ -129,6 +127,16 @@
         
         //STOP MOVIE
         else if ([command isEqualToString: @"/stoplive"]) stoplive = YES;
+        
+        //LOOP
+        else if ([command isEqualToString: @"/loop"]) {
+            [appDelegate.moviePlayer loopMedia:TRUE];
+        }
+        
+        //UNPAUSE
+        else if ([command isEqualToString: @"/unloop"]) {
+            [appDelegate.moviePlayer loopMedia:FALSE];
+        }
         
         //PAUSE
         else if ([command isEqualToString: @"/pause"]) {
@@ -155,6 +163,16 @@
         
         //UNMUTE
         else if ([command isEqualToString: @"/unmute"]) gounmute = YES;
+        
+        //VOLUME
+        else if ([command isEqualToString: @"/volume"])
+        {
+            if ([orders count] >= 1)
+            {
+                newvolume = [[orders objectAtIndex:0] intValue];
+                govolume = YES;
+            }
+        }
         
         //FADE to color (RGBA 8bit)
         else if ([command isEqualToString: @"/fade"]) {
@@ -221,8 +239,8 @@
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     //don't execute video related order if no screen 
-    if ([appDelegate.disPlay resolution] != @"noscreen") {
-        
+    if (![[appDelegate.disPlay resolution]  isEqual: @"noscreen"])
+    {
         //SCHEDULED ORDERS
         //play movie
         if (playmovie)
@@ -247,9 +265,10 @@
         //stop live
         if (stoplive) [appDelegate.live2Player stop];
         
-        //mute
+        //volume
         if (gomute) [appDelegate.disPlay mute:YES];
         if (gounmute) [appDelegate.disPlay mute:NO];
+        if (govolume) [appDelegate.moviePlayer setVolume:newvolume];
 
         //fade / unfade to color
         if (gofade) [appDelegate.disPlay fade:YES];
@@ -296,6 +315,8 @@
     
     gomute = NO;
     gounmute = NO;
+    govolume = NO;
+    newvolume = 0;
     
     gofade = NO;
     gounfade = NO;

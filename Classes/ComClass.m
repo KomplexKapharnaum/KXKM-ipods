@@ -51,20 +51,6 @@
 //###########################################################
 // UTILITIES
 
-/* DEPRECATED WAY TO OBTAIN IP
-- (NSString *) OLDgetIPAddress{
-    NSArray *addresses = [[NSHost currentHost] addresses];
-    NSString * ip;
-    for (NSString *anAddress in addresses) {
-        if (![anAddress hasPrefix:@"127"] && [[anAddress componentsSeparatedByString:@"."] count] == 4) {
-            ip = anAddress;
-            break;
-        } 
-        else ip = @"No Wifi !";
-    }
-	return ip;
-}*/
-
 //GET IP
 - (NSString *)getIPAddress
 {
@@ -301,10 +287,10 @@
     //Player Mode : Auto, Manu, Streaming, ... 
     NSString* msg = [appDelegate.interFace modeName];
     
-    //Faded
+    //loop
     msg = [msg stringByAppendingString:@" "];
-    if ([appDelegate.disPlay faded]) msg = [msg stringByAppendingString:@"faded"];
-    else msg = [msg stringByAppendingString:@"normal"];
+    if ([appDelegate.moviePlayer isLoop]) msg = [msg stringByAppendingString:@"loop"];
+    else msg = [msg stringByAppendingString:@"unloop"];
     
     //screen state
     msg = [msg stringByAppendingString:@" "];

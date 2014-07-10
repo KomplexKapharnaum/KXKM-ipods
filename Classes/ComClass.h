@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <VVOSC/VVOSC.h>
+#import "VVOSC.h"
 
 @interface ComClass : NSObject {
     

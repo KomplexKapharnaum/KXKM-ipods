@@ -61,7 +61,8 @@
     else muteview.alpha = 0;
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.interFace Bmute:muteMe];
+    [appDelegate.moviePlayer muteSound:muteMe];
+    [appDelegate.interFace Bmovie:[appDelegate.moviePlayer movie]:[appDelegate.disPlay muted]];
 }
 
 -(BOOL) muted {

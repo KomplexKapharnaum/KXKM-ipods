@@ -114,7 +114,7 @@
     if ([CaptureSession isRunning]) [CaptureSession stopRunning];
     
     
-    NSLog(@"stoprecord");
+    //NSLog(@"stoprecord");
     
     //remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     //[appDelegate.comPort sendRec:@"stop"];

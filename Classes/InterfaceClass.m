@@ -172,19 +172,32 @@
 //###########################################################
 // MANU BUTTON INFO
 
--(void) Bmute:(BOOL)m {
-    
-    if (m) manuView.movieButton.backgroundColor = [UIColor orangeColor];
-    else manuView.movieButton.backgroundColor = [UIColor whiteColor];
-    //TODO KEEP GREEN ON UNMUTE IF PLAYING
-}
-
--(void) Bslide:(CMTime)max:(CMTime)current{
+-(void) Bslide:(CMTime)maxi:(CMTime)current{
     
     if (!manuView.timeSlider.touchInside) {
-        manuView.timeSlider.maximumValue = (CGFloat)CMTimeGetSeconds(max);
+        manuView.timeSlider.maximumValue = (CGFloat)CMTimeGetSeconds(maxi);
         manuView.timeSlider.value = (CGFloat)CMTimeGetSeconds(current);
     }
+    
+    NSUInteger dTotalSeconds = CMTimeGetSeconds(current);
+    NSUInteger dHours = floor(dTotalSeconds / 3600);
+    NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
+    NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
+    
+    NSUInteger tTotalSeconds = CMTimeGetSeconds(maxi);
+    NSUInteger tHours = floor(tTotalSeconds / 3600);
+    NSUInteger tMinutes = floor(tTotalSeconds % 3600 / 60);
+    NSUInteger tSeconds = floor(tTotalSeconds % 3600 % 60);
+    
+    NSString *videoDurationText = [NSString stringWithFormat:@"%i:%02i:%02i / %i:%02i:%02i",dHours, dMinutes, dSeconds,tHours, tMinutes, tSeconds];
+    manuView.timeLabel.text = videoDurationText;
+    
+}
+
+-(void) Bvolume:(int)vol{
+    
+    if (!manuView.volumeSlider.touchInside)
+        manuView.volumeSlider.value = vol;
 }
 
 -(void) Bfade:(BOOL)m{
@@ -224,17 +237,26 @@
     else manuView.pauseButton.backgroundColor = [UIColor whiteColor];
 }
 
+-(void) Bloop:(BOOL)m{
+    
+    if (m) manuView.loopButton.backgroundColor = [UIColor orangeColor];
+    else manuView.loopButton.backgroundColor = [UIColor whiteColor];
+}
+
 -(void) Bmovie:(NSString*)m:(BOOL)muted {
     
-    if (m != nil) {
+    if (m != nil)
+    {
         [manuView.movieButton setTitle:m forState:UIControlStateNormal];
-        manuView.movieButton.backgroundColor = [UIColor greenColor]; 
+        if (muted) manuView.movieButton.backgroundColor = [UIColor orangeColor];
+        else manuView.movieButton.backgroundColor =[UIColor colorWithRed:0/255.0f green:110/255.0f blue:0/255.0f alpha:1.0f];;
     }
-    else {
+    else
+    {
         [manuView.movieButton setTitle:@"" forState:UIControlStateNormal];
-        manuView.movieButton.backgroundColor = [UIColor whiteColor];    
+        if (muted) manuView.movieButton.backgroundColor = [UIColor orangeColor];
+        else manuView.movieButton.backgroundColor = [UIColor darkGrayColor];
     }
-    if (muted) [self Bmute:YES];
 }
 
 -(void) Bnext:(NSString*)m {

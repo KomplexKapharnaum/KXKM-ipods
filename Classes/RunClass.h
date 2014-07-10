@@ -23,6 +23,8 @@
     
     BOOL gomute;
     BOOL gounmute;
+    BOOL govolume;
+    int  newvolume;
     
     BOOL gofade;
     BOOL gounfade;

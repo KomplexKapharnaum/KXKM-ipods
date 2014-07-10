@@ -44,12 +44,13 @@
 -(NSString*) getInfoName;
 
 //MANU INFO
--(void) Bmute:(BOOL)m;
--(void) Bslide:(CMTime)max:(CMTime)current;
+-(void) Bslide:(CMTime)maxi:(CMTime)current;
+-(void) Bvolume:(int)vol;
 -(void) Bfade:(BOOL)m;
 -(void) Bflash;
 -(void) Bmir:(BOOL)m;
 -(void) Bpause:(BOOL)m;
+-(void) Bloop:(BOOL)m;
 -(void) Bmovie:(NSString*)m:(BOOL)muted;
 -(void) Bnext:(NSString*)m;
 -(void) Bprev:(NSString*)m;
