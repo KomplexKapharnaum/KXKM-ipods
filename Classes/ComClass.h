@@ -48,6 +48,7 @@
 - (void) sendInfo;
 - (void) sendSync;
 - (void) sendRec:(NSString*)info;
+- (void) sendVolume:(int)vol;
 - (void) sendBat;
 - (void) sendAskip;
 - (void) sendSOS;

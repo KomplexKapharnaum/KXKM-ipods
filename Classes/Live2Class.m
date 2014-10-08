@@ -13,7 +13,8 @@
 #import "ConfigConst.h"
 #import "remoteplayv2AppDelegate.h"
 
-@implementation Live2Class
+@implementation Live2Class;
+@synthesize live1view, live2view;
 
 //###########################################################
 // INIT
@@ -24,6 +25,16 @@
     
     preQueue = [[NSMutableArray alloc] init];
     loadQueue = [[NSMutableArray alloc] init];
+    
+    //Create PLAYER 1 view
+    live1view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100,100)];
+    live1view.backgroundColor = [UIColor clearColor];
+    live1view.alpha=1;
+    
+    //Create PLAYER 2 view
+    live2view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100,100)];
+    live2view.backgroundColor = [UIColor clearColor];
+    live2view.alpha=1;
     
     use1 = YES;
     live = NO;
@@ -115,18 +126,19 @@
                 
                 //attach to view
                 AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:liveCurrent];
-                layer.frame = appDelegate.disPlay.live1view.layer.bounds;
-            
+                
+                
                 UIView *view;
-                if (use1) view = appDelegate.disPlay.live1view;
-                else view = appDelegate.disPlay.live2view;
-            
+                if (use1) view = live1view;
+                else view = live2view;
+                
+                layer.frame = live1view.layer.bounds;
                 if (view.layer.sublayers != nil) [[[view.layer.sublayers objectAtIndex:0] player] release];
                 view.layer.sublayers = nil;
                 [view.layer addSublayer:layer];
                 
                 [liveCurrent play];
-                
+                    
                 //animate fade in DISABLED
                 //view.alpha = 0;
                 [appDelegate.disPlay.liveview bringSubviewToFront:view];
@@ -135,8 +147,6 @@
                 //view.alpha = 1;
                 //[UIView commitAnimations];
                 
-                
-            
                 use1 = !use1;
             
                 [appDelegate.disPlay mute:[appDelegate.disPlay muted]];
@@ -196,8 +206,9 @@
     playbackObserver = nil;
     
     //clear views
-    appDelegate.disPlay.live1view.layer.sublayers = nil;
-    appDelegate.disPlay.live2view.layer.sublayers = nil;
+    live1view.layer.sublayers = nil;
+    live2view.layer.sublayers = nil;
+    
     [appDelegate.disPlay live:NO];
 }
 

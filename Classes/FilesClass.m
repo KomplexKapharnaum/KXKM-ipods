@@ -57,7 +57,7 @@
 - (NSArray *)list{
     
     //list compatible video files
-    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"mov", @"m4v", nil];
+    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"mov", @"m4v", @"mp3", @"aif", @"aac", nil];
     NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPath error:nil];
     NSArray *mL = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
     

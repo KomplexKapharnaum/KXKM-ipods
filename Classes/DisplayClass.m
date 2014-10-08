@@ -13,8 +13,7 @@
 @implementation DisplayClass
 
 @synthesize _secondWindow,screenResolution;
-@synthesize liveview, live1view, live2view;
-@synthesize movieview, movie1view, movie2view;
+@synthesize liveview, movieview;
 @synthesize muteview, fadeview, flashview, titlesview, mirview;
 
 //###########################################################
@@ -57,8 +56,10 @@
 //MUTE
 -(void) mute:(BOOL)muteMe {
     
-    if (muteMe) muteview.alpha = 1;
-    else muteview.alpha = 0;
+    if (muteview) {
+        if (muteMe) muteview.alpha = 1;
+        else muteview.alpha = 0;
+    }
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.moviePlayer muteSound:muteMe];
@@ -447,171 +448,149 @@
     return screenResolution;
 }
 
+//Create EXTERNAL window on SCREEN 1
+-(void) createWindow {
+    
+    if ([[UIScreen screens] count] < 2) return;
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    //select Screen
+    UIScreen*   secondScreen = [[UIScreen screens] objectAtIndex: 1];
+    
+    //create WINDOW (full sized for second screen)
+    _secondWindow = [[UIWindow alloc] initWithFrame:secondScreen.bounds];
+    
+    //ATTACH TO CURRENT ACTIVE SCREEN
+    _secondWindow.screen = secondScreen;
+    
+    // Add a black background to the window
+    UIView* backField = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    backField.backgroundColor = [UIColor blackColor];
+    [_secondWindow addSubview:backField];
+    [backField release];
+    
+    //MOVIE PLAYER
+    //Create Masks (movieview)
+    movieview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    movieview.backgroundColor = [UIColor clearColor];
+    movieview.alpha=1;
+    [_secondWindow addSubview:movieview];
+    
+        //Attach PLAYER subviews
+        [movieview addSubview: appDelegate.moviePlayer.movie1view];
+        [movieview addSubview: appDelegate.moviePlayer.movie2view];
+    
+    //LIVE PLAYER
+    //Create Masks (liveview)
+    liveview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    liveview.backgroundColor = [UIColor blackColor];
+    liveview.alpha=0;
+    [_secondWindow addSubview:liveview];
+    
+        //Attach PLAYER subviews
+        [liveview addSubview: appDelegate.live2Player.live1view];
+        [liveview addSubview: appDelegate.live2Player.live2view];
+    
+    
+    //Resize PLAYER subviews
+    CGRect frame = movieview.frame;
+    appDelegate.moviePlayer.movie1view.frame = frame;
+    appDelegate.moviePlayer.movie2view.frame = frame;
+    
+    appDelegate.live2Player.live1view.frame = frame;
+    appDelegate.live2Player.live2view.frame = frame;
+    [liveview addSubview: appDelegate.live2Player.live2view];
+    
+    //Create Masks (fadeview)
+    fadeview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    fadeview.backgroundColor = [UIColor blackColor];
+    fadeview.alpha=0;
+    [_secondWindow addSubview:fadeview];
+    
+    //Create Masks (titlesview)
+    CGRect titleframe = CGRectMake(
+                                   (secondScreen.bounds.size.width-secondScreen.bounds.size.height)/2,
+                                   (secondScreen.bounds.size.height-secondScreen.bounds.size.width)/2
+                                   ,secondScreen.bounds.size.height, secondScreen.bounds.size.width);
+    
+    
+    //VERTICAL TITLES VIEW
+    titlesview = [[UIView alloc] initWithFrame:titleframe];
+    titlesview.backgroundColor = [UIColor clearColor];
+    titlesview.alpha=1;
+    [_secondWindow addSubview:titlesview];
+    [titlesview.layer setTransform: CATransform3DMakeRotation((M_PI/2), 0, 0.0, 1.0)];
+    
+    //HORIZONTAL TITLES VIEW
+    titlesview2 = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    titlesview2.backgroundColor = [UIColor clearColor];
+    titlesview2.alpha=1;
+    [_secondWindow addSubview:titlesview2];
+    
+    
+    //Create Masks (muteview)
+    muteview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    muteview.backgroundColor = [UIColor blackColor];
+    muteview.alpha=0;
+    [_secondWindow addSubview:muteview];
+    
+    //Create Masks (mirview)
+    mirview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    mirview.backgroundColor = [UIColor blackColor];
+    mirview.alpha=0;
+    [_secondWindow addSubview:mirview];
+    
+    // Center a label in the view.
+    NSString*    noContentString = [NSString stringWithFormat:@" "];
+    CGSize        stringSize = [noContentString sizeWithFont:[UIFont systemFontOfSize:18]];
+    CGRect        labelSize = CGRectMake((secondScreen.bounds.size.width - stringSize.width) / 2.0,
+                                         (secondScreen.bounds.size.height - stringSize.height) / 2.0,
+                                         stringSize.width, stringSize.height);
+    UILabel*    noContentLabel = [[UILabel alloc] initWithFrame:labelSize];
+    noContentLabel.text = noContentString;
+    noContentLabel.font = [UIFont systemFontOfSize:18];
+    [mirview addSubview:noContentLabel];
+    
+    //Create Masks (flashview)
+    flashview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    flashview.backgroundColor = [UIColor blackColor];
+    flashview.alpha=0;
+    [_secondWindow addSubview:flashview];
+    
+    
+    // Go ahead and show the window.
+    _secondWindow.hidden = NO;
+    
+    //init View visibility
+    [self mir: VIEW_MIR];
+    [self fade: VIEW_FADE];
+    [self mute: VIEW_MUTE];
+}
+
 //check screen
 - (BOOL) checkScreen{
-	
+    
+    //last known resolution
     NSString* newRes = [screenResolution copy];
     
-	//no screen
-	if ([newRes isEqualToString: @"noscreen"]) {	
-		//add extrenal tvout window
-		if ([[UIScreen screens] count] > 1)
-		{	
-			// Associate the window with the second screen.
-			// The main screen is always at index 0.
-			
-            //select external Screen
-            UIScreen*    secondScreen = [[UIScreen screens] objectAtIndex:1];
-			
-            //create WINDOW (full sized for second screen)	
-			_secondWindow = [[UIWindow alloc] initWithFrame:secondScreen.bounds];
-			
-            //attach WINDOW to external screen
-            _secondWindow.screen = secondScreen;
-			
-            // Add a black background to the window		
-            UIView* backField = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            backField.backgroundColor = [UIColor blackColor];			
-            [_secondWindow addSubview:backField];
-            [backField release];
-            
-            //MOVIE PLAYER
-            //Create Masks (movieview)
-            movieview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            movieview.backgroundColor = [UIColor clearColor];
-            movieview.alpha=1;
-            [_secondWindow addSubview:movieview];
-            
-                //Create PLAYER 1 view
-                if (DEBUG_PLAYERS) {
-                    movie1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,350,350)];
-                    movie1view.backgroundColor = [UIColor greenColor];
-                }
-                else 
-                {
-                    movie1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-                    movie1view.backgroundColor = [UIColor clearColor];
-                }
-                movie1view.alpha=1;
-                [movieview addSubview:movie1view];
-            
-                //Create PLAYER 2 view
-                if (DEBUG_PLAYERS) {
-                    movie2view = [[UIView alloc] initWithFrame:CGRectMake(200,100,350,350)];
-                    movie2view.backgroundColor = [UIColor yellowColor];
-                }
-                else 
-                {
-                    movie2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-                    movie2view.backgroundColor = [UIColor clearColor];
-                }
-                movie2view.alpha=1;
-                [movieview addSubview:movie2view];
-            
-            //LIVE PLAYER
-            //Create Masks (liveview)
-            liveview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            liveview.backgroundColor = [UIColor blackColor];
-            liveview.alpha=0;
-            [_secondWindow addSubview:liveview];
-            
-                //Create PLAYER 1 view
-                if (DEBUG_PLAYERS) {
-                    live1view = [[UIView alloc] initWithFrame:CGRectMake(10,10,350,350)];
-                    live1view.backgroundColor = [UIColor blueColor];
-                }
-                else 
-                {
-                    live1view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-                    live1view.backgroundColor = [UIColor clearColor];
-                }
-                live1view.alpha=1;
-                [liveview addSubview:live1view];
-            
-                //Create PLAYER 2 view
-                if (DEBUG_PLAYERS) {
-                    live2view = [[UIView alloc] initWithFrame:CGRectMake(200,100,350,350)];
-                    live2view.backgroundColor = [UIColor redColor];
-                }
-                else 
-                {
-                    live2view = [[UIView alloc] initWithFrame:secondScreen.bounds];
-                    live2view.backgroundColor = [UIColor clearColor];
-                }
-                live2view.alpha=1;
-                [liveview addSubview:live2view];
-            
-            //Create Masks (fadeview)
-            fadeview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            fadeview.backgroundColor = [UIColor blackColor];
-            fadeview.alpha=0;
-            [_secondWindow addSubview:fadeview];
-            
-            //Create Masks (titlesview)
-            CGRect titleframe = CGRectMake(
-                                        (secondScreen.bounds.size.width-secondScreen.bounds.size.height)/2,
-                                           (secondScreen.bounds.size.height-secondScreen.bounds.size.width)/2
-                                           ,secondScreen.bounds.size.height, secondScreen.bounds.size.width);
-            
-
-            //VERTICAL TITLES VIEW
-            titlesview = [[UIView alloc] initWithFrame:titleframe];
-            titlesview.backgroundColor = [UIColor clearColor];
-            titlesview.alpha=1;
-            [_secondWindow addSubview:titlesview];
-            [titlesview.layer setTransform: CATransform3DMakeRotation((M_PI/2), 0, 0.0, 1.0)];
-            
-            //HORIZONTAL TITLES VIEW
-            titlesview2 = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            titlesview2.backgroundColor = [UIColor clearColor];
-            titlesview2.alpha=1;
-            [_secondWindow addSubview:titlesview2];
-            
-            
-            //Create Masks (muteview)
-            muteview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            muteview.backgroundColor = [UIColor blackColor];
-            muteview.alpha=0;
-            [_secondWindow addSubview:muteview];
-            
-            //Create Masks (mirview)
-            mirview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            mirview.backgroundColor = [UIColor blackColor];
-            mirview.alpha=0;
-            [_secondWindow addSubview:mirview];
-            
-            // Center a label in the view.
-            NSString*    noContentString = [NSString stringWithFormat:@" "];
-            CGSize        stringSize = [noContentString sizeWithFont:[UIFont systemFontOfSize:18]];
-            CGRect        labelSize = CGRectMake((secondScreen.bounds.size.width - stringSize.width) / 2.0,
-												 (secondScreen.bounds.size.height - stringSize.height) / 2.0,
-												 stringSize.width, stringSize.height);
-            UILabel*    noContentLabel = [[UILabel alloc] initWithFrame:labelSize];
-            noContentLabel.text = noContentString;
-            noContentLabel.font = [UIFont systemFontOfSize:18];
-            [mirview addSubview:noContentLabel];
-            
-            //Create Masks (flashview)
-            flashview = [[UIView alloc] initWithFrame:secondScreen.bounds];
-            flashview.backgroundColor = [UIColor blackColor];
-            flashview.alpha=0;
-            [_secondWindow addSubview:flashview];
-            
-            
-			// Go ahead and show the window.
-			_secondWindow.hidden = NO;
-			newRes =  [NSString stringWithFormat: @"%.0f x %.0f",secondScreen.bounds.size.width,secondScreen.bounds.size.height];
-            
-            //init View visibility
-            [self mir: VIEW_MIR];
-            [self fade: VIEW_FADE];
-            [self mute: VIEW_MUTE];
-            
-		}
-	}
-	//screen connected check if still there
-	else if ([[UIScreen screens] count] < 2) newRes = @"noscreen";
     
+    //external screen plugged
+    if ([[UIScreen screens] count] > 1)
+    {
+        //new external screen
+        if ([newRes isEqualToString: @"noscreen"])
+        {
+            //initialize window
+            if (!_secondWindow) [self createWindow];
+            
+            //get resolution
+            newRes =  [NSString stringWithFormat: @"%.0f x %.0f",_secondWindow.bounds.size.width,_secondWindow.bounds.size.height];
+        }
+    }
+    //external screen removed
+    else if (![newRes isEqualToString: @"noscreen"]) newRes = @"noscreen";
+
     //if resolution changed, send TRUE
     if (![newRes isEqualToString: screenResolution]) {
         screenResolution = [newRes copy];

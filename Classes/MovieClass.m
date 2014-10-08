@@ -11,7 +11,7 @@
 #import "ConfigConst.h"
 
 @implementation MovieClass
-
+@synthesize movie1view, movie2view;
 
 //###########################################################
 // INIT
@@ -24,6 +24,16 @@
     movieCurrent = nil;
     
     playerType = PLAYER_LOCAL;
+    
+    //Create PLAYER 1 view
+    movie1view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100,100)];
+    movie1view.backgroundColor = [UIColor clearColor];
+    movie1view.alpha=1;
+    
+    //Create PLAYER 2 view
+    movie2view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100,100)];
+    movie2view.backgroundColor = [UIColor clearColor];
+    movie2view.alpha=1;
     
     [self loopMedia:FALSE];
     [self setVolume:100];
@@ -46,7 +56,7 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    if ([[appDelegate.disPlay resolution]  isEqual: @"noscreen"]) return;
+    //if ([[appDelegate.disPlay resolution]  isEqual: @"noscreen"]) return;
     if (movieLoad == nil) return;    
     
     if ([movieLoad isEqualToString:@"*"] && (movieCurrent != nil)) {
@@ -87,15 +97,20 @@
         
         //Layer
         AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:player];
-        layer.frame = appDelegate.disPlay.movie1view.layer.bounds;
         
+        //select View
         UIView *view;
-        if (use1) view = appDelegate.disPlay.movie1view;
-        else view = appDelegate.disPlay.movie2view;
+        if (use1) view = movie1view;
+        else view = movie2view;
         
+        //Attach Layer
+        layer.frame = movie1view.layer.bounds;
         view.layer.sublayers = nil;
         [view.layer addSublayer:layer];
-        [appDelegate.disPlay.movieview bringSubviewToFront:view];
+        
+        //bring to front
+        if (appDelegate.disPlay.movieview)
+            [appDelegate.disPlay.movieview bringSubviewToFront:view];
         
         movieCurrent = [movieLoad copy];
         
@@ -154,8 +169,8 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    appDelegate.disPlay.movie1view.layer.sublayers = nil;
-    appDelegate.disPlay.movie2view.layer.sublayers = nil;
+    movie1view.layer.sublayers = nil;
+    movie2view.layer.sublayers = nil;
     
     paused = NO;
     
@@ -197,6 +212,7 @@
     [self applyVolume];
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.interFace Bvolume:volume];
+    [appDelegate.comPort sendVolume:volume];
 }
 
 //VOLUME
@@ -308,10 +324,9 @@
 //RELEASE PLAYER
 - (void) releaseMovie {
     
-    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
-    if (use1) appDelegate.disPlay.movie1view.layer.sublayers = nil;
-    else appDelegate.disPlay.movie2view.layer.sublayers = nil;
-
+    if (use1) movie1view.layer.sublayers = nil;
+    else movie2view.layer.sublayers = nil;
+    
     Releaser = nil;
 }
 

@@ -18,6 +18,9 @@
     
     AVPlayer* liveCurrent;
     
+    UIView *live1view;
+    UIView *live2view;
+    
     BOOL use1;
     BOOL live;
     BOOL itemPlaying;
@@ -27,6 +30,8 @@
     id playbackObserver;
 }
 
+@property (nonatomic,retain) UIView *live1view;
+@property (nonatomic,retain) UIView *live2view;
 
 -(void) load:(NSString*)file;
 -(void) start;

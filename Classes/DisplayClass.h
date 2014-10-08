@@ -15,12 +15,7 @@
     
     //views
     UIView *liveview;
-        UIView *live1view;
-        UIView *live2view;
-    
     UIView *movieview;
-        UIView *movie1view;
-        UIView *movie2view;
     
     UIView *mirview;
     UIView *muteview;
@@ -58,12 +53,7 @@
 @property (nonatomic, retain) NSString *screenResolution;
 
 @property (nonatomic,retain) UIView *liveview;
-@property (nonatomic,retain) UIView *live1view;
-@property (nonatomic,retain) UIView *live2view;
-
 @property (nonatomic,retain) UIView *movieview;
-@property (nonatomic,retain) UIView *movie1view;
-@property (nonatomic,retain) UIView *movie2view;
 
 @property (nonatomic,retain) UIView *muteview;
 @property (nonatomic,retain) UIView *mirview;
@@ -73,6 +63,7 @@
 
 
 -(BOOL) checkScreen;
+-(void) createWindow;
 -(NSString*) resolution;
 
 -(void) mute:(BOOL)muteMe;

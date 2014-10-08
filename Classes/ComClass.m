@@ -323,6 +323,12 @@
     [self send:[@"recstatus " stringByAppendingString:info]];
 }
 
+//RECORDER
+-(void)sendVolume:(int)vol
+{
+    [self send:[@"volumestatus " stringByAppendingString:[NSString stringWithFormat:@"%i",vol]]];
+}
+
 //BATTERY STATE
 -(void)sendBat {
     

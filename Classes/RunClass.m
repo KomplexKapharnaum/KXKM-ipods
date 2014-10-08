@@ -238,38 +238,38 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    //don't execute video related order if no screen 
+        //SCHEDULED ORDERS
+    //play movie
+    if (playmovie)
+    {
+        if ([appDelegate.recOrder isRecording]) [appDelegate.recOrder stop];
+        if ([appDelegate.live2Player isLive]) [appDelegate.live2Player stop];
+        [appDelegate.moviePlayer play];
+    }
+        
+    //stop movie
+    if (stopmovie) [appDelegate.moviePlayer stop];
+    
+    //play live
+    if (playlive)
+    {
+        if ([appDelegate.recOrder isRecording]) [appDelegate.recOrder stop];
+        if ([appDelegate.moviePlayer isPlaying]) [appDelegate.moviePlayer stop];
+        [appDelegate.live2Player start];
+    }
+    if ([appDelegate.live2Player isLive]) [appDelegate.live2Player beat];
+        
+    //stop live
+    if (stoplive) [appDelegate.live2Player stop];
+        
+    //volume
+    if (gomute) [appDelegate.disPlay mute:YES];
+    if (gounmute) [appDelegate.disPlay mute:NO];
+    if (govolume) [appDelegate.moviePlayer setVolume:newvolume];
+    
+    //don't execute video related order if no screen
     if (![[appDelegate.disPlay resolution]  isEqual: @"noscreen"])
     {
-        //SCHEDULED ORDERS
-        //play movie
-        if (playmovie)
-        {
-            if ([appDelegate.recOrder isRecording]) [appDelegate.recOrder stop];
-            if ([appDelegate.live2Player isLive]) [appDelegate.live2Player stop];
-            [appDelegate.moviePlayer play];
-        }
-        
-        //stop movie
-        if (stopmovie) [appDelegate.moviePlayer stop];
-        
-        //play live
-        if (playlive)
-        {
-            if ([appDelegate.recOrder isRecording]) [appDelegate.recOrder stop];
-            if ([appDelegate.moviePlayer isPlaying]) [appDelegate.moviePlayer stop];
-            [appDelegate.live2Player start];
-        }
-        if ([appDelegate.live2Player isLive]) [appDelegate.live2Player beat];
-        
-        //stop live
-        if (stoplive) [appDelegate.live2Player stop];
-        
-        //volume
-        if (gomute) [appDelegate.disPlay mute:YES];
-        if (gounmute) [appDelegate.disPlay mute:NO];
-        if (govolume) [appDelegate.moviePlayer setVolume:newvolume];
-
         //fade / unfade to color
         if (gofade) [appDelegate.disPlay fade:YES];
         if (gounfade) [appDelegate.disPlay fade:NO];

@@ -13,6 +13,12 @@
     
     AVPlayer* player;
     
+    UIView *movie1view;
+    UIView *movie2view;
+    
+    AVPlayerLayer *layer1;
+    AVPlayerLayer *layer2;
+    
     BOOL use1;
     BOOL paused;
     BOOL autoloop;
@@ -25,6 +31,9 @@
     
     NSTimer *Releaser;
 }
+
+@property (nonatomic,retain) UIView *movie1view;
+@property (nonatomic,retain) UIView *movie2view;
 
 -(void) load:(NSString*)file;
 -(void) play;
