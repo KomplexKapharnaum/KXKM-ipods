@@ -85,8 +85,19 @@
             }
         }
         
+        // Create the AVAsset
+        AVAsset *asset = [AVAsset assetWithURL:[appDelegate.filesManager url:movieLoad]];
+        AVPlayerItem *playerItem = nil;
+        
+        //ATTACH EQ
+        if (FALSE) playerItem = [self itemWithEQ:asset];
+        
+        //Make item
+        if (playerItem == nil) playerItem = [AVPlayerItem playerItemWithAsset:asset];
+        
         //Player
-        player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];
+        //player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];
+        player = [AVPlayer playerWithPlayerItem:playerItem];
         player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         
         //auto-loop
@@ -114,17 +125,17 @@
         
         movieCurrent = [movieLoad copy];
         
+        //let's play
         [self start];
         use1 = !use1;
         
-        //Releaser
+        //Releaser of previous player
         if (Releaser != nil) [Releaser invalidate];
         Releaser = [NSTimer scheduledTimerWithTimeInterval:TIMER_RELMOVIE 
                                                     target:self selector:@selector(releaseMovie) userInfo:nil repeats:NO];
         
         
         [appDelegate.disPlay mute:[appDelegate.disPlay muted]];
-        //TODO CHECK WITH JEX
         //[appDelegate.disPlay mir:[appDelegate.disPlay mired]];
         [appDelegate.disPlay mir:NO];
         
@@ -329,5 +340,88 @@
     
     Releaser = nil;
 }
+
+////EQ SECTION
+
+void eq_init(MTAudioProcessingTapRef tap, void *clientInfo, void **tapStorageOut)
+{
+    NSLog(@"Initialising the Audio Tap Processor");
+    *tapStorageOut = clientInfo;
+}
+
+void eq_finalize(MTAudioProcessingTapRef tap)
+{
+    NSLog(@"Finalizing the Audio Tap Processor");
+}
+
+void eq_prepare(MTAudioProcessingTapRef tap, CMItemCount maxFrames, const AudioStreamBasicDescription *processingFormat)
+{
+    NSLog(@"Preparing the Audio Tap Processor");
+}
+
+void eq_unprepare(MTAudioProcessingTapRef tap)
+{
+    NSLog(@"Unpreparing the Audio Tap Processor");
+}
+
+void eq_process(MTAudioProcessingTapRef tap, CMItemCount numberFrames,
+             MTAudioProcessingTapFlags flags, AudioBufferList *bufferListInOut,
+             CMItemCount *numberFramesOut, MTAudioProcessingTapFlags *flagsOut)
+{
+    NSLog(@"Processing the Audio Tap");
+    OSStatus err = MTAudioProcessingTapGetSourceAudio(tap, numberFrames, bufferListInOut,
+                                                      flagsOut, NULL, numberFramesOut);
+    if (err) NSLog(@"Error from GetSourceAudio: %ld", err);
+    
+    //LAKEViewController *self = (__bridge LAKEViewController *) MTAudioProcessingTapGetStorage(tap);
+    
+    //float scalar = self.slider.value;
+    float scalar = 2.0;
+    
+    vDSP_vsmul(bufferListInOut->mBuffers[1].mData, 1, &scalar, bufferListInOut->mBuffers[1].mData, 1, bufferListInOut->mBuffers[1].mDataByteSize / sizeof(float));
+    vDSP_vsmul(bufferListInOut->mBuffers[0].mData, 1, &scalar, bufferListInOut->mBuffers[0].mData, 1, bufferListInOut->mBuffers[0].mDataByteSize / sizeof(float));
+}
+
+//attachEQ using MT-TAP
+- (AVPlayerItem *) itemWithEQ:(AVAsset *)asset {
+    
+    //get audio track
+    //AVAssetTrack *audioTrack = [[asset tracks] objectAtIndex:0];
+    AVAssetTrack *audioTrack = [asset tracksWithMediaType:AVMediaTypeAudio][0];
+    
+    //get audio input params
+    AVMutableAudioMixInputParameters *inputParams = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:audioTrack];
+    
+    // Create a processing tap for the input parameters
+    MTAudioProcessingTapCallbacks callbacks;
+    callbacks.version = kMTAudioProcessingTapCallbacksVersion_0;
+    callbacks.clientInfo = (__bridge void *)(self);
+    callbacks.init = eq_init;
+    callbacks.prepare = eq_prepare;
+    callbacks.process = eq_process;
+    callbacks.unprepare = eq_unprepare;
+    callbacks.finalize = eq_finalize;
+    
+    MTAudioProcessingTapRef tap;
+    // The create function makes a copy of our callbacks struct
+    OSStatus err = MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks,
+                                              kMTAudioProcessingTapCreationFlag_PostEffects, &tap);
+    if (err || !tap) {
+        NSLog(@"Unable to create the Audio Processing Tap");
+        return nil;
+    }
+    assert(tap);
+    
+    // Assign the tap to the input parameters
+    inputParams.audioTapProcessor = tap;
+    
+    // Create a new AVAudioMix and assign it to our AVPlayerItem
+    AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
+    audioMix.inputParameters = @[inputParams];
+    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
+    playerItem.audioMix = audioMix;
+    return playerItem;
+}
+
 
 @end

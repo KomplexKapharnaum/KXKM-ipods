@@ -44,6 +44,8 @@
 		C6155583196D94E800AEDC8D /* VVAssertionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556E196D94E800AEDC8D /* VVAssertionHandler.m */; };
 		C6155584196D94E800AEDC8D /* VVStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556F196D94E800AEDC8D /* VVStopwatch.m */; };
 		C6155585196D94E800AEDC8D /* VVThreadLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155570196D94E800AEDC8D /* VVThreadLoop.m */; };
+		C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */; };
+		C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */; };
 		C6E52D2C196D4AF400DDE3F1 /* RecClass.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E52D2B196D4AF400DDE3F1 /* RecClass.m */; };
 		CE9A29C314C47D3000003298 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9A29C214C47D3000003298 /* CFNetwork.framework */; };
 		CE9DA3091488F872005357EC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9DA3081488F872005357EC /* AVFoundation.framework */; };
@@ -130,6 +132,8 @@
 		C615556E196D94E800AEDC8D /* VVAssertionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVAssertionHandler.m; sourceTree = "<group>"; };
 		C615556F196D94E800AEDC8D /* VVStopwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVStopwatch.m; sourceTree = "<group>"; };
 		C6155570196D94E800AEDC8D /* VVThreadLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVThreadLoop.m; sourceTree = "<group>"; };
+		C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
+		C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C6E52D2A196D4AF400DDE3F1 /* RecClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecClass.h; sourceTree = "<group>"; };
 		C6E52D2B196D4AF400DDE3F1 /* RecClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecClass.m; sourceTree = "<group>"; };
 		CE9A29C214C47D3000003298 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -160,6 +164,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */,
+				C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */,
 				CEA99D691513E1FC000EC74D /* QuartzCore.framework in Frameworks */,
 				CE9A29C314C47D3000003298 /* CFNetwork.framework in Frameworks */,
 				CE9F2C7914BDFB4500C55B10 /* CoreMedia.framework in Frameworks */,
@@ -237,6 +243,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */,
+				C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */,
 				CEA99D681513E1FC000EC74D /* QuartzCore.framework */,
 				CE9A29C214C47D3000003298 /* CFNetwork.framework */,
 				CE9F2C7814BDFB4500C55B10 /* CoreMedia.framework */,
@@ -453,6 +461,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = GY4V59X9ZS;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "KXKM" */;
 			compatibilityVersion = "Xcode 3.2";

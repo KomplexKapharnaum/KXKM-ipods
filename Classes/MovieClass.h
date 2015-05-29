@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <Accelerate/Accelerate.h>
+#import <MediaToolbox/MediaToolbox.h>
 
 @interface MovieClass : NSObject {
     
@@ -59,5 +61,9 @@
 -(CMTime) duration;
 -(CMTime) currentTime;
 - (void) releaseMovie;
+
+- (AVPlayerItem *) itemWithEQ:(AVAsset *)asset;
+
+
 
 @end
