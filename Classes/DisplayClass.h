@@ -16,6 +16,7 @@
     //views
     UIView *liveview;
     UIView *movieview;
+    UIView *srtview;
     
     UIView *mirview;
     UIView *muteview;
@@ -54,6 +55,7 @@
 
 @property (nonatomic,retain) UIView *liveview;
 @property (nonatomic,retain) UIView *movieview;
+@property (nonatomic,retain) UIView *srtview;
 
 @property (nonatomic,retain) UIView *muteview;
 @property (nonatomic,retain) UIView *mirview;

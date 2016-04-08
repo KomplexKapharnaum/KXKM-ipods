@@ -23,27 +23,8 @@
 		86D68AE414541853009897FD /* remoteplayv2UserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE214541853009897FD /* remoteplayv2UserViewController.xib */; };
 		86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D68AE614542701009897FD /* remoteplayv2TableViewController.m */; };
 		86D68AE914542701009897FD /* remoteplayv2TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */; };
-		C6155571196D94E800AEDC8D /* MutLockArray.m in Sources */ = {isa = PBXBuildFile; fileRef = C615555C196D94E800AEDC8D /* MutLockArray.m */; };
-		C6155572196D94E800AEDC8D /* MutLockDict.m in Sources */ = {isa = PBXBuildFile; fileRef = C615555D196D94E800AEDC8D /* MutLockDict.m */; };
-		C6155573196D94E800AEDC8D /* MutNRLockArray.m in Sources */ = {isa = PBXBuildFile; fileRef = C615555E196D94E800AEDC8D /* MutNRLockArray.m */; };
-		C6155574196D94E800AEDC8D /* MutNRLockDict.m in Sources */ = {isa = PBXBuildFile; fileRef = C615555F196D94E800AEDC8D /* MutNRLockDict.m */; };
-		C6155575196D94E800AEDC8D /* NamedMutLockArray.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155560196D94E800AEDC8D /* NamedMutLockArray.m */; };
-		C6155576196D94E800AEDC8D /* ObjectHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155561196D94E800AEDC8D /* ObjectHolder.m */; };
-		C6155577196D94E800AEDC8D /* OSCAddressSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155562196D94E800AEDC8D /* OSCAddressSpace.m */; };
-		C6155578196D94E800AEDC8D /* OSCBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155563196D94E800AEDC8D /* OSCBundle.m */; };
-		C6155579196D94E800AEDC8D /* OSCInPort.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155564196D94E800AEDC8D /* OSCInPort.m */; };
-		C615557A196D94E800AEDC8D /* OSCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155565196D94E800AEDC8D /* OSCManager.m */; };
-		C615557B196D94E800AEDC8D /* OSCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155566196D94E800AEDC8D /* OSCMessage.m */; };
-		C615557C196D94E800AEDC8D /* OSCNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155567196D94E800AEDC8D /* OSCNode.m */; };
-		C615557D196D94E800AEDC8D /* OSCOutPort.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155568196D94E800AEDC8D /* OSCOutPort.m */; };
-		C615557E196D94E800AEDC8D /* OSCPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155569196D94E800AEDC8D /* OSCPacket.m */; };
-		C615557F196D94E800AEDC8D /* OSCStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556A196D94E800AEDC8D /* OSCStringAdditions.m */; };
-		C6155580196D94E800AEDC8D /* OSCValue.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556B196D94E800AEDC8D /* OSCValue.m */; };
-		C6155581196D94E800AEDC8D /* OSCZeroConfDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556C196D94E800AEDC8D /* OSCZeroConfDomain.m */; };
-		C6155582196D94E800AEDC8D /* OSCZeroConfManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556D196D94E800AEDC8D /* OSCZeroConfManager.m */; };
-		C6155583196D94E800AEDC8D /* VVAssertionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556E196D94E800AEDC8D /* VVAssertionHandler.m */; };
-		C6155584196D94E800AEDC8D /* VVStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = C615556F196D94E800AEDC8D /* VVStopwatch.m */; };
-		C6155585196D94E800AEDC8D /* VVThreadLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = C6155570196D94E800AEDC8D /* VVThreadLoop.m */; };
+		889F515A1CB810380090AF49 /* ASBPlayerSubtitling.m in Sources */ = {isa = PBXBuildFile; fileRef = 889F51591CB810380090AF49 /* ASBPlayerSubtitling.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		88D767711CB80A8B0093A81D /* libVVOSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D767701CB80A8B0093A81D /* libVVOSC.a */; };
 		C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */; };
 		C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */; };
 		C6E52D2C196D4AF400DDE3F1 /* RecClass.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E52D2B196D4AF400DDE3F1 /* RecClass.m */; };
@@ -85,53 +66,35 @@
 		86D68AE514542700009897FD /* remoteplayv2TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = remoteplayv2TableViewController.h; sourceTree = "<group>"; };
 		86D68AE614542701009897FD /* remoteplayv2TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = remoteplayv2TableViewController.m; sourceTree = "<group>"; };
 		86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2TableViewController.xib; sourceTree = "<group>"; };
+		889F51581CB810380090AF49 /* ASBPlayerSubtitling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASBPlayerSubtitling.h; sourceTree = "<group>"; };
+		889F51591CB810380090AF49 /* ASBPlayerSubtitling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASBPlayerSubtitling.m; sourceTree = "<group>"; };
+		88D767571CB80A8B0093A81D /* MutLockArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutLockArray.h; sourceTree = "<group>"; };
+		88D767581CB80A8B0093A81D /* MutLockDict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutLockDict.h; sourceTree = "<group>"; };
+		88D767591CB80A8B0093A81D /* MutNRLockArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutNRLockArray.h; sourceTree = "<group>"; };
+		88D7675A1CB80A8B0093A81D /* MutNRLockDict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutNRLockDict.h; sourceTree = "<group>"; };
+		88D7675B1CB80A8B0093A81D /* NamedMutLockArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedMutLockArray.h; sourceTree = "<group>"; };
+		88D7675C1CB80A8B0093A81D /* ObjectHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectHolder.h; sourceTree = "<group>"; };
+		88D7675D1CB80A8B0093A81D /* OSCAddressSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCAddressSpace.h; sourceTree = "<group>"; };
+		88D7675E1CB80A8B0093A81D /* OSCBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCBundle.h; sourceTree = "<group>"; };
+		88D7675F1CB80A8B0093A81D /* OSCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCConstants.h; sourceTree = "<group>"; };
+		88D767601CB80A8B0093A81D /* OSCInPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCInPort.h; sourceTree = "<group>"; };
+		88D767611CB80A8B0093A81D /* OSCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCManager.h; sourceTree = "<group>"; };
+		88D767621CB80A8B0093A81D /* OSCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCMessage.h; sourceTree = "<group>"; };
+		88D767631CB80A8B0093A81D /* OSCNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCNode.h; sourceTree = "<group>"; };
+		88D767641CB80A8B0093A81D /* OSCOutPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCOutPort.h; sourceTree = "<group>"; };
+		88D767651CB80A8B0093A81D /* OSCPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCPacket.h; sourceTree = "<group>"; };
+		88D767661CB80A8B0093A81D /* OSCStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCStringAdditions.h; sourceTree = "<group>"; };
+		88D767671CB80A8B0093A81D /* OSCValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCValue.h; sourceTree = "<group>"; };
+		88D767681CB80A8B0093A81D /* OSCZeroConfDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCZeroConfDomain.h; sourceTree = "<group>"; };
+		88D767691CB80A8B0093A81D /* OSCZeroConfManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCZeroConfManager.h; sourceTree = "<group>"; };
+		88D7676A1CB80A8B0093A81D /* VVAssertionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVAssertionHandler.h; sourceTree = "<group>"; };
+		88D7676B1CB80A8B0093A81D /* VVBasicMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVBasicMacros.h; sourceTree = "<group>"; };
+		88D7676C1CB80A8B0093A81D /* VVBasics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVBasics.h; sourceTree = "<group>"; };
+		88D7676D1CB80A8B0093A81D /* VVOSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVOSC.h; sourceTree = "<group>"; };
+		88D7676E1CB80A8B0093A81D /* VVStopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVStopwatch.h; sourceTree = "<group>"; };
+		88D7676F1CB80A8B0093A81D /* VVThreadLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVThreadLoop.h; sourceTree = "<group>"; };
+		88D767701CB80A8B0093A81D /* libVVOSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libVVOSC.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* KXKM-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KXKM-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
-		C6155542196D94E800AEDC8D /* MutLockArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutLockArray.h; sourceTree = "<group>"; };
-		C6155543196D94E800AEDC8D /* MutLockDict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutLockDict.h; sourceTree = "<group>"; };
-		C6155544196D94E800AEDC8D /* MutNRLockArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutNRLockArray.h; sourceTree = "<group>"; };
-		C6155545196D94E800AEDC8D /* MutNRLockDict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutNRLockDict.h; sourceTree = "<group>"; };
-		C6155546196D94E800AEDC8D /* NamedMutLockArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedMutLockArray.h; sourceTree = "<group>"; };
-		C6155547196D94E800AEDC8D /* ObjectHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectHolder.h; sourceTree = "<group>"; };
-		C6155548196D94E800AEDC8D /* OSCAddressSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCAddressSpace.h; sourceTree = "<group>"; };
-		C6155549196D94E800AEDC8D /* OSCBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCBundle.h; sourceTree = "<group>"; };
-		C615554A196D94E800AEDC8D /* OSCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCConstants.h; sourceTree = "<group>"; };
-		C615554B196D94E800AEDC8D /* OSCInPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCInPort.h; sourceTree = "<group>"; };
-		C615554C196D94E800AEDC8D /* OSCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCManager.h; sourceTree = "<group>"; };
-		C615554D196D94E800AEDC8D /* OSCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCMessage.h; sourceTree = "<group>"; };
-		C615554E196D94E800AEDC8D /* OSCNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCNode.h; sourceTree = "<group>"; };
-		C615554F196D94E800AEDC8D /* OSCOutPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCOutPort.h; sourceTree = "<group>"; };
-		C6155550196D94E800AEDC8D /* OSCPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCPacket.h; sourceTree = "<group>"; };
-		C6155551196D94E800AEDC8D /* OSCStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCStringAdditions.h; sourceTree = "<group>"; };
-		C6155552196D94E800AEDC8D /* OSCValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCValue.h; sourceTree = "<group>"; };
-		C6155553196D94E800AEDC8D /* OSCZeroConfDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCZeroConfDomain.h; sourceTree = "<group>"; };
-		C6155554196D94E800AEDC8D /* OSCZeroConfManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCZeroConfManager.h; sourceTree = "<group>"; };
-		C6155555196D94E800AEDC8D /* VVAssertionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVAssertionHandler.h; sourceTree = "<group>"; };
-		C6155556196D94E800AEDC8D /* VVBasicMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVBasicMacros.h; sourceTree = "<group>"; };
-		C6155557196D94E800AEDC8D /* VVBasics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVBasics.h; sourceTree = "<group>"; };
-		C6155558196D94E800AEDC8D /* VVOSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVOSC.h; sourceTree = "<group>"; };
-		C6155559196D94E800AEDC8D /* VVStopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVStopwatch.h; sourceTree = "<group>"; };
-		C615555A196D94E800AEDC8D /* VVThreadLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVThreadLoop.h; sourceTree = "<group>"; };
-		C615555C196D94E800AEDC8D /* MutLockArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutLockArray.m; sourceTree = "<group>"; };
-		C615555D196D94E800AEDC8D /* MutLockDict.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutLockDict.m; sourceTree = "<group>"; };
-		C615555E196D94E800AEDC8D /* MutNRLockArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutNRLockArray.m; sourceTree = "<group>"; };
-		C615555F196D94E800AEDC8D /* MutNRLockDict.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutNRLockDict.m; sourceTree = "<group>"; };
-		C6155560196D94E800AEDC8D /* NamedMutLockArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedMutLockArray.m; sourceTree = "<group>"; };
-		C6155561196D94E800AEDC8D /* ObjectHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectHolder.m; sourceTree = "<group>"; };
-		C6155562196D94E800AEDC8D /* OSCAddressSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCAddressSpace.m; sourceTree = "<group>"; };
-		C6155563196D94E800AEDC8D /* OSCBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCBundle.m; sourceTree = "<group>"; };
-		C6155564196D94E800AEDC8D /* OSCInPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCInPort.m; sourceTree = "<group>"; };
-		C6155565196D94E800AEDC8D /* OSCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCManager.m; sourceTree = "<group>"; };
-		C6155566196D94E800AEDC8D /* OSCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCMessage.m; sourceTree = "<group>"; };
-		C6155567196D94E800AEDC8D /* OSCNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCNode.m; sourceTree = "<group>"; };
-		C6155568196D94E800AEDC8D /* OSCOutPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCOutPort.m; sourceTree = "<group>"; };
-		C6155569196D94E800AEDC8D /* OSCPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCPacket.m; sourceTree = "<group>"; };
-		C615556A196D94E800AEDC8D /* OSCStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCStringAdditions.m; sourceTree = "<group>"; };
-		C615556B196D94E800AEDC8D /* OSCValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCValue.m; sourceTree = "<group>"; };
-		C615556C196D94E800AEDC8D /* OSCZeroConfDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCZeroConfDomain.m; sourceTree = "<group>"; };
-		C615556D196D94E800AEDC8D /* OSCZeroConfManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCZeroConfManager.m; sourceTree = "<group>"; };
-		C615556E196D94E800AEDC8D /* VVAssertionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVAssertionHandler.m; sourceTree = "<group>"; };
-		C615556F196D94E800AEDC8D /* VVStopwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVStopwatch.m; sourceTree = "<group>"; };
-		C6155570196D94E800AEDC8D /* VVThreadLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVThreadLoop.m; sourceTree = "<group>"; };
 		C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
 		C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C6E52D2A196D4AF400DDE3F1 /* RecClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecClass.h; sourceTree = "<group>"; };
@@ -164,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88D767711CB80A8B0093A81D /* libVVOSC.a in Frameworks */,
 				C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */,
 				C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */,
 				CEA99D691513E1FC000EC74D /* QuartzCore.framework in Frameworks */,
@@ -183,7 +147,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C6155540196D94D500AEDC8D /* VVOSC */,
 				C6E52D28196D4ACD00DDE3F1 /* Rec */,
 				CE9F342014E42C8D006ABD81 /* Com */,
 				CE9F342214E42CA8006ABD81 /* Run */,
@@ -211,6 +174,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				889F51571CB810150090AF49 /* ASBSubtitling */,
+				88D767721CB80A910093A81D /* VVOSC */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -284,73 +249,54 @@
 			name = viewcontrollers;
 			sourceTree = "<group>";
 		};
-		C6155540196D94D500AEDC8D /* VVOSC */ = {
+		889F51571CB810150090AF49 /* ASBSubtitling */ = {
 			isa = PBXGroup;
 			children = (
-				C6155541196D94E800AEDC8D /* include */,
-				C615555B196D94E800AEDC8D /* src */,
+				889F51581CB810380090AF49 /* ASBPlayerSubtitling.h */,
+				889F51591CB810380090AF49 /* ASBPlayerSubtitling.m */,
 			);
-			name = VVOSC;
+			name = ASBSubtitling;
 			sourceTree = "<group>";
 		};
-		C6155541196D94E800AEDC8D /* include */ = {
+		88D767561CB80A8B0093A81D /* include */ = {
 			isa = PBXGroup;
 			children = (
-				C6155542196D94E800AEDC8D /* MutLockArray.h */,
-				C6155543196D94E800AEDC8D /* MutLockDict.h */,
-				C6155544196D94E800AEDC8D /* MutNRLockArray.h */,
-				C6155545196D94E800AEDC8D /* MutNRLockDict.h */,
-				C6155546196D94E800AEDC8D /* NamedMutLockArray.h */,
-				C6155547196D94E800AEDC8D /* ObjectHolder.h */,
-				C6155548196D94E800AEDC8D /* OSCAddressSpace.h */,
-				C6155549196D94E800AEDC8D /* OSCBundle.h */,
-				C615554A196D94E800AEDC8D /* OSCConstants.h */,
-				C615554B196D94E800AEDC8D /* OSCInPort.h */,
-				C615554C196D94E800AEDC8D /* OSCManager.h */,
-				C615554D196D94E800AEDC8D /* OSCMessage.h */,
-				C615554E196D94E800AEDC8D /* OSCNode.h */,
-				C615554F196D94E800AEDC8D /* OSCOutPort.h */,
-				C6155550196D94E800AEDC8D /* OSCPacket.h */,
-				C6155551196D94E800AEDC8D /* OSCStringAdditions.h */,
-				C6155552196D94E800AEDC8D /* OSCValue.h */,
-				C6155553196D94E800AEDC8D /* OSCZeroConfDomain.h */,
-				C6155554196D94E800AEDC8D /* OSCZeroConfManager.h */,
-				C6155555196D94E800AEDC8D /* VVAssertionHandler.h */,
-				C6155556196D94E800AEDC8D /* VVBasicMacros.h */,
-				C6155557196D94E800AEDC8D /* VVBasics.h */,
-				C6155558196D94E800AEDC8D /* VVOSC.h */,
-				C6155559196D94E800AEDC8D /* VVStopwatch.h */,
-				C615555A196D94E800AEDC8D /* VVThreadLoop.h */,
+				88D767571CB80A8B0093A81D /* MutLockArray.h */,
+				88D767581CB80A8B0093A81D /* MutLockDict.h */,
+				88D767591CB80A8B0093A81D /* MutNRLockArray.h */,
+				88D7675A1CB80A8B0093A81D /* MutNRLockDict.h */,
+				88D7675B1CB80A8B0093A81D /* NamedMutLockArray.h */,
+				88D7675C1CB80A8B0093A81D /* ObjectHolder.h */,
+				88D7675D1CB80A8B0093A81D /* OSCAddressSpace.h */,
+				88D7675E1CB80A8B0093A81D /* OSCBundle.h */,
+				88D7675F1CB80A8B0093A81D /* OSCConstants.h */,
+				88D767601CB80A8B0093A81D /* OSCInPort.h */,
+				88D767611CB80A8B0093A81D /* OSCManager.h */,
+				88D767621CB80A8B0093A81D /* OSCMessage.h */,
+				88D767631CB80A8B0093A81D /* OSCNode.h */,
+				88D767641CB80A8B0093A81D /* OSCOutPort.h */,
+				88D767651CB80A8B0093A81D /* OSCPacket.h */,
+				88D767661CB80A8B0093A81D /* OSCStringAdditions.h */,
+				88D767671CB80A8B0093A81D /* OSCValue.h */,
+				88D767681CB80A8B0093A81D /* OSCZeroConfDomain.h */,
+				88D767691CB80A8B0093A81D /* OSCZeroConfManager.h */,
+				88D7676A1CB80A8B0093A81D /* VVAssertionHandler.h */,
+				88D7676B1CB80A8B0093A81D /* VVBasicMacros.h */,
+				88D7676C1CB80A8B0093A81D /* VVBasics.h */,
+				88D7676D1CB80A8B0093A81D /* VVOSC.h */,
+				88D7676E1CB80A8B0093A81D /* VVStopwatch.h */,
+				88D7676F1CB80A8B0093A81D /* VVThreadLoop.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
 		};
-		C615555B196D94E800AEDC8D /* src */ = {
+		88D767721CB80A910093A81D /* VVOSC */ = {
 			isa = PBXGroup;
 			children = (
-				C615555C196D94E800AEDC8D /* MutLockArray.m */,
-				C615555D196D94E800AEDC8D /* MutLockDict.m */,
-				C615555E196D94E800AEDC8D /* MutNRLockArray.m */,
-				C615555F196D94E800AEDC8D /* MutNRLockDict.m */,
-				C6155560196D94E800AEDC8D /* NamedMutLockArray.m */,
-				C6155561196D94E800AEDC8D /* ObjectHolder.m */,
-				C6155562196D94E800AEDC8D /* OSCAddressSpace.m */,
-				C6155563196D94E800AEDC8D /* OSCBundle.m */,
-				C6155564196D94E800AEDC8D /* OSCInPort.m */,
-				C6155565196D94E800AEDC8D /* OSCManager.m */,
-				C6155566196D94E800AEDC8D /* OSCMessage.m */,
-				C6155567196D94E800AEDC8D /* OSCNode.m */,
-				C6155568196D94E800AEDC8D /* OSCOutPort.m */,
-				C6155569196D94E800AEDC8D /* OSCPacket.m */,
-				C615556A196D94E800AEDC8D /* OSCStringAdditions.m */,
-				C615556B196D94E800AEDC8D /* OSCValue.m */,
-				C615556C196D94E800AEDC8D /* OSCZeroConfDomain.m */,
-				C615556D196D94E800AEDC8D /* OSCZeroConfManager.m */,
-				C615556E196D94E800AEDC8D /* VVAssertionHandler.m */,
-				C615556F196D94E800AEDC8D /* VVStopwatch.m */,
-				C6155570196D94E800AEDC8D /* VVThreadLoop.m */,
+				88D767561CB80A8B0093A81D /* include */,
+				88D767701CB80A8B0093A81D /* libVVOSC.a */,
 			);
-			path = src;
+			name = VVOSC;
 			sourceTree = "<group>";
 		};
 		C6E52D28196D4ACD00DDE3F1 /* Rec */ = {
@@ -508,41 +454,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6155573196D94E800AEDC8D /* MutNRLockArray.m in Sources */,
-				C6155580196D94E800AEDC8D /* OSCValue.m in Sources */,
+				889F515A1CB810380090AF49 /* ASBPlayerSubtitling.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* remoteplayv2AppDelegate.m in Sources */,
-				C6155575196D94E800AEDC8D /* NamedMutLockArray.m in Sources */,
-				C615557F196D94E800AEDC8D /* OSCStringAdditions.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* remoteplayv2ViewController.m in Sources */,
-				C6155584196D94E800AEDC8D /* VVStopwatch.m in Sources */,
-				C615557C196D94E800AEDC8D /* OSCNode.m in Sources */,
-				C615557D196D94E800AEDC8D /* OSCOutPort.m in Sources */,
-				C6155583196D94E800AEDC8D /* VVAssertionHandler.m in Sources */,
 				86D68AE314541853009897FD /* remoteplayv2UserViewController.m in Sources */,
 				86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */,
 				CEC492A614E2C5C30094C710 /* DisplayClass.m in Sources */,
 				CEC492AA14E2E39A0094C710 /* ComClass.m in Sources */,
-				C615557E196D94E800AEDC8D /* OSCPacket.m in Sources */,
 				CE9F341114E406AC006ABD81 /* RunClass.m in Sources */,
-				C6155571196D94E800AEDC8D /* MutLockArray.m in Sources */,
 				CE9F341614E42150006ABD81 /* MovieClass.m in Sources */,
-				C6155574196D94E800AEDC8D /* MutNRLockDict.m in Sources */,
 				CE9F341914E42A42006ABD81 /* FilesClass.m in Sources */,
-				C6155572196D94E800AEDC8D /* MutLockDict.m in Sources */,
 				CE9F341F14E42BC8006ABD81 /* InterfaceClass.m in Sources */,
-				C6155582196D94E800AEDC8D /* OSCZeroConfManager.m in Sources */,
-				C615557B196D94E800AEDC8D /* OSCMessage.m in Sources */,
 				CEACE5F914EADC9E007BF3AE /* CheckerClass.m in Sources */,
-				C6155581196D94E800AEDC8D /* OSCZeroConfDomain.m in Sources */,
-				C6155578196D94E800AEDC8D /* OSCBundle.m in Sources */,
-				C6155585196D94E800AEDC8D /* VVThreadLoop.m in Sources */,
 				CEC2481D14ED399100F7B2D2 /* Live2Class.m in Sources */,
-				C6155576196D94E800AEDC8D /* ObjectHolder.m in Sources */,
-				C6155577196D94E800AEDC8D /* OSCAddressSpace.m in Sources */,
-				C6155579196D94E800AEDC8D /* OSCInPort.m in Sources */,
 				C6E52D2C196D4AF400DDE3F1 /* RecClass.m in Sources */,
-				C615557A196D94E800AEDC8D /* OSCManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,7 +478,7 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ADDITIONAL_SDKS = "$HOME/Library/SDKs/VVOSC/$(PLATFORM_NAME).sdk $HOME/Library/SDKs/VVBasics/$(PLATFORM_NAME).sdk";
+				ADDITIONAL_SDKS = "";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -564,6 +490,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"/Users/mgr/Desktop/KXKM-remoteplayer",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -576,7 +503,7 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ADDITIONAL_SDKS = "$HOME/Library/SDKs/VVOSC/$(PLATFORM_NAME).sdk $HOME/Library/SDKs/VVBasics/$(PLATFORM_NAME).sdk";
+				ADDITIONAL_SDKS = "";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -586,6 +513,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"/Users/mgr/Desktop/KXKM-remoteplayer",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",

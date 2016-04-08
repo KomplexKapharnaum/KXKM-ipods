@@ -13,7 +13,7 @@
 @implementation DisplayClass
 
 @synthesize _secondWindow,screenResolution;
-@synthesize liveview, movieview;
+@synthesize liveview, movieview, srtview;
 @synthesize muteview, fadeview, flashview, titlesview, mirview;
 
 //###########################################################
@@ -481,6 +481,16 @@
         [movieview addSubview: appDelegate.moviePlayer.movie1view];
         [movieview addSubview: appDelegate.moviePlayer.movie2view];
     
+    //SRT PLAYER
+    //Create Masks (movieview)
+    srtview = [[UIView alloc] initWithFrame:secondScreen.bounds];
+    srtview.backgroundColor = [UIColor clearColor];
+    srtview.alpha=1;
+    [_secondWindow addSubview:srtview];
+    
+        //Attach SRT subviews
+        [srtview addSubview: appDelegate.moviePlayer.srtLabel];
+    
     //LIVE PLAYER
     //Create Masks (liveview)
     liveview = [[UIView alloc] initWithFrame:secondScreen.bounds];
@@ -497,6 +507,7 @@
     CGRect frame = movieview.frame;
     appDelegate.moviePlayer.movie1view.frame = frame;
     appDelegate.moviePlayer.movie2view.frame = frame;
+    appDelegate.moviePlayer.srtLabel.frame = CGRectMake(0,(4*frame.size.height/5),frame.size.width,(frame.size.height/5));
     
     appDelegate.live2Player.live1view.frame = frame;
     appDelegate.live2Player.live2view.frame = frame;

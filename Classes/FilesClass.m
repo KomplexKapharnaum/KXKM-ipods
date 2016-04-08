@@ -25,12 +25,12 @@
     docPath = [[paths objectAtIndex:0] copy];
     
     //simulator path (dev only)
-    if ([[self platform] isEqualToString:@"i386"] || [[self platform] isEqualToString:@"x86_64"]) docPath = @"/Media/Video/";
+    if ([[self platform] isEqualToString:@"i386"] || [[self platform] isEqualToString:@"x86_64"]) docPath = @"/Users/mgr/Media/Video";
     
     //make list
     [self mediaList];
     
-    return [super init];	
+    return [super init];
 }
 
 //###########################################################
@@ -116,7 +116,7 @@
         path = [docPath stringByAppendingString:@"/"];
         path = [path stringByAppendingString:file];
         myURL = [NSURL fileURLWithPath:path];
-        //NSLog(@"local file");
+        //NSLog(@"local file %@",file);
         return myURL;
     }
     

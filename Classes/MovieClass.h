@@ -10,13 +10,17 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Accelerate/Accelerate.h>
 #import <MediaToolbox/MediaToolbox.h>
+#import "ASBPlayerSubtitling.h"
 
 @interface MovieClass : NSObject {
     
     AVPlayer* player;
+    ASBPlayerSubtitling* subtitles;
     
     UIView *movie1view;
     UIView *movie2view;
+    
+    UILabel *srtLabel;
     
     AVPlayerLayer *layer1;
     AVPlayerLayer *layer2;
@@ -36,6 +40,7 @@
 
 @property (nonatomic,retain) UIView *movie1view;
 @property (nonatomic,retain) UIView *movie2view;
+@property (nonatomic,retain) UIView *srtLabel;
 
 -(void) load:(NSString*)file;
 -(void) play;

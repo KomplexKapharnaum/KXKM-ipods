@@ -11,7 +11,7 @@
 #import "ConfigConst.h"
 
 @implementation MovieClass
-@synthesize movie1view, movie2view;
+@synthesize movie1view, movie2view, srtLabel;
 
 //###########################################################
 // INIT
@@ -34,6 +34,13 @@
     movie2view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100,100)];
     movie2view.backgroundColor = [UIColor clearColor];
     movie2view.alpha=1;
+    
+    //Create SRT label
+    srtLabel = [[UILabel alloc] init];
+    [srtLabel setBackgroundColor:[UIColor clearColor]];
+    [srtLabel setTextAlignment:NSTextAlignmentCenter];
+    srtLabel.textColor = [UIColor yellowColor];
+    srtLabel.text = @"hello";	
     
     [self loopMedia:FALSE];
     [self setVolume:100];
@@ -99,6 +106,15 @@
         //player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];
         player = [AVPlayer playerWithPlayerItem:playerItem];
         player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+        
+        // Subtitles
+        subtitles = [ASBPlayerSubtitling new];
+        subtitles.label = srtLabel;
+        [subtitles setPlayer:player];
+        [subtitles loadSubtitlesAtURL:[NSURL fileURLWithPath:@"/Users/mgr/Media/Video/jellies.srt"] error:nil];
+        
+        //NSLog(@"%@", myString);
+        
         
         //auto-loop
         [[NSNotificationCenter defaultCenter] addObserver:self
