@@ -150,6 +150,8 @@
     
     NSString* path;
     
+    if ([[file pathExtension] isEqualToString:@"mp3"]) return nil;
+    
     file = [[file stringByDeletingPathExtension] stringByAppendingString:@".mp3"];
     path = [docPath stringByAppendingString:@"/"];
     path = [path stringByAppendingString:file];

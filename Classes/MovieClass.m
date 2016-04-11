@@ -45,6 +45,8 @@
     subtitles = [ASBPlayerSubtitling new];
     subtitles.label = srtLabel;
     
+    dubPlayer = nil;
+    
     [self loopMedia:FALSE];
     [self setVolume:100];
     [self muteSound:FALSE];
@@ -111,18 +113,18 @@
         player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         
         // Subtitles
-        NSURL* srtfile = [appDelegate.filesManager srtfor:movieLoad];
-        [subtitles apply:srtfile to:player];
-        
-        // Audio DUB
-        NSURL* audiodub = [appDelegate.filesManager dubfor:movieLoad];
-        if (audiodub) {
-            NSLog(@"audio dub found");
+        if (ENABLE_SRT) {
+            NSURL* srtfile = [appDelegate.filesManager srtfor:movieLoad];
+            [subtitles apply:srtfile to:player];
         }
         
-        
-        //NSLog(@"%@", myString);
-        
+        // Audio DUB
+        if (ENABLE_DUB) {
+            if (dubPlayer != nil) [dubPlayer pause];
+            dubPlayer = nil;
+            NSURL* audiodub = [appDelegate.filesManager dubfor:movieLoad];
+            if (audiodub) dubPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audiodub error:nil];
+        }
         
         //auto-loop
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -179,6 +181,7 @@
     {
         AVPlayerItem *p = [notification object];
         [p seekToTime:kCMTimeZero];
+        if (dubPlayer  != nil) [dubPlayer setCurrentTime:0];
     }
     else [self stop];
 }
@@ -189,6 +192,7 @@
     if (![self isPlaying]) return;
     
     [player play];
+    if (dubPlayer != nil) [dubPlayer play];
     paused = NO;
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -210,6 +214,7 @@
     movie2view.layer.sublayers = nil;
     
     [subtitles stop];
+    if (dubPlayer != nil) [dubPlayer pause];
     
     paused = NO;
     
@@ -268,6 +273,18 @@
     if (mute) vol = 0.0;
     else vol = volume/100.0;
     
+    if (dubPlayer != nil)
+    {
+        [self mainPlayerVolume:0.0];
+        [dubPlayer setVolume:vol];
+    }
+    else [self mainPlayerVolume:vol];
+    
+}
+
+// INTERNAL PLAYER VOLUME
+-(void) mainPlayerVolume:(float) vol {
+    
     if ([player respondsToSelector:@selector(setVolume:)]) {
         player.volume = vol;
         
@@ -295,6 +312,7 @@
     if (![self isPlaying]) return;
     
     [player pause];
+    if (dubPlayer != nil) [dubPlayer pause];
     paused = YES;
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -322,8 +340,16 @@
     if (![self isPlaying]) return;
     
     if ( CMTimeGetSeconds(player.currentItem.duration) > (playbacktimeWanted/1000)) {
+        
         //TODO Optimize seekToTime, and seekToTime 0 (rewind)
         [player seekToTime:CMTimeMake(playbacktimeWanted, 1000) toleranceBefore: kCMTimeZero toleranceAfter: kCMTimeZero];
+        
+        // Seek DUB player
+        if (dubPlayer != nil) {
+            if ((playbacktimeWanted/1000) > dubPlayer.duration) [dubPlayer setCurrentTime:dubPlayer.duration];
+            else [dubPlayer setCurrentTime:(playbacktimeWanted/1000)];
+        }
+        
         [self start];
     }
     else {

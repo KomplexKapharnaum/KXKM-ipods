@@ -16,6 +16,7 @@
     
     AVPlayer* player;
     ASBPlayerSubtitling* subtitles;
+    AVAudioPlayer* dubPlayer;
     
     UIView *movie1view;
     UIView *movie2view;

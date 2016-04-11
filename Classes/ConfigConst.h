@@ -57,6 +57,10 @@
 //DEBUG
 #define DEBUG_PLAYERS   NO   //separate and colorize rotative players views
 
+// SRT AND AUDIO DUB
+#define ENABLE_SRT      YES
+#define ENABLE_DUB      YES
+
 //HTTP SERVER PORT
 //#define HTTP_PORT   8074 unused: TODO make it configurable or sended by the server
 
