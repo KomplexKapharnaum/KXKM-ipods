@@ -40,7 +40,10 @@
     [srtLabel setBackgroundColor:[UIColor clearColor]];
     [srtLabel setTextAlignment:NSTextAlignmentCenter];
     srtLabel.textColor = [UIColor yellowColor];
-    srtLabel.text = @"hello";	
+    srtLabel.text = @"hello";
+    
+    subtitles = [ASBPlayerSubtitling new];
+    subtitles.label = srtLabel;
     
     [self loopMedia:FALSE];
     [self setVolume:100];
@@ -103,15 +106,20 @@
         if (playerItem == nil) playerItem = [AVPlayerItem playerItemWithAsset:asset];
         
         //Player
-        //player = [AVPlayer playerWithURL:[appDelegate.filesManager url:movieLoad]];
+        player = nil;
         player = [AVPlayer playerWithPlayerItem:playerItem];
         player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         
         // Subtitles
-        subtitles = [ASBPlayerSubtitling new];
-        subtitles.label = srtLabel;
-        [subtitles setPlayer:player];
-        [subtitles loadSubtitlesAtURL:[NSURL fileURLWithPath:@"/Users/mgr/Media/Video/jellies.srt"] error:nil];
+        NSURL* srtfile = [appDelegate.filesManager srtfor:movieLoad];
+        [subtitles apply:srtfile to:player];
+        
+        // Audio DUB
+        NSURL* audiodub = [appDelegate.filesManager dubfor:movieLoad];
+        if (audiodub) {
+            NSLog(@"audio dub found");
+        }
+        
         
         //NSLog(@"%@", myString);
         
@@ -129,6 +137,7 @@
         UIView *view;
         if (use1) view = movie1view;
         else view = movie2view;
+        
         
         //Attach Layer
         layer.frame = movie1view.layer.bounds;
@@ -165,6 +174,7 @@
 
 //MOVIE END OBSEREVER (auto loop)
 - (void)movieDidEnd:(NSNotification *)notification {
+    NSLog(@"movie did end");
     if (autoloop)
     {
         AVPlayerItem *p = [notification object];
@@ -198,6 +208,8 @@
     
     movie1view.layer.sublayers = nil;
     movie2view.layer.sublayers = nil;
+    
+    [subtitles stop];
     
     paused = NO;
     
@@ -258,10 +270,11 @@
     
     if ([player respondsToSelector:@selector(setVolume:)]) {
         player.volume = vol;
+        
     }else {
         NSArray *audioTracks = player.currentItem.asset.tracks;
         
-        // Mute all the audio tracks
+        // Set all the audio tracks
         NSMutableArray *allAudioParams = [NSMutableArray array];
         for (AVAssetTrack *track in audioTracks) {
             AVMutableAudioMixInputParameters *audioInputParams =[AVMutableAudioMixInputParameters audioMixInputParameters];
@@ -350,6 +363,9 @@
 
 //RELEASE PLAYER
 - (void) releaseMovie {
+    
+    //if (use1) NSLog(@"releasing m1");
+    //else NSLog(@"releasing m2");
     
     if (use1) movie1view.layer.sublayers = nil;
     else movie2view.layer.sublayers = nil;

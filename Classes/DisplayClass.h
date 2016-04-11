@@ -48,6 +48,8 @@
     NSArray *subTitles;
     UILabel* soustitres;
     UILabel* soustitres2;
+    
+    BOOL isFlipped;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *_secondWindow;
@@ -73,6 +75,9 @@
 
 -(void) mir:(BOOL)mirDisp;
 -(BOOL) mired;
+
+-(void) flip:(BOOL)flipDisp;
+-(BOOL) flipped;
 
 -(void) fade:(BOOL)fadeMe;
 -(void) fadeColor:(int)Red:(int)Green:(int)Blue:(int)Alpha;

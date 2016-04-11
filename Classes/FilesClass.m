@@ -129,6 +129,36 @@
     return myURL;
 }
 
+//GET SRT
+//RETURN LOCAL URL of found SRT
+- (NSURL*) srtfor:(NSString *) file {
+    
+    NSString* path;
+    
+    file = [[file stringByDeletingPathExtension] stringByAppendingString:@".srt"];
+    path = [docPath stringByAppendingString:@"/"];
+    path = [path stringByAppendingString:file];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) return nil;
+    
+    return [NSURL fileURLWithPath:path];
+}
+
+//GET AUDIO DUB
+//RETURN LOCAL URL of found SRT
+- (NSURL*) dubfor:(NSString *) file {
+    
+    NSString* path;
+    
+    file = [[file stringByDeletingPathExtension] stringByAppendingString:@".mp3"];
+    path = [docPath stringByAppendingString:@"/"];
+    path = [path stringByAppendingString:file];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) return nil;
+    
+    return [NSURL fileURLWithPath:path];
+}
+
 //MAKE URL
 - (NSURL*) urlnew:(NSString *) file {
     

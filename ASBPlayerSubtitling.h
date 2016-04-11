@@ -23,9 +23,11 @@
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, assign) BOOL visible;
 
+- (void)apply:(NSURL *)url to:(AVPlayer *)player;
 - (void)loadSubtitlesAtURL:(NSURL *)url error:(NSError **)error;
 - (void)loadSRTContent:(NSString *)string error:(NSError **)error;
-- (void)removeSubtitles;
+- (void)stop;
+
 
 - (ASBSubtitle *)lastSubtitleAtTime:(NSTimeInterval)time;
 

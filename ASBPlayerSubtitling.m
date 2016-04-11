@@ -46,9 +46,14 @@
     self.queue = dispatch_queue_create("subtitling", NULL);
 }
 
+- (void)apply:(NSURL *)url to:(AVPlayer *)player {
+    [self stop];
+    [self setPlayer:player];
+    [self loadSubtitlesAtURL:url error:nil];
+}
+
 - (void)setPlayer:(AVPlayer *)player
 {
-    [self.player pause];
     [self removeTimeObserver];
     _player = player;
     
@@ -121,11 +126,13 @@
     return value;
 }
 
-- (void)removeSubtitles
+- (void) stop
 {
     self.subtitles = nil;
     self.currentText = nil;
     [self updateLabel];
+    [self removeTimeObserver];
+    self.player = nil;
 }
 
 - (ASBSubtitle *)lastSubtitleAtTime:(NSTimeInterval)time

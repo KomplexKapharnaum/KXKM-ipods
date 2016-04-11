@@ -295,7 +295,10 @@
     //screen state
     msg = [msg stringByAppendingString:@" "];
     if ([[appDelegate.disPlay resolution] isEqualToString:@"noscreen"]) msg = [msg stringByAppendingString:@"noscreen"];
-    else msg = [msg stringByAppendingString:@"screen"];
+    else {
+        if ([appDelegate.disPlay flipped]) msg = [msg stringByAppendingString:@"screenflip"];
+        else msg = [msg stringByAppendingString:@"screen"];
+    }
     
     //Player State : waiting, playing,
     msg = [msg stringByAppendingString:@" "];

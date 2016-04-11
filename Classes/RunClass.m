@@ -138,6 +138,16 @@
             [appDelegate.moviePlayer loopMedia:FALSE];
         }
         
+        //LOOP
+        else if ([command isEqualToString: @"/flip"]) {
+            [appDelegate.disPlay flip:TRUE];
+        }
+        
+        //UNPAUSE
+        else if ([command isEqualToString: @"/unflip"]) {
+            [appDelegate.disPlay flip:FALSE];
+        }
+        
         //PAUSE
         else if ([command isEqualToString: @"/pause"]) {
             [appDelegate.moviePlayer pause];

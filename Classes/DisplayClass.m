@@ -28,6 +28,8 @@
     titlesMode = 1;
     titlesOr = 1;
     
+    isFlipped = NO;
+    
     subTitles = [[NSArray alloc] initWithObjects:
                  @"Maintenant",
                  @"Maintenant", 
@@ -83,6 +85,19 @@
 
 -(BOOL) mired {
     return (mirview.alpha == 1);
+}
+
+//FLIP
+-(void) flip:(BOOL)flipDisp{
+    
+    isFlipped = flipDisp;
+    
+    if (isFlipped) _secondWindow.transform = CGAffineTransformMakeScale(-1.0, 1.0);
+    else _secondWindow.transform = CGAffineTransformMakeScale(1.0, 1.0);
+}
+
+-(BOOL) flipped {
+    return isFlipped;
 }
 
 //FADE

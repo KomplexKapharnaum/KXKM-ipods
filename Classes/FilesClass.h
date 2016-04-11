@@ -27,4 +27,7 @@
 - (NSURL*) url:(NSString *) file;
 - (NSURL*) urlnew:(NSString *) file;
 
+- (NSURL*) srtfor:(NSString *) file;
+- (NSURL*) dubfor:(NSString *) file;
+
 @end
