@@ -478,6 +478,7 @@
     
     //ATTACH TO CURRENT ACTIVE SCREEN
     _secondWindow.screen = secondScreen;
+    CGRect frame = _secondWindow.frame;
     
     // Add a black background to the window
     UIView* backField = [[UIView alloc] initWithFrame:secondScreen.bounds];
@@ -495,6 +496,8 @@
         //Attach PLAYER subviews
         [movieview addSubview: appDelegate.moviePlayer.movie1view];
         [movieview addSubview: appDelegate.moviePlayer.movie2view];
+        appDelegate.moviePlayer.movie1view.frame = frame;
+        appDelegate.moviePlayer.movie2view.frame = frame;
     
     //SRT PLAYER
     //Create Masks (movieview)
@@ -505,6 +508,7 @@
     
         //Attach SRT subviews
         [srtview addSubview: appDelegate.moviePlayer.srtLabel];
+        appDelegate.moviePlayer.srtLabel.frame = CGRectMake(0,(5*frame.size.height/6),frame.size.width,(frame.size.height/6));
     
     //LIVE PLAYER
     //Create Masks (liveview)
@@ -516,17 +520,9 @@
         //Attach PLAYER subviews
         [liveview addSubview: appDelegate.live2Player.live1view];
         [liveview addSubview: appDelegate.live2Player.live2view];
+        appDelegate.live2Player.live1view.frame = frame;
+        appDelegate.live2Player.live2view.frame = frame;
     
-    
-    //Resize PLAYER subviews
-    CGRect frame = movieview.frame;
-    appDelegate.moviePlayer.movie1view.frame = frame;
-    appDelegate.moviePlayer.movie2view.frame = frame;
-    appDelegate.moviePlayer.srtLabel.frame = CGRectMake(0,(4*frame.size.height/5),frame.size.width,(frame.size.height/5));
-    
-    appDelegate.live2Player.live1view.frame = frame;
-    appDelegate.live2Player.live2view.frame = frame;
-    [liveview addSubview: appDelegate.live2Player.live2view];
     
     //Create Masks (fadeview)
     fadeview = [[UIView alloc] initWithFrame:secondScreen.bounds];

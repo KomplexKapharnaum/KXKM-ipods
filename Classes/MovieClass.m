@@ -40,7 +40,9 @@
     [srtLabel setBackgroundColor:[UIColor clearColor]];
     [srtLabel setTextAlignment:NSTextAlignmentCenter];
     srtLabel.textColor = [UIColor yellowColor];
-    srtLabel.text = @"hello";
+    srtLabel.text = @"";
+    srtLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    srtLabel.numberOfLines = 0;
     
     subtitles = [ASBPlayerSubtitling new];
     subtitles.label = srtLabel;

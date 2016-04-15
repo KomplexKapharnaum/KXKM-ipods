@@ -48,8 +48,8 @@
 
 - (void)apply:(NSURL *)url to:(AVPlayer *)player {
     [self stop];
-    [self setPlayer:player];
     [self loadSubtitlesAtURL:url error:nil];
+    [self setPlayer:player];
 }
 
 - (void)setPlayer:(AVPlayer *)player
@@ -176,8 +176,59 @@
     return track.nominalFrameRate;
 }
 
+-(UIColor *)colorFromHexString:(NSString *)hexString {
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+-(NSString*)extractMeta:(NSString *)string {
+    
+    NSMutableArray* lines = [NSMutableArray arrayWithArray:[string componentsSeparatedByString: @"\n"]];
+    
+    BOOL search = true;
+    while (search) {
+        
+        // Read Line
+        if ([lines count] < 1) break;
+        NSString *line = [lines objectAtIndex:0];
+        
+        // Find COLOR
+        if ([line hasPrefix:@"COLOR"])
+        {
+            NSArray* exLine = [line componentsSeparatedByString:@"="];
+            if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
+            if ([exLine count] >= 2) {
+                NSString* color = [[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+                if ([color hasPrefix:@"#"]) self.label.textColor = [self colorFromHexString:color];
+            }
+        }
+        // Find SIZE
+        else if ([line hasPrefix:@"SIZE"])
+        {
+            NSArray* exLine = [line componentsSeparatedByString:@"="];
+            if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
+            if ([exLine count] >= 2) {
+                int size = [[[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]] integerValue];
+                if (size > 0) [self.label setFont:[UIFont systemFontOfSize:size]];
+            }
+        }
+        // No more Metadata
+        else search = false;
+        
+        if (search) [lines removeObjectAtIndex:0];
+    }
+    
+    return [lines componentsJoinedByString:@"\n"];
+}
+
 - (void)loadSRTContent:(NSString *)string error:(NSError **)error
 {
+    //EXTRACT META DATA
+    string = [self extractMeta:string];
+    
     NSScanner *scanner;
     
     scanner = [NSScanner scannerWithString:string];
@@ -299,6 +350,7 @@
         else
         {
             self.label.text = self.currentText;
+            NSLog(@"found txt %@",self.currentText);
         }
     }
     else
@@ -323,6 +375,7 @@
     
     nbSecondsElapsed = CMTimeGetSeconds(self.player.currentItem.currentTime);
     subtitle = [self lastSubtitleAtTime:nbSecondsElapsed];
+    
     if(([subtitle.text isEqualToString:self.currentText]) || (subtitle.text == self.currentText))
         return;
     
