@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="remoteplayv2UserViewController">
@@ -11,13 +11,13 @@
                 <outlet property="fadeBlackButton" destination="25" id="28"/>
                 <outlet property="fadeWhiteButton" destination="26" id="30"/>
                 <outlet property="flashButton" destination="31" id="45"/>
+                <outlet property="flipButton" destination="12" id="T5g-y1-Yd0"/>
                 <outlet property="loopButton" destination="A47-TO-c1f" id="kTh-tx-sj4"/>
                 <outlet property="messageRegie" destination="11" id="33"/>
                 <outlet property="mirButton" destination="35" id="46"/>
                 <outlet property="movieButton" destination="7" id="44"/>
                 <outlet property="nextButton" destination="13" id="17"/>
                 <outlet property="pauseButton" destination="37" id="47"/>
-                <outlet property="sosButton" destination="12" id="48"/>
                 <outlet property="timeLabel" destination="w0z-Bx-qzD" id="Nk0-ks-Fyw"/>
                 <outlet property="timeSlider" destination="9" id="23"/>
                 <outlet property="view" destination="1" id="3"/>
@@ -48,6 +48,7 @@
                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" continuous="NO" id="9">
                     <rect key="frame" x="8" y="119" width="296" height="29"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="tintColor" red="0.43660835599999998" green="0.041045183569999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <action selector="slide:" destination="-1" eventType="touchDragExit" id="49"/>
                         <action selector="slide:" destination="-1" eventType="touchDragInside" id="y4h-r1-Wgo"/>
@@ -66,13 +67,13 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="12">
                     <rect key="frame" x="123" y="279" width="74" height="48"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.43660835597826086" green="0.041045183573135052" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="SOS">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="FLIP">
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="sos:" destination="-1" eventType="touchUpInside" id="34"/>
+                        <action selector="flip:" destination="-1" eventType="touchUpInside" id="day-es-jSa"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="13">
@@ -102,9 +103,9 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="25">
                     <rect key="frame" x="30" y="165" width="74" height="65"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="> Noir">
-                        <color key="titleColor" red="0.1859892165" green="0.29979514550000003" blue="0.50596552309999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="fadeBlack:" destination="-1" eventType="touchUpInside" id="27"/>
@@ -113,9 +114,9 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="26">
                     <rect key="frame" x="30" y="249" width="74" height="65"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="> Blanc">
-                        <color key="titleColor" red="0.1859892165" green="0.29979514550000003" blue="0.50596552309999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="fadeWhite:" destination="-1" eventType="touchUpInside" id="29"/>
@@ -124,9 +125,9 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="31">
                     <rect key="frame" x="217" y="249" width="74" height="65"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="FLASH">
-                        <color key="titleColor" red="0.1859892165" green="0.29979514550000003" blue="0.50596552309999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="flash:" destination="-1" eventType="touchUpInside" id="32"/>
@@ -135,9 +136,9 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="35">
                     <rect key="frame" x="217" y="165" width="74" height="65"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="MIRE">
-                        <color key="titleColor" red="0.1859892165" green="0.29979514550000003" blue="0.50596552309999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="mir:" destination="-1" eventType="touchUpInside" id="43"/>
@@ -146,9 +147,9 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="37">
                     <rect key="frame" x="123" y="159" width="74" height="42"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="PAUSE">
-                        <color key="titleColor" red="0.1859892165" green="0.29979514550000003" blue="0.50596552309999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="pause:" destination="-1" eventType="touchUpInside" id="42"/>
@@ -157,9 +158,9 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="A47-TO-c1f">
                     <rect key="frame" x="123" y="219" width="74" height="42"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="LOOP">
-                        <color key="titleColor" red="0.1859892165" green="0.29979514550000003" blue="0.50596552309999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
                         <action selector="loop:" destination="-1" eventType="touchUpInside" id="0YQ-HN-uec"/>
@@ -175,6 +176,7 @@
                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" id="ErM-82-GW9">
                     <rect key="frame" x="75" y="344" width="229" height="31"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="tintColor" red="0.10368594402882131" green="0.43660835599999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <action selector="volume:" destination="-1" eventType="touchDragInside" id="Ck3-95-wQk"/>
                         <action selector="volume:" destination="-1" eventType="touchDragExit" id="cLk-AC-Dgv"/>
@@ -191,6 +193,12 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
             <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

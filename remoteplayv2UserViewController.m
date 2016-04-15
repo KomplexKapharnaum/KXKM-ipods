@@ -108,10 +108,10 @@
 }
 
 //envoi message sos à la régie
--(IBAction)sos:(id)sender{
+-(IBAction)flip:(id)sender{
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    [appDelegate.comPort sendSOS];
+    [appDelegate.disPlay flip:(![appDelegate.disPlay flipped])];
     [appDelegate.checkMachine userAct:0];
 }
 

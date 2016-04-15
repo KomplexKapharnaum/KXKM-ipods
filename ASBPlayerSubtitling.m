@@ -212,7 +212,7 @@
             if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
             if ([exLine count] >= 2) {
                 int size = [[[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]] integerValue];
-                if (size > 0) [self.label setFont:[UIFont systemFontOfSize:size]];
+                if (size > 0) [self.label setFont:[UIFont fontWithName:@"Thonburi" size:size]];
             }
         }
         // No more Metadata
@@ -349,8 +349,7 @@
         }
         else
         {
-            self.label.text = self.currentText;
-            NSLog(@"found txt %@",self.currentText);
+            self.label.text = self.currentText; 
         }
     }
     else

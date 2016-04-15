@@ -18,6 +18,11 @@
 - (id) init
 {
     mode = AUTO;
+    
+    notactiveBtnColor = [UIColor lightGrayColor];
+    activeBtnColor = [UIColor colorWithRed:(183./255) green:(162./255) blue:(0./255) alpha:1];
+    [activeBtnColor retain];
+    
     return [super init];	
 }
 
@@ -203,44 +208,50 @@
 -(void) Bfade:(BOOL)m{
     
     if (m) {
-        manuView.fadeBlackButton.backgroundColor = [UIColor orangeColor];
-        manuView.fadeWhiteButton.backgroundColor = [UIColor orangeColor];
+        manuView.fadeBlackButton.backgroundColor = activeBtnColor;
+        manuView.fadeWhiteButton.backgroundColor = activeBtnColor;
     }
     else {
-        manuView.fadeBlackButton.backgroundColor = [UIColor whiteColor];
-        manuView.fadeWhiteButton.backgroundColor = [UIColor whiteColor];
+        manuView.fadeBlackButton.backgroundColor = notactiveBtnColor;
+        manuView.fadeWhiteButton.backgroundColor = notactiveBtnColor;
     }
 }
 
 -(void) Bflash {
     
-    manuView.flashButton.backgroundColor = [UIColor orangeColor];
+    manuView.flashButton.backgroundColor = activeBtnColor;
     [UIView beginAnimations:@"Bflash" context:NULL];
     [UIView setAnimationDuration:FLASH_LENGHT];
-    manuView.flashButton.backgroundColor = [UIColor whiteColor];
+    manuView.flashButton.backgroundColor = notactiveBtnColor;
     [UIView commitAnimations];
     
 }
 
 -(void) Bmir:(BOOL)m{
     
-    if (m) manuView.mirButton.backgroundColor = [UIColor orangeColor];
-    else manuView.mirButton.backgroundColor = [UIColor whiteColor];
+    if (m) manuView.mirButton.backgroundColor = activeBtnColor;
+    else manuView.mirButton.backgroundColor = notactiveBtnColor;
     
-    if (m) autoView.mirButtonauto.backgroundColor = [UIColor orangeColor];
+    if (m) autoView.mirButtonauto.backgroundColor = activeBtnColor;
     else autoView.mirButtonauto.backgroundColor = [UIColor colorWithWhite:1 alpha:0.09]; 
 }
 
 -(void) Bpause:(BOOL)m{
     
-    if (m) manuView.pauseButton.backgroundColor = [UIColor orangeColor];
-    else manuView.pauseButton.backgroundColor = [UIColor whiteColor];
+    if (m) manuView.pauseButton.backgroundColor = activeBtnColor;
+    else manuView.pauseButton.backgroundColor = notactiveBtnColor;
 }
 
 -(void) Bloop:(BOOL)m{
     
-    if (m) manuView.loopButton.backgroundColor = [UIColor orangeColor];
-    else manuView.loopButton.backgroundColor = [UIColor whiteColor];
+    if (m) manuView.loopButton.backgroundColor = activeBtnColor;
+    else manuView.loopButton.backgroundColor = notactiveBtnColor;
+}
+
+-(void) Bflip:(BOOL)m{
+    
+    if (m) manuView.flipButton.backgroundColor = activeBtnColor;
+    else manuView.flipButton.backgroundColor = notactiveBtnColor;
 }
 
 -(void) Bmovie:(NSString*)m:(BOOL)muted {

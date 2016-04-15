@@ -20,11 +20,11 @@
 		86127E4A143357970041071B /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86127E49143357970041071B /* MediaPlayer.framework */; };
 		86BF8B5A145374850014C3B1 /* iconkxkm.png in Resources */ = {isa = PBXBuildFile; fileRef = 86BF8B59145374850014C3B1 /* iconkxkm.png */; };
 		86D68AE314541853009897FD /* remoteplayv2UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D68AE114541853009897FD /* remoteplayv2UserViewController.m */; };
-		86D68AE414541853009897FD /* remoteplayv2UserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE214541853009897FD /* remoteplayv2UserViewController.xib */; };
 		86D68AE814542701009897FD /* remoteplayv2TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D68AE614542701009897FD /* remoteplayv2TableViewController.m */; };
 		86D68AE914542701009897FD /* remoteplayv2TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */; };
 		889F515A1CB810380090AF49 /* ASBPlayerSubtitling.m in Sources */ = {isa = PBXBuildFile; fileRef = 889F51591CB810380090AF49 /* ASBPlayerSubtitling.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		88D767711CB80A8B0093A81D /* libVVOSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D767701CB80A8B0093A81D /* libVVOSC.a */; };
+		C64217871CC144C700CBAE4E /* remoteplayv2UserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C64217861CC144C700CBAE4E /* remoteplayv2UserViewController.xib */; };
 		C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */; };
 		C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */; };
 		C6E52D2C196D4AF400DDE3F1 /* RecClass.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E52D2B196D4AF400DDE3F1 /* RecClass.m */; };
@@ -62,7 +62,6 @@
 		86BF8B59145374850014C3B1 /* iconkxkm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconkxkm.png; sourceTree = "<group>"; };
 		86D68AE014541853009897FD /* remoteplayv2UserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = remoteplayv2UserViewController.h; sourceTree = "<group>"; };
 		86D68AE114541853009897FD /* remoteplayv2UserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = remoteplayv2UserViewController.m; sourceTree = "<group>"; };
-		86D68AE214541853009897FD /* remoteplayv2UserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2UserViewController.xib; sourceTree = "<group>"; };
 		86D68AE514542700009897FD /* remoteplayv2TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = remoteplayv2TableViewController.h; sourceTree = "<group>"; };
 		86D68AE614542701009897FD /* remoteplayv2TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = remoteplayv2TableViewController.m; sourceTree = "<group>"; };
 		86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2TableViewController.xib; sourceTree = "<group>"; };
@@ -95,6 +94,7 @@
 		88D7676F1CB80A8B0093A81D /* VVThreadLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVThreadLoop.h; sourceTree = "<group>"; };
 		88D767701CB80A8B0093A81D /* libVVOSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libVVOSC.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* KXKM-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KXKM-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C64217861CC144C700CBAE4E /* remoteplayv2UserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2UserViewController.xib; sourceTree = "<group>"; };
 		C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
 		C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C6E52D2A196D4AF400DDE3F1 /* RecClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecClass.h; sourceTree = "<group>"; };
@@ -241,7 +241,7 @@
 				2899E5210DE3E06400AC0155 /* remoteplayv2ViewController.xib */,
 				86D68AE014541853009897FD /* remoteplayv2UserViewController.h */,
 				86D68AE114541853009897FD /* remoteplayv2UserViewController.m */,
-				86D68AE214541853009897FD /* remoteplayv2UserViewController.xib */,
+				C64217861CC144C700CBAE4E /* remoteplayv2UserViewController.xib */,
 				86D68AE514542700009897FD /* remoteplayv2TableViewController.h */,
 				86D68AE614542701009897FD /* remoteplayv2TableViewController.m */,
 				86D68AE714542701009897FD /* remoteplayv2TableViewController.xib */,
@@ -438,11 +438,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
+				C64217871CC144C700CBAE4E /* remoteplayv2UserViewController.xib in Resources */,
 				2899E5220DE3E06400AC0155 /* remoteplayv2ViewController.xib in Resources */,
 				86127D69143351430041071B /* iconkxkm.jpg in Resources */,
 				86127DD3143354880041071B /* Settings.bundle in Resources */,
 				86BF8B5A145374850014C3B1 /* iconkxkm.png in Resources */,
-				86D68AE414541853009897FD /* remoteplayv2UserViewController.xib in Resources */,
 				86D68AE914542701009897FD /* remoteplayv2TableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

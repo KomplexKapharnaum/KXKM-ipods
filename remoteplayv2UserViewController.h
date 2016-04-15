@@ -26,6 +26,7 @@
 @property (nonatomic,retain) IBOutlet UIButton *mirButton;
 @property (nonatomic,retain) IBOutlet UIButton *pauseButton;
 @property (nonatomic,retain) IBOutlet UIButton *loopButton;
+@property (nonatomic,retain) IBOutlet UIButton *flipButton;
 
 @property (nonatomic,retain) IBOutlet UIButton *sosButton;
 @property (nonatomic,retain) IBOutlet UILabel *messageRegie;
@@ -46,7 +47,7 @@
 - (IBAction)loop:(id)sender;
 
 - (IBAction)flash:(id)sender;
-- (IBAction)sos:(id)sender;
+- (IBAction)flip:(id)sender;
 
 
 @end

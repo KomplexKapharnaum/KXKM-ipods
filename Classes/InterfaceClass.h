@@ -15,7 +15,9 @@
 
 @interface InterfaceClass : NSObject {
     
-    int mode;   
+    int mode;
+    UIColor* activeBtnColor;
+    UIColor* notactiveBtnColor;
 
     //INTERFACES CONTROLLERS
     remoteplayv2ViewController      *autoView;
@@ -51,6 +53,7 @@
 -(void) Bmir:(BOOL)m;
 -(void) Bpause:(BOOL)m;
 -(void) Bloop:(BOOL)m;
+-(void) Bflip:(BOOL)m;
 -(void) Bmovie:(NSString*)m:(BOOL)muted;
 -(void) Bnext:(NSString*)m;
 -(void) Bprev:(NSString*)m;

@@ -94,6 +94,9 @@
     
     if (isFlipped) _secondWindow.transform = CGAffineTransformMakeScale(-1.0, 1.0);
     else _secondWindow.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    
+    remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.interFace Bflip:isFlipped];
 }
 
 -(BOOL) flipped {
