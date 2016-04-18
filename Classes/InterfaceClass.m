@@ -180,7 +180,9 @@
 -(void) Bslide:(CMTime)maxi:(CMTime)current{
     
     if (!manuView.timeSlider.touchInside) {
-        manuView.timeSlider.maximumValue = (CGFloat)CMTimeGetSeconds(maxi);
+        CGFloat maximum = (CGFloat)CMTimeGetSeconds(maxi);
+        if (isnan(maximum)) maximum = 0.0;
+        manuView.timeSlider.maximumValue = maximum;
         manuView.timeSlider.value = (CGFloat)CMTimeGetSeconds(current);
     }
     

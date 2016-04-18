@@ -57,11 +57,25 @@
 - (NSArray *)list{
     
     //list compatible video files
-    NSArray *extensions = [NSArray arrayWithObjects:@"mp4", @"mov", @"m4v", @"mp3", @"aif", @"aac", nil];
     NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPath error:nil];
-    NSArray *mL = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
+    NSArray *extensionsMovies = [NSArray arrayWithObjects:@"mp4", @"mov", @"m4v", nil];
+    NSArray *mLmovies = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensionsMovies]];
     
-    return mL;
+    //list compatible sound files
+    NSArray *extensionsSounds = [NSArray arrayWithObjects:@"mp3", @"aif", @"aac", nil];
+    NSArray *mLsounds = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensionsSounds]];
+    
+    //remove DUB sounds (same filename)
+    NSMutableArray *mL = [mLmovies mutableCopy];
+    NSString *soundname;
+    for (id sound in mLsounds) {
+        soundname = [sound stringByDeletingPathExtension];
+        BOOL isDub = FALSE;
+        for (id movie in mLmovies) isDub = isDub || [[movie stringByDeletingPathExtension] isEqualToString:soundname];
+        if (!isDub) [mL addObject:sound];
+    }
+    
+    return [mL copy];
 }
 
 //UPDATE MEDIA LIST
