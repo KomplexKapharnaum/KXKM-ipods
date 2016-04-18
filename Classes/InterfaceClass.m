@@ -261,13 +261,13 @@
     if (m != nil)
     {
         [manuView.movieButton setTitle:m forState:UIControlStateNormal];
-        if (muted) manuView.movieButton.backgroundColor = [UIColor orangeColor];
+        if (muted) manuView.movieButton.backgroundColor = activeBtnColor;
         else manuView.movieButton.backgroundColor =[UIColor colorWithRed:0/255.0f green:110/255.0f blue:0/255.0f alpha:1.0f];;
     }
     else
     {
         [manuView.movieButton setTitle:@"" forState:UIControlStateNormal];
-        if (muted) manuView.movieButton.backgroundColor = [UIColor orangeColor];
+        if (muted) manuView.movieButton.backgroundColor = activeBtnColor;
         else manuView.movieButton.backgroundColor = [UIColor darkGrayColor];
     }
 }
