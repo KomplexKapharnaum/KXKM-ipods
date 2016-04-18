@@ -25,6 +25,8 @@
     
     playerType = PLAYER_LOCAL;
     
+    volume_rel = [[[NSUserDefaults standardUserDefaults] stringForKey:@"overdub_prop"] intValue]/100.;
+    
     //Create PLAYER 1 view
     movie1view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100,100)];
     movie1view.backgroundColor = [UIColor clearColor];
@@ -277,7 +279,8 @@
     
     if (dubPlayer != nil)
     {
-        [self mainPlayerVolume:0.0];
+        NSLog(@"prop: %f",volume_rel);
+        [self mainPlayerVolume:vol*volume_rel];
         [dubPlayer setVolume:vol];
     }
     else [self mainPlayerVolume:vol];

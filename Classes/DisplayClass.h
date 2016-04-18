@@ -50,6 +50,7 @@
     UILabel* soustitres2;
     
     BOOL isFlipped;
+    BOOL isMuted;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *_secondWindow;

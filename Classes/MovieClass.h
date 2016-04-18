@@ -30,6 +30,7 @@
     BOOL paused;
     BOOL autoloop;
     int volume;
+    float volume_rel;
     BOOL mute;
     
     NSString *movieLoad;

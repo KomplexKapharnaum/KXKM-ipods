@@ -256,7 +256,7 @@
     else manuView.flipButton.backgroundColor = notactiveBtnColor;
 }
 
--(void) Bmovie:(NSString*)m:(BOOL)muted {
+-(void) Bmovie:(NSString*)m :(BOOL)muted {
     
     if (m != nil)
     {

@@ -29,6 +29,7 @@
     titlesOr = 1;
     
     isFlipped = NO;
+    isMuted = NO;
     
     subTitles = [[NSArray alloc] initWithObjects:
                  @"Maintenant",
@@ -58,6 +59,8 @@
 //MUTE
 -(void) mute:(BOOL)muteMe {
     
+    isMuted = muteMe;
+    
     if (muteview) {
         if (muteMe) muteview.alpha = 1;
         else muteview.alpha = 0;
@@ -65,11 +68,11 @@
     
     remoteplayv2AppDelegate *appDelegate = (remoteplayv2AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.moviePlayer muteSound:muteMe];
-    [appDelegate.interFace Bmovie:[appDelegate.moviePlayer movie]:[appDelegate.disPlay muted]];
+    [appDelegate.interFace Bmovie:[appDelegate.moviePlayer movie]:muteMe];
 }
 
 -(BOOL) muted {
-    return (muteview.alpha == 1);
+    return isMuted;
 }
 
 
