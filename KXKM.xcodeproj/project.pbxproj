@@ -498,6 +498,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = KXKM;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -522,6 +523,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = KXKM;
+				PROVISIONING_PROFILE = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
