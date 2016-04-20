@@ -130,32 +130,32 @@
         
         //LOOP
         else if ([command isEqualToString: @"/loop"]) {
-            [appDelegate.moviePlayer loopMedia:TRUE];
+            loopmovie = TRUE;
         }
         
         //UNPAUSE
         else if ([command isEqualToString: @"/unloop"]) {
-            [appDelegate.moviePlayer loopMedia:FALSE];
+            unloopmovie = TRUE;
         }
         
         //LOOP
         else if ([command isEqualToString: @"/flip"]) {
-            [appDelegate.disPlay flip:TRUE];
+            flipmovie = YES;
         }
         
         //UNPAUSE
         else if ([command isEqualToString: @"/unflip"]) {
-            [appDelegate.disPlay flip:FALSE];
+            unflipmovie = YES;
         }
         
         //PAUSE
         else if ([command isEqualToString: @"/pause"]) {
-            [appDelegate.moviePlayer pause];
+            pausemovie = YES;
         }
         
         //UNPAUSE
         else if ([command isEqualToString: @"/unpause"]) {
-            [appDelegate.moviePlayer unpause];
+            unpausemovie = YES;
         }
         
         //START RECORD
@@ -271,6 +271,18 @@
         
     //stop live
     if (stoplive) [appDelegate.live2Player stop];
+    
+    //flip
+    if (flipmovie) [appDelegate.disPlay flip:TRUE];
+    if (unflipmovie) [appDelegate.disPlay flip:FALSE];
+    
+    //loop
+    if (loopmovie) [appDelegate.moviePlayer loopMedia:TRUE];
+    if (unloopmovie) [appDelegate.moviePlayer loopMedia:FALSE];
+    
+    //pause
+    if (pausemovie) [appDelegate.moviePlayer pause];
+    if (unpausemovie) [appDelegate.moviePlayer unpause];
         
     //volume
     if (gomute) [appDelegate.disPlay mute:YES];
@@ -322,6 +334,13 @@
     
     playlive = NO;
     stoplive = NO;
+    
+    flipmovie = NO;
+    unflipmovie = NO;
+    loopmovie = NO;
+    unloopmovie = NO;
+    pausemovie = NO;
+    unpausemovie = NO;
     
     gomute = NO;
     gounmute = NO;

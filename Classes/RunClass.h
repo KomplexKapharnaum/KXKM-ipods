@@ -21,6 +21,13 @@
     BOOL startrecord;
     BOOL stoprecord;
     
+    BOOL flipmovie;
+    BOOL unflipmovie;
+    BOOL pausemovie;
+    BOOL unpausemovie;
+    BOOL loopmovie;
+    BOOL unloopmovie;
+    
     BOOL gomute;
     BOOL gounmute;
     BOOL govolume;

@@ -95,6 +95,9 @@
     
     isFlipped = flipDisp;
     
+    if (isFlipped) NSLog(@"flip");
+    else NSLog(@"unflip");
+    
     if (isFlipped) _secondWindow.transform = CGAffineTransformMakeScale(-1.0, 1.0);
     else _secondWindow.transform = CGAffineTransformMakeScale(1.0, 1.0);
     
@@ -514,7 +517,7 @@
     
         //Attach SRT subviews
         [srtview addSubview: appDelegate.moviePlayer.srtLabel];
-        appDelegate.moviePlayer.srtLabel.frame = CGRectMake(0,(5*frame.size.height/6),frame.size.width,(frame.size.height/6));
+        appDelegate.moviePlayer.srtLabel.frame = CGRectMake(0,(7*frame.size.height/8),frame.size.width,(frame.size.height/8));
     
     //LIVE PLAYER
     //Create Masks (liveview)
