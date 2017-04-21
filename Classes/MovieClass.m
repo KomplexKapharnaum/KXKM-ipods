@@ -11,7 +11,7 @@
 #import "ConfigConst.h"
 
 @implementation MovieClass
-@synthesize movie1view, movie2view, srtLabel;
+@synthesize movie1view, movie2view, srtLabel, subtitles;
 
 //###########################################################
 // INIT

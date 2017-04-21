@@ -43,6 +43,7 @@
 @property (nonatomic,retain) UIView *movie1view;
 @property (nonatomic,retain) UIView *movie2view;
 @property (nonatomic,retain) UIView *srtLabel;
+@property (nonatomic,retain) ASBPlayerSubtitling *subtitles;
 
 -(void) load:(NSString*)file;
 -(void) play;

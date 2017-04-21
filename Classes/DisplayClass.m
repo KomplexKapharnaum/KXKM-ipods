@@ -517,7 +517,8 @@
     
         //Attach SRT subviews
         [srtview addSubview: appDelegate.moviePlayer.srtLabel];
-        appDelegate.moviePlayer.srtLabel.frame = CGRectMake(0,(7*frame.size.height/8),frame.size.width,(frame.size.height/8));
+        appDelegate.moviePlayer.subtitles.areaBottom = CGRectMake(0,(7*frame.size.height/8),frame.size.width,(frame.size.height/8));
+        
     
     //LIVE PLAYER
     //Create Masks (liveview)

@@ -22,6 +22,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *label;
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, assign) BOOL visible;
+@property (nonatomic, assign) CGRect areaBottom;
 
 - (void)apply:(NSURL *)url to:(AVPlayer *)player;
 - (void)loadSubtitlesAtURL:(NSURL *)url error:(NSError **)error;

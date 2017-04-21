@@ -43,11 +43,13 @@
 - (void)setup
 {
     _visible = YES;
+    self.areaBottom = CGRectMake(0, 0, 0, 0);
     self.queue = dispatch_queue_create("subtitling", NULL);
 }
 
 - (void)apply:(NSURL *)url to:(AVPlayer *)player {
     [self stop];
+    self.label.frame = self.areaBottom; // Reset position to bottom
     [self loadSubtitlesAtURL:url error:nil];
     [self setPlayer:player];
 }
@@ -213,6 +215,16 @@
             if ([exLine count] >= 2) {
                 int size = [[[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]] integerValue];
                 if (size > 0) [self.label setFont:[UIFont fontWithName:@"Thonburi" size:size]];
+            }
+        }
+        // Find POSITION
+        else if ([line hasPrefix:@"POSITION"])
+        {
+            NSArray* exLine = [line componentsSeparatedByString:@"="];
+            if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
+            if ([exLine count] >= 2) {
+                NSString* position = [[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+                if ([position isEqualToString:@"top"]) self.label.frame = CGRectMake(self.areaBottom.origin.x,0,self.areaBottom.size.width,self.areaBottom.size.height);
             }
         }
         // No more Metadata
