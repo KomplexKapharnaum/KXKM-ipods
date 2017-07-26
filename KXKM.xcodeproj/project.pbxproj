@@ -25,6 +25,8 @@
 		889F515A1CB810380090AF49 /* ASBPlayerSubtitling.m in Sources */ = {isa = PBXBuildFile; fileRef = 889F51591CB810380090AF49 /* ASBPlayerSubtitling.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		88D767711CB80A8B0093A81D /* libVVOSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D767701CB80A8B0093A81D /* libVVOSC.a */; };
 		C64217871CC144C700CBAE4E /* remoteplayv2UserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C64217861CC144C700CBAE4E /* remoteplayv2UserViewController.xib */; };
+		C6AC24821F2639BD009D3A20 /* THLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6AC24811F2639BD009D3A20 /* THLabel.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		C6AC24841F2639FE009D3A20 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6AC24831F2639FE009D3A20 /* CoreText.framework */; };
 		C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */; };
 		C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */; };
 		C6E52D2C196D4AF400DDE3F1 /* RecClass.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E52D2B196D4AF400DDE3F1 /* RecClass.m */; };
@@ -95,6 +97,9 @@
 		88D767701CB80A8B0093A81D /* libVVOSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libVVOSC.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* KXKM-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KXKM-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		C64217861CC144C700CBAE4E /* remoteplayv2UserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = remoteplayv2UserViewController.xib; sourceTree = "<group>"; };
+		C6AC24801F2639BD009D3A20 /* THLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLabel.h; sourceTree = "<group>"; };
+		C6AC24811F2639BD009D3A20 /* THLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLabel.m; sourceTree = "<group>"; };
+		C6AC24831F2639FE009D3A20 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
 		C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C6E52D2A196D4AF400DDE3F1 /* RecClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecClass.h; sourceTree = "<group>"; };
@@ -127,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6AC24841F2639FE009D3A20 /* CoreText.framework in Frameworks */,
 				88D767711CB80A8B0093A81D /* libVVOSC.a in Frameworks */,
 				C6C3E4BE1B18AD3D008EBC53 /* Accelerate.framework in Frameworks */,
 				C6C3E4BC1B18AD36008EBC53 /* MediaToolbox.framework in Frameworks */,
@@ -174,6 +180,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				C6AC247F1F2639BD009D3A20 /* THLabel */,
 				889F51571CB810150090AF49 /* ASBSubtitling */,
 				88D767721CB80A910093A81D /* VVOSC */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -208,6 +215,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C6AC24831F2639FE009D3A20 /* CoreText.framework */,
 				C6C3E4BD1B18AD3D008EBC53 /* Accelerate.framework */,
 				C6C3E4BB1B18AD36008EBC53 /* MediaToolbox.framework */,
 				CEA99D681513E1FC000EC74D /* QuartzCore.framework */,
@@ -297,6 +305,15 @@
 				88D767701CB80A8B0093A81D /* libVVOSC.a */,
 			);
 			name = VVOSC;
+			sourceTree = "<group>";
+		};
+		C6AC247F1F2639BD009D3A20 /* THLabel */ = {
+			isa = PBXGroup;
+			children = (
+				C6AC24801F2639BD009D3A20 /* THLabel.h */,
+				C6AC24811F2639BD009D3A20 /* THLabel.m */,
+			);
+			path = THLabel;
 			sourceTree = "<group>";
 		};
 		C6E52D28196D4ACD00DDE3F1 /* Rec */ = {
@@ -454,6 +471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6AC24821F2639BD009D3A20 /* THLabel.m in Sources */,
 				889F515A1CB810380090AF49 /* ASBPlayerSubtitling.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* remoteplayv2AppDelegate.m in Sources */,

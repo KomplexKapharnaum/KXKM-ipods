@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *subtitles;
 @property (nonatomic, strong) dispatch_queue_t queue;
 @property (nonatomic, copy) NSString *currentText;
+@property (nonatomic, copy) NSString *currentPosition;
 @property (nonatomic, copy) NSString *cssStyle;
 @end
 
@@ -45,6 +46,7 @@
     _visible = YES;
     self.areaBottom = CGRectMake(0, 0, 0, 0);
     self.queue = dispatch_queue_create("subtitling", NULL);
+    self.currentPosition = @"bottom";
 }
 
 - (void)apply:(NSURL *)url to:(AVPlayer *)player {
@@ -186,9 +188,24 @@
     return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
+-(NSString*)fetchMetaValue:(NSString *)line {
+    NSArray* exLine = [line componentsSeparatedByString:@"="];
+    if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
+    if ([exLine count] < 2) return NULL;
+    NSString* value = [[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+    value = [[value componentsSeparatedByString:@" "] objectAtIndex:0];
+    return value;
+}
+
 -(NSString*)extractMeta:(NSString *)string {
     
     NSMutableArray* lines = [NSMutableArray arrayWithArray:[string componentsSeparatedByString: @"\n"]];
+    
+    NSString* font = @"Thonburi";
+    NSString* color = @"#FFB400";
+    NSString* position = @"bottom";
+    int size = 34;
+    int outline = 2;
     
     BOOL search = true;
     while (search) {
@@ -196,42 +213,53 @@
         // Read Line
         if ([lines count] < 1) break;
         NSString *line = [lines objectAtIndex:0];
+        NSString* metaValue = [self fetchMetaValue:line];   // extract value after = or :
         
         // Find COLOR
         if ([line hasPrefix:@"COLOR"])
         {
-            NSArray* exLine = [line componentsSeparatedByString:@"="];
-            if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
-            if ([exLine count] >= 2) {
-                NSString* color = [[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
-                if ([color hasPrefix:@"#"]) self.label.textColor = [self colorFromHexString:color];
-            }
+            if ([metaValue hasPrefix:@"#"]) color = metaValue;
         }
         // Find SIZE
         else if ([line hasPrefix:@"SIZE"])
         {
-            NSArray* exLine = [line componentsSeparatedByString:@"="];
-            if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
-            if ([exLine count] >= 2) {
-                int size = [[[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]] integerValue];
-                if (size > 0) [self.label setFont:[UIFont fontWithName:@"Thonburi" size:size]];
-            }
+            if ([metaValue integerValue] > 0) size = [metaValue integerValue];
+        }
+        // Find FONT
+        else if ([line hasPrefix:@"FONT"])
+        {
+            if ([metaValue length] > 0) font = metaValue;
         }
         // Find POSITION
         else if ([line hasPrefix:@"POSITION"])
         {
-            NSArray* exLine = [line componentsSeparatedByString:@"="];
-            if ([exLine count] < 2) exLine = [line componentsSeparatedByString:@":"];
-            if ([exLine count] >= 2) {
-                NSString* position = [[exLine objectAtIndex:1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
-                if ([position isEqualToString:@"top"]) self.label.frame = CGRectMake(self.areaBottom.origin.x,0,self.areaBottom.size.width,self.areaBottom.size.height);
-            }
+            if ([metaValue length] > 0) position = metaValue;
         }
+        // Find OUTLINE
+        else if ([line hasPrefix:@"OUTLINE"])
+        {
+            outline = [metaValue integerValue];
+        }
+
         // No more Metadata
         else search = false;
         
         if (search) [lines removeObjectAtIndex:0];
     }
+    
+    // Apply Meta COLOR
+    self.label.textColor = [self colorFromHexString:color];
+    
+    // Apply Meta SIZE & FONT
+    [self.label setFont:[UIFont fontWithName:font size:size]];
+    
+    // Apply Meta POSITION
+    self.currentPosition = position;
+    
+    // Apply OUTLINE (using THLabel which override UILabel)
+    self.label.strokeSize = outline;
+    self.label.strokeColor = [UIColor blackColor];
+    self.label.strokePosition = THLabelStrokePositionOutside;
     
     return [lines componentsJoinedByString:@"\n"];
 }
@@ -353,7 +381,7 @@
 
 - (void)updateLabel
 {
-    if(self.currentText != nil)
+    /*if(self.currentText != nil)
     {
         if([self isHTML:self.currentText])
         {
@@ -361,7 +389,7 @@
         }
         else
         {
-            self.label.text = self.currentText; 
+            self.label.text = self.currentText;
         }
     }
     else
@@ -369,7 +397,26 @@
         self.label.attributedText = nil;
         self.label.text = nil;
     }
+     */
     
+    // Update UILabel text
+    self.label.text = self.currentText;
+    
+    // Adjust UILabel height and vertical position
+    CGSize maximumLabelSize = CGSizeMake(self.areaBottom.size.width, FLT_MAX);
+    CGSize expectedLabelSize = [self.label.text sizeWithFont:self.label.font constrainedToSize:maximumLabelSize lineBreakMode:self.label.lineBreakMode];
+    CGRect newFrame = self.label.frame;
+    newFrame.size.height = expectedLabelSize.height;
+    
+    // Adjust UILabel position vertical
+    if ([self.currentPosition isEqualToString:@"top"]) newFrame.origin.y = 0;
+    else newFrame.origin.y = (self.areaBottom.origin.y + self.areaBottom.size.height) - expectedLabelSize.height;
+    
+    // Apply new label geometry
+    self.label.frame = newFrame;
+    
+    
+    // Hide if empty
     self.label.hidden = (self.currentText.length == 0) || !self.visible;
     self.containerView.hidden = self.label.hidden;
 }

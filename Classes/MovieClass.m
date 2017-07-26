@@ -38,7 +38,7 @@
     movie2view.alpha=1;
     
     //Create SRT label
-    srtLabel = [[UILabel alloc] init];
+    srtLabel = [[THLabel alloc] init];
     [srtLabel setBackgroundColor:[UIColor clearColor]];
     [srtLabel setTextAlignment:NSTextAlignmentCenter];
     srtLabel.textColor = [UIColor yellowColor];

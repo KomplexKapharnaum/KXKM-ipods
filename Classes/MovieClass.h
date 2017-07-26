@@ -21,7 +21,7 @@
     UIView *movie1view;
     UIView *movie2view;
     
-    UILabel *srtLabel;
+    THLabel *srtLabel;
     
     AVPlayerLayer *layer1;
     AVPlayerLayer *layer2;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "THLabel.h"
 
 @interface ASBSubtitle : NSObject
 @property (nonatomic, assign) NSInteger index;
@@ -19,7 +20,7 @@
 @interface ASBPlayerSubtitling : NSObject
 
 @property (nonatomic, strong) IBOutlet UIView *containerView;
-@property (nonatomic, strong) IBOutlet UILabel *label;
+@property (nonatomic, strong) IBOutlet THLabel *label;
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, assign) BOOL visible;
 @property (nonatomic, assign) CGRect areaBottom;
